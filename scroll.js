@@ -1,12 +1,37 @@
 
+// ─── Shared helpers ───────────────────────────────────────────────────────────
+// Current translation table, with the fr fallback every caller in this file wants
+const t = () => translations[currentLang] || translations.fr;
+
+// One scroll listener for the whole page, coalesced into a single rAF: each job
+// runs at most once per frame, so a fast scroll can't queue up a layout read per
+// event. Jobs also run once at registration, so a page loaded already scrolled
+// (reload, #hash deep link) starts in the right state.
+const scrollJobs = [];
+let scrollTicking = false;
+
+function onScroll(job) {
+  scrollJobs.push(job);
+  job(window.scrollY);
+}
+
+window.addEventListener('scroll', () => {
+  if (scrollTicking) return;
+  scrollTicking = true;
+  requestAnimationFrame(() => {
+    scrollTicking = false;
+    const y = window.scrollY;
+    scrollJobs.forEach(job => job(y));
+  });
+}, { passive: true });
+
 // ─── Scroll progress bar ──────────────────────────────────────────────────────
 const scrollProgressBar = document.getElementById('scrollProgress');
 if (scrollProgressBar) {
-  window.addEventListener('scroll', () => {
-    const scrolled = window.scrollY;
+  onScroll(y => {
     const total = document.documentElement.scrollHeight - window.innerHeight;
-    scrollProgressBar.style.width = total > 0 ? (scrolled / total * 100) + '%' : '0%';
-  }, { passive: true });
+    scrollProgressBar.style.width = total > 0 ? (y / total * 100) + '%' : '0%';
+  });
 }
 
 // ─── Custom SVG icons (for skills without a simple-icons slug) ────────────────
@@ -69,7 +94,7 @@ const categoryDefs = ['dev', 'data', 'orchestration', 'db', 'cloud', 'pm'];
 function skillsByCategory(cat) {
   return skillsData
     .filter(s => s.category === cat)
-    .sort((a, b) => b.level - a.level || (skillDuration[b.id] || 0) - (skillDuration[a.id] || 0));
+    .sort((a, b) => b.level - a.level || (skillMonths[b.id] || 0) - (skillMonths[a.id] || 0));
 }
 
 function renderSkills() {
@@ -118,11 +143,6 @@ function renderSkills() {
       const nameSpan = document.createElement('span');
       nameSpan.textContent = s.name;
       div.appendChild(nameSpan);
-
-      const dots = document.createElement('span');
-      dots.className = 'skill-dots';
-      dots.innerHTML = '<i></i><i></i><i></i>';
-      div.appendChild(dots);
 
       itemsDiv.appendChild(div);
     });
@@ -196,31 +216,22 @@ const roleSkills = {
   }
 };
 
-// Total usage duration (ms) per skill, computed after roleSkills
-const skillDuration = {};
+// Total hands-on months per skill, summed over the roles that used it. Built in
+// one pass here and reused by both the card ordering and the hover label, so the
+// two can't disagree.
+const skillMonths = {};
 Object.values(roleSkills).forEach(role => {
   const end = role.end || new Date();
-  const ms = end - role.start;
+  const months = Math.max(1,
+    (end.getFullYear() - role.start.getFullYear()) * 12 +
+    end.getMonth() - role.start.getMonth()
+  );
   role.skills.forEach(s => {
-    skillDuration[s.id] = (skillDuration[s.id] || 0) + ms;
+    skillMonths[s.id] = (skillMonths[s.id] || 0) + months;
   });
 });
 
 const skillNames = Object.fromEntries(skillsData.map(s => [s.id, s.name]));
-
-function roleMonths(role) {
-  const end = role.end || new Date();
-  return Math.max(1,
-    (end.getFullYear() - role.start.getFullYear()) * 12 +
-    end.getMonth() - role.start.getMonth()
-  );
-}
-
-function skillTotalMonths(skillId) {
-  return Object.values(roleSkills)
-    .filter(r => r.skills.some(s => s.id === skillId))
-    .reduce((sum, r) => sum + roleMonths(r), 0);
-}
 
 function formatSkillDuration(months, lang) {
   const halfYears = Math.ceil(months / 6);
@@ -240,8 +251,7 @@ function formatSkillDuration(months, lang) {
 
 function updateSkillDurations(lang) {
   document.querySelectorAll('.stack-item[data-skill]').forEach(el => {
-    const months = skillTotalMonths(el.dataset.skill);
-    el.dataset.years = formatSkillDuration(months, lang);
+    el.dataset.years = formatSkillDuration(skillMonths[el.dataset.skill] || 0, lang);
   });
 }
 
@@ -264,43 +274,57 @@ function generateExperienceTags() {
   });
 }
 
-// ─── Read-more toggle helper ──────────────────────────────────────────────────
-// Handles expand/collapse with a label swap (delayed on close for CSS animation)
-function attachReadMore(btn, bodyEl, moreKey, lessKey) {
+// ─── Expand / collapse toggles ────────────────────────────────────────────────
+// Shared by the About "read more", the per-experience task lists, the project
+// descriptions and "show more projects". The button's [data-i18n] span is
+// re-keyed on every state change, so applyLang() re-translates the label from
+// the attribute alone and needs no per-toggle special-casing.
+//   toggleClass — class carrying the expanded state on `target` (default 'expanded')
+//   delayLabel  — ms to wait before restoring the collapsed label, so the text
+//                 doesn't swap while the block is still visibly closing
+function setupToggle(btn, target, expandedKey, collapsedKey, opts = {}) {
   const span = btn.querySelector('[data-i18n]');
-  btn.addEventListener('click', () => {
-    const expanded = bodyEl.classList.toggle('expanded');
-    const t = translations[currentLang] || translations.fr;
+  const { toggleClass = 'expanded', delayLabel = 0 } = opts;
+  let labelTimer = null;
+
+  const isExpanded = () => target.classList.contains(toggleClass);
+
+  function set(expanded) {
+    target.classList.toggle(toggleClass, expanded);
     btn.classList.toggle('expanded', expanded);
     btn.setAttribute('aria-expanded', String(expanded));
-    if (expanded) {
-      span.textContent = t[lessKey];
-    } else {
-      // wait for close animation to finish before changing the text
-      setTimeout(() => { span.textContent = t[moreKey]; }, 400);
-    }
-  });
+
+    // Drop any label swap still pending from an earlier click — otherwise a
+    // quick collapse→expand lets the stale timer relabel an open block.
+    clearTimeout(labelTimer);
+    const key = expanded ? expandedKey : collapsedKey;
+    const apply = () => {
+      span.dataset.i18n = key;
+      span.textContent = t()[key];
+    };
+    if (!expanded && delayLabel) labelTimer = setTimeout(apply, delayLabel);
+    else apply();
+  }
+
+  btn.addEventListener('click', () => set(!isExpanded()));
+  return { set, isExpanded };
 }
 
 // ─── About read more ──────────────────────────────────────────────────────────
 const aboutBody   = document.getElementById('aboutBody');
 const aboutToggle = document.getElementById('aboutToggle');
-if (aboutBody && aboutToggle) attachReadMore(aboutToggle, aboutBody, 'about.readmore', 'about.readless');
+if (aboutBody && aboutToggle) {
+  setupToggle(aboutToggle, aboutBody, 'about.readless', 'about.readmore', { delayLabel: 400 });
+}
 
 // ─── Experience tasks toggles ─────────────────────────────────────────────────
 document.querySelectorAll('.tasks-toggle').forEach(btn => {
-  btn.addEventListener('click', () => {
-    const ul = btn.nextElementSibling;
-    const expanded = ul.classList.toggle('expanded');
-    btn.classList.toggle('expanded', expanded);
-    btn.setAttribute('aria-expanded', String(expanded));
-    updateToggleLabel(btn, btn, 'exp.tasks.hide', 'exp.tasks.show');
-  });
+  const list = document.getElementById(btn.getAttribute('aria-controls'));
+  if (list) setupToggle(btn, list, 'exp.tasks.hide', 'exp.tasks.show');
 });
 
 // ─── Stat counters ────────────────────────────────────────────────────────────
-const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
-
+// prefersReducedMotion comes from i18n.js (loaded first) — one query, both files
 function animateCounter(el) {
   const target = parseInt(el.dataset.count, 10);
   const suffix = el.dataset.suffix || '';
@@ -351,7 +375,7 @@ document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
 
 // ─── Sticky Nav show/hide (desktop only) ─────────────────────────────────────
 const nav = document.getElementById('siteNav');
-(function () {
+if (nav) {
   const mq = window.matchMedia('(min-width: 901px)');
   let navVisible = false;
 
@@ -361,13 +385,11 @@ const nav = document.getElementById('siteNav');
     nav.classList.toggle('visible', show);
   }
 
-  window.addEventListener('scroll', () => {
-    if (mq.matches) setNav(window.scrollY > 80);
-  }, { passive: true });
+  onScroll(y => { if (mq.matches) setNav(y > 80); });
 
   // On resize to mobile, remove visible class
   mq.addEventListener('change', e => { if (!e.matches) setNav(false); });
-})();
+}
 
 // ─── Active nav link ──────────────────────────────────────────────────────────
 const sections = document.querySelectorAll('main section[id]');
@@ -494,7 +516,7 @@ generateExperienceTags();
     pill.className = 'skill-filter-pill';
     const label = document.createElement('span');
     label.dataset.i18n = 'skills.filter';
-    label.textContent = (translations[currentLang] || translations.fr)['skills.filter'];
+    label.textContent = t()['skills.filter'];
     const name = document.createElement('strong');
     name.textContent = skillNames[skillId] || skillId;
     const cross = document.createElement('span');
@@ -521,7 +543,8 @@ generateExperienceTags();
 
 // ─── Project read more ────────────────────────────────────────────────────────
 document.querySelectorAll('.project-readmore').forEach(btn => {
-  attachReadMore(btn, document.getElementById(btn.dataset.desc), 'projects.readmore', 'projects.readless');
+  const body = document.getElementById(btn.dataset.desc);
+  if (body) setupToggle(btn, body, 'projects.readless', 'projects.readmore', { delayLabel: 400 });
 });
 
 // ─── Projects: show more / less (reveal cards beyond the first 3) ──────────────
@@ -529,18 +552,10 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
   const toggle  = document.getElementById('projectsToggle');
   const section = document.getElementById('projects');
   if (!toggle || !section) return;
-  const span = toggle.querySelector('[data-i18n]');
 
-  function setExpanded(expanded) {
-    const t = translations[currentLang] || translations.fr;
-    section.classList.toggle('show-all', expanded);
-    toggle.classList.toggle('expanded', expanded);
-    toggle.setAttribute('aria-expanded', String(expanded));
-    span.setAttribute('data-i18n', expanded ? 'projects.showless' : 'projects.showmore');
-    span.textContent = expanded ? t['projects.showless'] : t['projects.showmore'];
-  }
-
-  toggle.addEventListener('click', () => setExpanded(!section.classList.contains('show-all')));
+  const projects = setupToggle(
+    toggle, section, 'projects.showless', 'projects.showmore', { toggleClass: 'show-all' }
+  );
 
   // Deep links (e.g. #project-swarm): when the hash targets a card inside the
   // collapsed block, expand it first, then scroll once the height animation
@@ -550,8 +565,8 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     if (!id) return;
     const target = document.getElementById(id);
     if (!target || !target.closest('#projectsExtra')) return;
-    const wasExpanded = section.classList.contains('show-all');
-    setExpanded(true);
+    const wasExpanded = projects.isExpanded();
+    projects.set(true);
     setTimeout(() => {
       target.scrollIntoView({ block: 'start', behavior: prefersReducedMotion ? 'auto' : 'smooth' });
     }, wasExpanded || prefersReducedMotion ? 0 : 480);
@@ -635,13 +650,13 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       });
 
       if (res.ok) {
-        setStatus((translations[currentLang] || translations.fr)['contact.success'], 'is-success');
+        setStatus(t()['contact.success'], 'is-success');
         form.reset();
       } else {
         throw new Error('server');
       }
     } catch {
-      setStatus((translations[currentLang] || translations.fr)['contact.error'], 'is-error');
+      setStatus(t()['contact.error'], 'is-error');
     } finally {
       submit.disabled = false;
       submit.classList.remove('is-loading');
@@ -775,8 +790,8 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     x:         'https://x.com/alexiscolinfr',
   };
 
+  // Terminal-local copy; page content comes from the shared t() above
   const tt = () => termText[currentLang] || termText.fr;
-  const t  = () => translations[currentLang] || translations.fr;
 
   let printQueue = [];
   let printTimer = null;
@@ -958,6 +973,14 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
 
   let onCloseEnd = null;
 
+  // aria-modal only holds while the window is actually modal. Minimized, the
+  // page behind is fully usable, so leaving it set would tell screen readers
+  // the rest of the document is inert when it isn't.
+  function setModal(on) {
+    if (on) term.setAttribute('aria-modal', 'true');
+    else term.removeAttribute('aria-modal');
+  }
+
   function openTerminal() {
     // Cancel any in-flight close so reopening mid-animation can't re-hide us
     if (onCloseEnd) { term.removeEventListener('animationend', onCloseEnd); onCloseEnd = null; }
@@ -967,6 +990,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     if (overlay.hidden) { lastFocus = document.activeElement; resetPosition(); }
     overlay.hidden = false;
     overlay.classList.remove('terminal-overlay--min');
+    setModal(true);
     // Each fresh open (after a close) is a new session: login banner + welcome
     if (!greeted) {
       greeted = true;
@@ -981,6 +1005,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     overlay.classList.remove('terminal-overlay--min');
     term.classList.remove('terminal--max');
     resetPosition();
+    setModal(false);
     overlay.hidden = true;
     clearQueue();
     output.innerHTML = '';
@@ -1002,12 +1027,14 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
   function minimizeTerminal() {
     resetPosition();
     overlay.classList.add('terminal-overlay--min');
+    setModal(false);
     input.blur();
   }
 
   function restoreTerminal() {
     resetPosition();
     overlay.classList.remove('terminal-overlay--min');
+    setModal(true);
     input.focus();
   }
 
@@ -1043,6 +1070,17 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       else { histIdx = history.length; input.value = ''; }
       e.preventDefault();
     }
+  });
+
+  // Keep Tab inside the dialog while it's modal — without this, tabbing walks
+  // onto the page hidden behind the backdrop with no visible focus (WCAG 2.4.3)
+  term.addEventListener('keydown', e => {
+    if (e.key !== 'Tab' || isMinimized()) return;
+    const stops = [dotClose, dotMin, dotMax, input];
+    const i = stops.indexOf(document.activeElement);
+    const step = e.shiftKey ? -1 : 1;
+    stops[(i + step + stops.length) % stops.length].focus();
+    e.preventDefault();
   });
 
   // Clicking anywhere in the terminal refocuses the input (like a real one)

@@ -1,3 +1,6 @@
+// Queried once here and reused by scroll.js, which loads after this file
+const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+
 // ─── Dynamic duration for current job ────────────────────────────────────────
 const CURRENT_JOB_START = new Date(2024, 1); // February 2024
 
@@ -401,56 +404,25 @@ const translations = {
   }
 };
 
-// ─── Helper: updates a toggle button label ───────────────────────────────────
-function updateToggleLabel(btn, expandedEl, expandedKey, collapsedKey) {
-  const span = btn.querySelector('[data-i18n]');
-  if (span) span.textContent = translations[currentLang][
-    expandedEl.classList.contains('expanded') ? expandedKey : collapsedKey
-  ];
-}
-
 // ─── Apply translations ───────────────────────────────────────────────────────
+// Each attribute names the translation key; the setter says where the string
+// lands. Expand/collapse buttons re-key their own [data-i18n] as they toggle
+// (see setupToggle in scroll.js), so their labels come along for free.
+const I18N_TARGETS = [
+  ['data-i18n',             (el, v) => { el.textContent = v; }],
+  ['data-i18n-aria',        (el, v) => el.setAttribute('aria-label', v)],
+  ['data-i18n-placeholder', (el, v) => el.setAttribute('placeholder', v)],
+  ['data-i18n-title',       (el, v) => el.setAttribute('title', v)],
+];
+
 function applyLang(lang) {
   const t = translations[lang];
 
-  // textContent nodes
-  document.querySelectorAll('[data-i18n]').forEach(el => {
-    const key = el.dataset.i18n;
-    if (t[key] !== undefined) el.textContent = t[key];
-  });
-
-  // aria-label attributes
-  document.querySelectorAll('[data-i18n-aria]').forEach(el => {
-    const key = el.dataset.i18nAria;
-    if (t[key] !== undefined) el.setAttribute('aria-label', t[key]);
-  });
-
-  // placeholder attributes
-  document.querySelectorAll('[data-i18n-placeholder]').forEach(el => {
-    const key = el.dataset.i18nPlaceholder;
-    if (t[key] !== undefined) el.setAttribute('placeholder', t[key]);
-  });
-
-  // title attributes
-  document.querySelectorAll('[data-i18n-title]').forEach(el => {
-    const key = el.dataset.i18nTitle;
-    if (t[key] !== undefined) el.setAttribute('title', t[key]);
-  });
-
-  // Toggles — restore correct label based on expanded state
-  document.querySelectorAll('.tasks-toggle').forEach(btn =>
-    updateToggleLabel(btn, btn, 'exp.tasks.hide', 'exp.tasks.show')
-  );
-
-  const aboutToggleBtn = document.getElementById('aboutToggle');
-  const aboutBody      = document.getElementById('aboutBody');
-  if (aboutToggleBtn && aboutBody) {
-    updateToggleLabel(aboutToggleBtn, aboutBody, 'about.readless', 'about.readmore');
-  }
-
-  document.querySelectorAll('.project-readmore').forEach(btn => {
-    const body = document.getElementById(btn.dataset.desc);
-    if (body) updateToggleLabel(btn, body, 'projects.readless', 'projects.readmore');
+  I18N_TARGETS.forEach(([attr, set]) => {
+    document.querySelectorAll('[' + attr + ']').forEach(el => {
+      const value = t[el.getAttribute(attr)];
+      if (value !== undefined) set(el, value);
+    });
   });
 
   // CV button — swap href to matching language file
@@ -471,13 +443,12 @@ function applyLang(lang) {
 // ─── Toggle handler ───────────────────────────────────────────────────────────
 let langSwitching = false;
 const FADE_MS = 130; // keep in sync with #pageWrap transition in style.css
-const reduceMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
 
 document.getElementById('langToggle').addEventListener('click', () => {
   const next = currentLang === 'fr' ? 'en' : 'fr';
 
   // Reduced motion: swap instantly, no animation.
-  if (reduceMotion) {
+  if (prefersReducedMotion) {
     currentLang = next;
     applyLang(next);
     return;

@@ -82,7 +82,7 @@
   cursor: pointer;
   box-shadow: var(--shadow);
   font-size: 11px;
-  transition: box-shadow .15s, opacity .25s ease, visibility .25s ease;
+  transition: box-shadow .15s;
 }
 
 .header-btn:hover {
@@ -92,7 +92,7 @@
 .theme-toggle {
   justify-content: center;
   color: var(--muted);
-  transition: box-shadow .15s, color .15s, opacity .25s ease, visibility .25s ease;
+  transition: box-shadow .15s, color .15s;
 }
 
 .theme-toggle svg {
@@ -145,89 +145,59 @@
   padding: 0;
 }
 
+/* ── Theme ────────────────────────────────────────────────────────────────
+   Every value is declared ONCE with light-dark(); which half applies is driven
+   by `color-scheme` — the OS preference by default, forced by the [data-theme]
+   attribute the theme toggle writes on <html>. That also keeps native UI
+   (scrollbars, form controls, the canvas before CSS paints) in step with the
+   theme, which <meta name="color-scheme"> alone can't do for the override. */
 :root {
-  --bg:        #f0e6dc;
-  --bg-alt:    #ede0d4;
-  --card:      #faf5f0;
-  --card-hover:#fff;
-  --border:    rgba(0,0,0,.08);
-  --text:      #1c1712;
-  --muted:     #6b5f55;   /* ≥ 4.5:1 on bg and card (WCAG AA) */
-  --accent:    #b85c38;   /* decorative only (lines, dots, backgrounds) */
-  --accent-text: #9d4a28; /* accent-colored text — ≥ 4.5:1 on bg/card */
-  --accent-btn:  #b85c38; /* button background with white text — ≥ 4.5:1 */
-  --accent-soft: rgba(184,92,56,.12);
-  /* Colourise filter applied to monochrome skill icons (light theme) */
-  --icon-filter: invert(26%) sepia(9%) saturate(600%) hue-rotate(340deg) brightness(88%) contrast(92%);
+  color-scheme: light dark;
+
+  --bg:          light-dark(#f0e6dc, #332c24);
+  --bg-alt:      light-dark(#ede0d4, #3a3229);
+  --card:        light-dark(#faf5f0, #41382e);
+  --card-hover:  light-dark(#ffffff, #493e35);
+  --border:      light-dark(rgba(0,0,0,.08), rgba(255,255,255,.08));
+  --text:        light-dark(#1c1712, #f0e6dc);
+  --muted:       light-dark(#6b5f55, #b3a89e);   /* ≥ 4.5:1 on bg and card (WCAG AA) */
+  --accent:      light-dark(#b85c38, #c96840);   /* decorative only (lines, dots, backgrounds) */
+  --accent-text: light-dark(#9d4a28, #e29565);   /* accent-colored text — ≥ 4.5:1 on bg/card */
+  --accent-btn:  light-dark(#b85c38, #a34e2e);   /* button background with white text — ≥ 4.5:1 */
+  --accent-dark: light-dark(#a34e2e, #8f4426);
+  --accent-soft: light-dark(rgba(184,92,56,.12), rgba(201,104,64,.15));
   /* Contract badge text colors — lightened in dark mode for contrast */
-  --badge-green:  #3d7a52;
-  --badge-blue:   #3260a0;
-  --badge-ochre:  #8f6428;
-  --badge-purple: #5b50a0;
-  --tag-bg:    rgba(0,0,0,.06);
-  --tag-border: rgba(0,0,0,.1);
-  --tag-text:  #4a3f38;
+  --badge-green:  light-dark(#3d7a52, #82c79a);
+  --badge-blue:   light-dark(#3260a0, #8fb6e8);
+  --badge-ochre:  light-dark(#8f6428, #d4a35e);
+  --badge-purple: light-dark(#5b50a0, #ada3e0);
+  --tag-bg:     light-dark(rgba(0,0,0,.06), rgba(255,255,255,.06));
+  --tag-border: light-dark(rgba(0,0,0,.1),  rgba(255,255,255,.1));
+  --tag-text:   light-dark(#4a3f38, #c5b8ae);
+  --shadow:     0 2px 12px light-dark(rgba(0,0,0,.06), rgba(0,0,0,.30));
+  --shadow-lg:  0 8px 32px light-dark(rgba(0,0,0,.10), rgba(0,0,0,.50));
+
   --radius:    14px;
   --radius-sm: 8px;
-  --shadow:    0 2px 12px rgba(0,0,0,.06);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,.10);
-  --accent-dark: #a34e2e;
   --font:      'Space Mono', 'Courier New', monospace;
   --max-w:     860px;
+
+  /* Colourise filter applied to monochrome skill icons. A filter chain isn't a
+     colour, so light-dark() can't express it — hence the real overrides below,
+     the only theme value still declared twice. */
+  --icon-filter: invert(26%) sepia(9%) saturate(600%) hue-rotate(340deg) brightness(88%) contrast(92%);
 }
+
+/* Manual override from the theme toggle — flips every light-dark() at once */
+[data-theme="light"] { color-scheme: light; }
+[data-theme="dark"]  { color-scheme: dark; }
 
 [data-theme="dark"] {
-  --bg:        #332c24;
-  --bg-alt:    #3a3229;
-  --card:      #41382e;
-  --card-hover:#493e35;
-  --border:    rgba(255,255,255,.08);
-  --text:      #f0e6dc;
-  --muted:     #b3a89e;   /* ≥ 4.5:1 on bg and card (WCAG AA) */
-  --accent:    #c96840;
-  --accent-text: #e29565; /* accent-colored text — ≥ 4.5:1 on bg/card */
-  --accent-btn:  #a34e2e; /* button background with white text — ≥ 4.5:1 */
-  --accent-dark: #8f4426;
-  --accent-soft: rgba(201,104,64,.15);
   --icon-filter: invert(85%) sepia(10%) saturate(300%) hue-rotate(340deg) brightness(100%) contrast(90%);
-  --badge-green:  #82c79a;
-  --badge-blue:   #8fb6e8;
-  --badge-ochre:  #d4a35e;
-  --badge-purple: #ada3e0;
-  --tag-bg:    rgba(255,255,255,.06);
-  --tag-border: rgba(255,255,255,.1);
-  --tag-text:  #c5b8ae;
-  --shadow:    0 2px 12px rgba(0,0,0,.30);
-  --shadow-lg: 0 8px 32px rgba(0,0,0,.50);
 }
-
-/* Note: values identical to [data-theme="dark"] — keep in sync
-   (cannot be deduplicated without a preprocessor: @media cannot be
-   merged with a selector in a single vanilla CSS block) */
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
-    --bg:        #332c24;
-    --bg-alt:    #3a3229;
-    --card:      #41382e;
-    --card-hover:#493e35;
-    --border:    rgba(255,255,255,.08);
-    --text:      #f0e6dc;
-    --muted:     #b3a89e;   /* ≥ 4.5:1 on bg and card (WCAG AA) */
-    --accent:    #c96840;
-    --accent-text: #e29565; /* accent-colored text — ≥ 4.5:1 on bg/card */
-    --accent-btn:  #a34e2e; /* button background with white text — ≥ 4.5:1 */
-    --accent-dark: #8f4426;
-    --accent-soft: rgba(201,104,64,.15);
     --icon-filter: invert(85%) sepia(10%) saturate(300%) hue-rotate(340deg) brightness(100%) contrast(90%);
-    --badge-green:  #82c79a;
-    --badge-blue:   #8fb6e8;
-    --badge-ochre:  #d4a35e;
-    --badge-purple: #ada3e0;
-    --tag-bg:    rgba(255,255,255,.06);
-    --tag-border: rgba(255,255,255,.1);
-    --tag-text:  #c5b8ae;
-    --shadow:    0 2px 12px rgba(0,0,0,.30);
-    --shadow-lg: 0 8px 32px rgba(0,0,0,.50);
   }
 }
 
@@ -666,11 +636,14 @@ header h1 {
 
 /* ── Diagonal pattern — only its opacity is toggled on hover. The scroll
    animation runs continuously (it's invisible at opacity 0), so the pattern
-   keeps moving while it fades out on mouse-leave instead of freezing mid-fade. */
+   keeps moving while it fades out on mouse-leave instead of freezing mid-fade.
+   Two offset layers of the same tile, so each stat declares its glyph once in
+   --stat-glyph and this rule stacks it twice. */
 .about-stat::before {
   content: '';
   position: absolute;
   inset: -40%;
+  background-image: var(--stat-glyph), var(--stat-glyph);
   background-repeat: repeat;
   background-size: 90px 90px;
   background-position: 0 0, 45px 45px;
@@ -697,18 +670,8 @@ header h1 {
 }
 
 /* hourglass — experience */
-.about-stat[data-stat="exp"]::before {
-  background-image:
-    url("data:image/svg+xml,\
-%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 90' fill='none'\
- stroke='%23c96840' stroke-opacity='0.22' stroke-width='1.4'\
- stroke-linecap='round' stroke-linejoin='round'%3E\
-%3Cg transform='translate(19,19)'%3E\
-%3Cpath d='M15,15 L37,15 C37,21 29,25 26,26 C23,27 15,31 15,37 L37,37 C37,31 29,27 26,26 C23,25 15,21 15,15 Z'/%3E\
-%3Cline x1='13' y1='15' x2='39' y2='15'/%3E\
-%3Cline x1='13' y1='37' x2='39' y2='37'/%3E\
-%3C/g%3E%3C/svg%3E"),
-    url("data:image/svg+xml,\
+.about-stat[data-stat="exp"] {
+  --stat-glyph: url("data:image/svg+xml,\
 %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 90' fill='none'\
  stroke='%23c96840' stroke-opacity='0.22' stroke-width='1.4'\
  stroke-linecap='round' stroke-linejoin='round'%3E\
@@ -720,19 +683,8 @@ header h1 {
 }
 
 /* briefcase — industry sectors */
-.about-stat[data-stat="sectors"]::before {
-  background-image:
-    url("data:image/svg+xml,\
-%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 90' fill='none'\
- stroke='%23c96840' stroke-opacity='0.22' stroke-width='1.4'\
- stroke-linecap='round' stroke-linejoin='round'%3E\
-%3Cg transform='translate(19,19)'%3E\
-%3Crect x='13' y='22' width='26' height='18' rx='2'/%3E\
-%3Cpath d='M20,22 L20,18 Q20,15 23,15 L29,15 Q32,15 32,18 L32,22'/%3E\
-%3Cline x1='13' y1='30' x2='39' y2='30'/%3E\
-%3Crect x='24' y='28' width='5' height='4' rx='1'/%3E\
-%3C/g%3E%3C/svg%3E"),
-    url("data:image/svg+xml,\
+.about-stat[data-stat="sectors"] {
+  --stat-glyph: url("data:image/svg+xml,\
 %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 90' fill='none'\
  stroke='%23c96840' stroke-opacity='0.22' stroke-width='1.4'\
  stroke-linecap='round' stroke-linejoin='round'%3E\
@@ -745,19 +697,8 @@ header h1 {
 }
 
 /* pipe — pipelines */
-.about-stat[data-stat="pipelines"]::before {
-  background-image:
-    url("data:image/svg+xml,\
-%3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 90' fill='none'\
- stroke='%23c96840' stroke-opacity='0.22' stroke-width='1.4'\
- stroke-linecap='round' stroke-linejoin='round'%3E\
-%3Cg transform='translate(19,19)'%3E\
-%3Cline x1='13' y1='21' x2='39' y2='21'/%3E\
-%3Cline x1='13' y1='31' x2='39' y2='31'/%3E\
-%3Crect x='7' y='16' width='6' height='20'/%3E\
-%3Crect x='39' y='16' width='6' height='20'/%3E\
-%3C/g%3E%3C/svg%3E"),
-    url("data:image/svg+xml,\
+.about-stat[data-stat="pipelines"] {
+  --stat-glyph: url("data:image/svg+xml,\
 %3Csvg xmlns='http://www.w3.org/2000/svg' viewBox='0 0 90 90' fill='none'\
  stroke='%23c96840' stroke-opacity='0.22' stroke-width='1.4'\
  stroke-linecap='round' stroke-linejoin='round'%3E\
@@ -973,13 +914,6 @@ header h1 {
 #experience .timeline::before { left: calc(72px + 8px + 13.25px); }
 #education .timeline::before  { left: calc(44px + 8px + 13.25px); }
 
-/* Remove individual ::after elements (replaced by the continuous line) */
-#experience .timeline-item .timeline-track::after,
-#experience .timeline-group__header .timeline-track::after,
-#education .timeline-item .timeline-track::after {
-  display: none;
-}
-
 #education .timeline-item {
   grid-template-columns: 44px 28px 1fr;
 }
@@ -1098,13 +1032,6 @@ header h1 {
 .timeline-header h3 {
   font-size: clamp(11px, 2.5vw, 13px);
   font-weight: 600;
-}
-
-.timeline-role {
-  display: flex;
-  align-items: center;
-  flex-wrap: wrap;
-  gap: 8px;
 }
 
 .company {
@@ -1397,7 +1324,9 @@ a.company:hover {
   -webkit-backdrop-filter: blur(5px);
   -webkit-mask-image: linear-gradient(to right, transparent 0%, black 45%);
   mask-image: linear-gradient(to right, transparent 0%, black 45%);
-  background: linear-gradient(to right, rgba(250,245,240,0) 0%, rgba(250,245,240,0.55) 45%);
+  background: linear-gradient(to right,
+    light-dark(rgba(250,245,240,0),    rgba(53,44,34,0))    0%,
+    light-dark(rgba(250,245,240,0.55), rgba(53,44,34,0.55)) 45%);
 }
 
 .overlay-github {
@@ -1442,16 +1371,6 @@ a.company:hover {
   border-radius: var(--radius-sm);
 }
 
-[data-theme="dark"] .project-overlay {
-  background: linear-gradient(to right, rgba(53,44,34,0) 0%, rgba(53,44,34,0.55) 45%);
-}
-
-@media (prefers-color-scheme: dark) {
-  :root:not([data-theme="light"]) .project-overlay {
-    background: linear-gradient(to right, rgba(53,44,34,0) 0%, rgba(53,44,34,0.55) 45%);
-  }
-}
-
 .project-header {
   margin-bottom: 4px;
   display: flex;
@@ -1465,7 +1384,6 @@ a.company:hover {
   font-weight: 700;
 }
 
-.project-title-sep { display: none; }
 .project-title-sub {
   display: block;
   font-size: 0.82em;
@@ -2194,7 +2112,7 @@ footer a:not(.back-to-top):hover {
 }
 .stack-item:hover > img,
 .stack-item:hover > svg,
-.stack-item:hover > span:not(.skill-dots) {
+.stack-item:hover > span {
   filter: blur(2px);
   opacity: 0.2;
 }
@@ -2226,7 +2144,7 @@ footer a:not(.back-to-top):hover {
 }
 .stack-item[data-level="1"] > img,
 .stack-item[data-level="1"] > svg,
-.stack-item[data-level="1"] > span:not(.skill-dots) {
+.stack-item[data-level="1"] > span {
   opacity: 0.42;
 }
 /* Desaturate Familiar icons by appending grayscale() to the theme-aware
@@ -2237,7 +2155,7 @@ footer a:not(.back-to-top):hover {
 }
 .stack-item[data-level="1"]:hover > img,
 .stack-item[data-level="1"]:hover > svg,
-.stack-item[data-level="1"]:hover > span:not(.skill-dots) {
+.stack-item[data-level="1"]:hover > span {
   filter: blur(2px);
   opacity: 0.2;
 }
@@ -2258,9 +2176,6 @@ footer a:not(.back-to-top):hover {
   line-height: 1.2;
   transition: filter .2s, opacity .2s;
 }
-
-/* ── Skill dots — hidden, replaced by top stripe ── */
-.skill-dots { display: none; }
 
 /* ── Skill → experience cross-filter ── */
 .timeline-subitem,
@@ -2533,8 +2448,6 @@ footer a:not(.back-to-top):hover {
 
   .edu-abbr   { display: none; }
   .date-long  { display: none; }
-  .edu-abbr   { display: none; }
-  .date-long  { display: none; }
   .date-short { display: inline; }
 
   .avatar,
@@ -2802,11 +2715,6 @@ footer a:not(.back-to-top):hover {
   /* Skill filter: never print a filtered/dimmed timeline */
   .skill-filter-pill { display: none !important; }
   .skill-dim { opacity: 1 !important; }
-
-  .project-card:hover > *:not(.project-overlay) {
-    filter: none !important;
-    opacity: 1 !important;
-  }
 
   a { color: inherit !important; }
   a[href]::after { content: none !important; }
