@@ -1,6 +1,6 @@
-# alexiscolin.fr
+# alexiscolin.com
 
-Personal portfolio & resume website — [alexiscolin.fr](https://alexiscolin.fr)
+Personal portfolio & resume website — [alexiscolin.com](https://alexiscolin.com)
 
 ## Stack
 

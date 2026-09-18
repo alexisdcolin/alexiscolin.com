@@ -1,4 +1,4 @@
 User-agent: *
 Allow: /
 
-Sitemap: https://alexiscolin.fr/sitemap.xml
+Sitemap: https://alexiscolin.com/sitemap.xml

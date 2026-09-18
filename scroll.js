@@ -783,11 +783,11 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     { name: 'projects.swarm.title.main',  sub: 'projects.swarm.title.sub' },
   ];
   const SOCIALS = {
-    github:    'https://github.com/alexiscolinfr',
-    linkedin:  'https://www.linkedin.com/in/alexiscolinfr',
-    instagram: 'https://www.instagram.com/alexiscolinfr',
-    threads:   'https://www.threads.net/@alexiscolinfr',
-    x:         'https://x.com/alexiscolinfr',
+    github:    'https://github.com/alexisdcolin',
+    linkedin:  'https://www.linkedin.com/in/alexisdcolin',
+    instagram: 'https://www.instagram.com/alexisdcolin',
+    threads:   'https://www.threads.com/@alexisdcolin',
+    x:         'https://x.com/alexisdcolin',
   };
 
   // Terminal-local copy; page content comes from the shared t() above
@@ -905,8 +905,8 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       print([
         `email     contact@alexiscolin.fr`,
         `${tt().lblPhone.padEnd(9)} +1 (438) 543-6098`,
-        `github    github.com/alexiscolinfr`,
-        `linkedin  linkedin.com/in/alexiscolinfr`,
+        `github    github.com/alexisdcolin`,
+        `linkedin  linkedin.com/in/alexisdcolin`,
       ]);
     },
 
