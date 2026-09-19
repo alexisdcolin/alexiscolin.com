@@ -12,6 +12,9 @@ Vanilla HTML / CSS / JavaScript — no framework, no build step.
 | `style.css` | All styles (responsive, dark mode, animations) |
 | `scroll.js` | Nav, skills rendering, counters, interactions, keyboard shortcuts, terminal easter egg |
 | `i18n.js` | FR / EN translations and language switching |
+| `skills-data.js` | Skills catalogue, shared by the site and the CV |
+| `cv.html` `cv.css` `cv.js` | Print view of the CV — wording reused from `i18n.js` |
+| `cv-refs.enc` | Referees, AES-GCM encrypted — unlocked in `cv.html` with a passphrase |
 
 ## Features
 
@@ -23,6 +26,8 @@ Vanilla HTML / CSS / JavaScript — no framework, no build step.
 - **Timeline** — git-style branching for multi-role positions
 - **Contact form** — AJAX via Formspree, client-side validation
 - **Privacy** — no cookies at all; traffic measured with Cloudflare Web Analytics, so no consent banner
+- **CV** — one source: `cv.html` reuses the site's own wording and skills, and prints straight to PDF from the browser
+- **References** — shipped as AES-GCM ciphertext and decrypted in the page with a passphrase, so a static host never exposes the referees' contact details
 - **Terminal easter egg** — fake zsh shell (`` ` `` / `$` or the `>_` footer button) with ~15 commands to browse the CV, open socials, switch lang/theme and navigate sections
 
 ## Development

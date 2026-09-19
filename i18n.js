@@ -39,7 +39,7 @@ const translations = {
     'hero.role':           'Développeur Data & IA',
     'hero.location':       'Montréal, QC',
     'hero.location.short': 'Montréal',
-    'links.cv':           'Télécharger le CV',
+    'links.cv':           'CV imprimable',
     'status.available':   'Disponible immédiatement',
     'status.open':        'En poste · À l\'écoute du marché',
     'status.unavailable': 'Non disponible pour le moment',
@@ -212,14 +212,30 @@ const translations = {
     'aria.terminal.max':   'Agrandir le terminal',
     'aria.terminal.input': 'Commande',
 
-    // Cookie banner
+    // CV print view
+    'cv.back':  'Retour au site',
+    'cv.print': 'Imprimer / PDF',
+    // exp.laps.total bundles duration, city and a flag emoji; the CV lays
+    // those out in separate slots and has no use for the emoji.
+    'cv.laps.duration':  currentJobDuration('fr'),
+    'cv.bialr.duration': '3 ans 4 mois',
+    'cv.tagline':   'De leur source jusqu\'aux agents IA : des données fiables, gouvernées, dignes de confiance',
+    'cv.refs.title': 'Références',
+    // Names and personal contact details stay out of a public repository;
+    // the nominative version goes in the copy sent to a recruiter.
+    'cv.refs.body':  'Disponibles sur demande.',
+    'cv.refs.unlock': 'Références',
+    'cv.refs.lock':   'Verrouiller',
+    'cv.refs.prompt': 'Phrase de passe des références',
+    'cv.refs.wrong':  'Phrase de passe incorrecte.',
+    'cv.refs.absent': 'Aucun fichier de références chiffré n\'a été trouvé.',
   },
 
   en: {
     'hero.role':           'Data & AI Engineer',
     'hero.location':       'Montreal, QC',
     'hero.location.short': 'Montreal',
-    'links.cv':           'Download CV',
+    'links.cv':           'Printable CV',
     'status.available':   'Available now',
     'status.open':        'Employed · Open to opportunities',
     'status.unavailable': 'Not available at the moment',
@@ -392,7 +408,19 @@ const translations = {
     'aria.terminal.max':   'Maximize the terminal',
     'aria.terminal.input': 'Command',
 
-    // Cookie banner
+    // CV print view
+    'cv.back':  'Back to site',
+    'cv.print': 'Print / PDF',
+    'cv.laps.duration':  currentJobDuration('en'),
+    'cv.bialr.duration': '3 yrs 4 mos',
+    'cv.tagline':   'From their source to AI agents: data that is reliable, governed and trustworthy',
+    'cv.refs.title': 'References',
+    'cv.refs.body':  'Available on request.',
+    'cv.refs.unlock': 'References',
+    'cv.refs.lock':   'Lock',
+    'cv.refs.prompt': 'References passphrase',
+    'cv.refs.wrong':  'Wrong passphrase.',
+    'cv.refs.absent': 'No encrypted references file was found.',
   }
 };
 
@@ -417,9 +445,9 @@ function applyLang(lang) {
     });
   });
 
-  // CV button — swap href to matching language file
+  // CV button — open the print view already in the right language
   const cvBtn = document.getElementById('cvDownload');
-  if (cvBtn) cvBtn.href = `assets/cv-${lang}.pdf`;
+  if (cvBtn) cvBtn.href = `/cv.html?lang=${lang}`;
 
   // <html lang> + toggle button state
   document.documentElement.lang = lang;
@@ -436,7 +464,8 @@ function applyLang(lang) {
 let langSwitching = false;
 const FADE_MS = 130; // keep in sync with #pageWrap transition in style.css
 
-document.getElementById('langToggle').addEventListener('click', () => {
+const langToggleBtn = document.getElementById('langToggle');
+if (langToggleBtn) langToggleBtn.addEventListener('click', () => {
   const next = currentLang === 'fr' ? 'en' : 'fr';
 
   // Reduced motion: swap instantly, no animation.

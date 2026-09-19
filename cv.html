@@ -1,0 +1,270 @@
+<!DOCTYPE html>
+<html lang="fr">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>CV — Alexis Colin</title>
+  <meta name="description" content="CV d'Alexis Colin, Data &amp; AI Engineer à Montréal." />
+  <!-- Print view of the CV: not a landing page, keep it out of the index -->
+  <meta name="robots" content="noindex, follow" />
+  <link rel="icon" href="/assets/favicon.ico" sizes="any" />
+  <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
+  <link rel="stylesheet" href="/cv.css?v=11" />
+  <!-- Cloudflare Web Analytics — cookieless, no consent banner needed -->
+  <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1e7d4c7d044344bfbb5808d2bf1a1fc0"}'></script>
+</head>
+<body>
+
+  <!-- Icon sprite; display:none keeps it out of both flow and print -->
+  <svg xmlns="http://www.w3.org/2000/svg" style="display:none" aria-hidden="true">
+    <symbol id="i-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
+    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
+    <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
+    <symbol id="i-in" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></symbol>
+    <symbol id="i-unlock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol>
+  </svg>
+
+  <!-- Screen-only controls; window.print() is what produces the PDF -->
+  <div class="cv-toolbar" data-screen-only>
+    <a class="cv-toolbar__link" href="/">← <span data-i18n="cv.back">Retour au site</span></a>
+    <div class="cv-toolbar__actions">
+      <button type="button" id="langToggle" class="cv-toolbar__btn" aria-label="Switch language">
+        <span data-lang="fr">FR</span><span class="cv-toolbar__sep">/</span><span data-lang="en">EN</span>
+      </button>
+      <button type="button" id="refsUnlock" class="cv-toolbar__btn">
+        <svg class="ico" aria-hidden="true"><use href="#i-unlock"/></svg>
+        <span data-i18n="cv.refs.unlock">Références</span>
+      </button>
+      <button type="button" id="cvPrint" class="cv-toolbar__btn cv-toolbar__btn--accent">
+        <span data-i18n="cv.print">Imprimer / PDF</span>
+      </button>
+    </div>
+  </div>
+
+  <article class="cv">
+
+    <header class="cv-head">
+      <h1 class="cv-name">Alexis Colin</h1>
+      <p class="cv-role" data-i18n="hero.role">Développeur Data &amp; IA</p>
+      <p class="cv-tagline" data-i18n="cv.tagline">De leur source jusqu'aux agents IA : des données fiables, gouvernées, dignes de confiance</p>
+      <ul class="cv-contact">
+        <li><svg class="ico"><use href="#i-mail"/></svg><a href="mailto:contact@alexiscolin.com">contact@alexiscolin.com</a></li>
+        <li><svg class="ico"><use href="#i-phone"/></svg><a href="tel:+14385436098">(438) 543-6098</a></li>
+        <li><svg class="ico"><use href="#i-pin"/></svg><span data-i18n="hero.location.short">Montréal</span></li>
+        <li><svg class="ico"><use href="#i-link"/></svg><a href="https://alexiscolin.com">alexiscolin.com</a></li>
+        <li><svg class="ico"><use href="#i-in"/></svg><a href="https://www.linkedin.com/in/alexisdcolin">alexisdcolin</a></li>
+        <li><svg class="ico"><use href="#i-gh"/></svg><a href="https://github.com/alexisdcolin">alexisdcolin</a></li>
+      </ul>
+    </header>
+
+    <!-- ═══════════ EXPÉRIENCE ═══════════ -->
+    <section class="cv-section">
+      <h2 class="cv-h2" data-i18n="exp.title">Expérience</h2>
+
+      <div class="cv-entry">
+        <h3 class="cv-entry__title" data-i18n="exp.laps.role">Développeur Data &amp; IA</h3>
+        <p class="cv-entry__org">Laps</p>
+        <p class="cv-entry__meta">
+          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span> · <span data-i18n="cv.laps.duration">2 ans 7 mois</span></span>
+          <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg><span data-i18n="hero.location">Montréal, QC</span></span>
+        </p>
+        <p class="cv-entry__desc" data-i18n="exp.laps.desc">Conception et mise en place de l'ensemble de l'infrastructure de données de Laps, réseau e-commerce spécialisé dans le matériel de golf, depuis l'ingestion et le traitement jusqu'à la valorisation des données via des rapports stratégiques et opérationnels et leur exposition aux assistants IA (serveur MCP).</p>
+        <ul class="cv-entry__list">
+          <li data-i18n="exp.laps.li1">Conception, déploiement et automatisation de flux de données en Python sur AWS</li>
+          <li data-i18n="exp.laps.li2">Modélisation et implémentation d'un entrepôt de données centralisé</li>
+          <li data-i18n="exp.laps.li3">Développement de rapports et tableaux de bord opérationnels avec Grafana</li>
+          <li data-i18n="exp.laps.li4">Développement d'un serveur MCP en Python connectant l'entrepôt de données aux assistants IA, avec gouvernance SQL et masquage des données sensibles</li>
+        </ul>
+      </div>
+
+      <!-- Three successive roles at one company: grouped so the CV reads as a
+           progression rather than as three unrelated employers. -->
+      <div class="cv-group">
+        <div class="cv-group__head">
+          <h3 class="cv-group__company">BIAL-R</h3>
+          <p class="cv-entry__meta">
+            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.bialr.start">Sept. 2020</span> – <span data-i18n="exp.bialr.end">Déc. 2023</span> · <span data-i18n="cv.bialr.duration">3 ans 4 mois</span></span>
+            <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg>Lyon</span>
+          </p>
+        </div>
+
+        <div class="cv-entry">
+          <h3 class="cv-entry__title" data-i18n="exp.bialr1.role">Développeur Data</h3>
+          <p class="cv-entry__org"><span data-i18n="exp.client.prep">chez</span> <span data-i18n="exp.bialr1.client">Bial-S</span></p>
+          <p class="cv-entry__meta">
+            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.bialr1.start">Janv. 2023</span> – <span data-i18n="exp.bialr1.end">Déc. 2023</span> · <span data-i18n="exp.bialr1.meta">1 an</span></span>
+          </p>
+          <p class="cv-entry__desc" data-i18n="exp.bialr1.desc">Participation à l'industrialisation d'une plateforme décisionnelle Cloud automatisée sur AWS, permettant l'ingestion, la visualisation et l'analyse prédictive de données pour des Offices Publics de l'Habitat.</p>
+          <ul class="cv-entry__list">
+            <li data-i18n="exp.bialr1.li1">Conception, déploiement et automatisation de flux de données ETL avec Pentaho</li>
+            <li data-i18n="exp.bialr1.li2">Support transversal de la plateforme décisionnelle et intégration de nouveaux clients</li>
+            <li data-i18n="exp.bialr1.li3">Pilotage du CDS : gestion d'équipe, coordination des activités et amélioration continue</li>
+          </ul>
+        </div>
+
+        <div class="cv-entry">
+          <h3 class="cv-entry__title" data-i18n="exp.bialr2.role">Consultant ETL</h3>
+          <p class="cv-entry__org"><span data-i18n="exp.client.prep">chez</span> <span data-i18n="exp.bialr2.client">Clariane</span></p>
+          <p class="cv-entry__meta">
+            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.bialr2.start">Sept. 2021</span> – <span data-i18n="exp.bialr2.end">Déc. 2022</span> · <span data-i18n="exp.bialr2.meta">1 an 4 mois</span></span>
+          </p>
+          <p class="cv-entry__desc" data-i18n="exp.bialr2.desc">Référent MCO de l'ensemble des flux inter-applicatifs de Clariane, couvrant les domaines finance, RH, santé et relation client.</p>
+          <ul class="cv-entry__list">
+            <li data-i18n="exp.bialr2.li1">Développement et maintenance des flux inter-applicatifs avec Pentaho</li>
+            <li data-i18n="exp.bialr2.li2">Gestion des incidents de production : analyse, correction et reprise de données</li>
+            <li data-i18n="exp.bialr2.li3">Contribution à la migration des flux inter-applicatifs de Pentaho vers un ESB</li>
+          </ul>
+        </div>
+
+        <div class="cv-entry">
+          <h3 class="cv-entry__title" data-i18n="exp.bialr3.role">Consultant Data</h3>
+          <p class="cv-entry__org"><span data-i18n="exp.client.prep">chez</span> <span data-i18n="exp.bialr3.client">APRR</span></p>
+          <p class="cv-entry__meta">
+            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.bialr3.start">Sept. 2020</span> – <span data-i18n="exp.bialr3.end">Août 2021</span> · <span data-i18n="exp.bialr3.meta">1 an</span></span>
+          </p>
+          <p class="cv-entry__desc" data-i18n="exp.bialr3.desc">Alternance en dernière année de Master MIAGE, principalement réalisée sur des missions pour le client Autoroutes Paris-Rhin-Rhône (APRR) dans les domaines finance, péage, autoroute et relation clientèle.</p>
+          <ul class="cv-entry__list">
+            <li data-i18n="exp.bialr3.li1">Cartographie et mise en place d'une gouvernance des données</li>
+            <li data-i18n="exp.bialr3.li2">Développement et déploiement de rapports opérationnels</li>
+            <li data-i18n="exp.bialr3.li3">Conception et maintenance de flux ETL avec Pentaho</li>
+          </ul>
+        </div>
+
+      </div>
+
+      <div class="cv-entry">
+        <h3 class="cv-entry__title" data-i18n="exp.hyatt.role">Technicien Support IT</h3>
+        <p class="cv-entry__org">Park Hyatt Paris-Vendôme</p>
+        <p class="cv-entry__meta">
+          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.hyatt.start">Avr. 2018</span> – <span data-i18n="exp.hyatt.end">Juill. 2018</span></span>
+          <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg>Paris</span>
+        </p>
+        <p class="cv-entry__desc" data-i18n="exp.hyatt.desc">Stage de fin de DUT au sein du service informatique d'un palace parisien.</p>
+        <ul class="cv-entry__list">
+          <li data-i18n="exp.hyatt.li1">Maintenance et support du parc informatique (poste de travail, réseaux, serveurs)</li>
+          <li data-i18n="exp.hyatt.li2">Participation au déploiement de nouveaux projets IT</li>
+          <li data-i18n="exp.hyatt.li3">Contribution à la mise en place et au suivi des mesures de cybersécurité</li>
+        </ul>
+      </div>
+    </section>
+
+    <!-- ═══════════ COMPÉTENCES ═══════════ -->
+    <section class="cv-section">
+      <h2 class="cv-h2" data-i18n="skills.title">Compétences</h2>
+      <!-- Rendered by cv.js from the shared catalogue in skills-data.js -->
+      <div class="cv-skills" id="cvSkills"></div>
+    </section>
+
+    <!-- ═══════════ FORMATION ═══════════ -->
+    <section class="cv-section">
+      <h2 class="cv-h2" data-i18n="edu.title">Formation</h2>
+
+      <div class="cv-entry">
+        <h3 class="cv-entry__title" data-i18n="edu.miage.degree">Master Méthodes Informatiques Appliquées à la Gestion des Entreprises - MIAGE</h3>
+        <p class="cv-entry__org">UCBL — Université Claude Bernard Lyon 1</p>
+        <p class="cv-entry__meta">
+          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="edu.miage.dates">Sept. 2019 – Juin 2021</span></span>
+          <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg>Lyon</span>
+        </p>
+        <p class="cv-entry__desc" data-i18n="edu.miage.desc">Parcours Systèmes d'Information de Gestion de Santé.</p>
+      </div>
+
+      <div class="cv-entry">
+        <h3 class="cv-entry__title" data-i18n="edu.uqac.degree">Baccalauréat en Informatique</h3>
+        <p class="cv-entry__org">UQAC — Université du Québec à Chicoutimi</p>
+        <p class="cv-entry__meta">
+          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="edu.uqac.dates">Sept. 2018 – Juin 2019</span></span>
+          <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg>Chicoutimi, QC</span>
+        </p>
+        <p class="cv-entry__desc" data-i18n="edu.uqac.desc">Double diplômation DUETI avec l'Université de Versailles Saint-Quentin-en-Yvelines.</p>
+      </div>
+
+      <div class="cv-entry">
+        <h3 class="cv-entry__title" data-i18n="edu.dut.degree">Diplôme Universitaire de Technologie en Informatique</h3>
+        <p class="cv-entry__org">UVSQ — Université de Versailles Saint-Quentin-en-Yvelines</p>
+        <p class="cv-entry__meta">
+          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="edu.dut.dates">Sept. 2016 – Juin 2018</span></span>
+          <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg>Vélizy-Villacoublay</span>
+        </p>
+      </div>
+    </section>
+
+    <!-- ═══════════ PROJETS ═══════════ -->
+    <section class="cv-section">
+      <h2 class="cv-h2" data-i18n="projects.title">Projets</h2>
+
+      <div class="cv-entry">
+        <h3 class="cv-entry__title"><span data-i18n="projects.mcp.title.main">MCP Server</span> — <span data-i18n="projects.mcp.title.sub">Accès IA gouverné à l'entrepôt de données</span></h3>
+        <p class="cv-entry__org" data-i18n="projects.badge.pro">Professionnel</p>
+        <p class="cv-entry__meta">
+          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="projects.mcp.meta">Laps · Avr. – Juin 2026 · 3 mois</span></span>
+        </p>
+        <p class="cv-entry__desc" data-i18n="projects.mcp.desc">Développement d'un serveur MCP en Python (FastMCP) donnant aux assistants IA un accès gouverné à l'entrepôt de données de Laps.</p>
+      </div>
+
+      <div class="cv-entry">
+        <h3 class="cv-entry__title"><span data-i18n="projects.etl.title.main">AWS Lambda ETL</span> — <span data-i18n="projects.etl.title.sub">Framework de pipelines serverless</span></h3>
+        <p class="cv-entry__org" data-i18n="projects.badge.pro">Professionnel</p>
+        <p class="cv-entry__meta">
+          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="projects.etl.meta">Juin - Sept. 2025 · 4 mois</span></span>
+          <span class="cv-meta"><svg class="ico"><use href="#i-gh"/></svg><a href="https://github.com/alexisdcolin/AWS-Lambda-ETL">AWS-Lambda-ETL</a></span>
+        </p>
+        <p class="cv-entry__desc" data-i18n="projects.etl.desc">Développement d'un framework ETL serverless sur AWS Lambda, permettant la création de pipelines modulaires, évolutifs et économiques pour l'automatisation des flux de données.</p>
+      </div>
+
+    </section>
+
+    <!-- ═══════════ LANGUES ═══════════ -->
+    <section class="cv-section">
+      <h2 class="cv-h2" data-i18n="skills.languages">Langues</h2>
+      <div class="cv-langs">
+        <div class="cv-lang">
+          <span class="cv-lang__name" data-i18n="lang.french">Français</span>
+          <span class="cv-lang__level" data-i18n="lang.french.level">Natif</span>
+        </div>
+        <div class="cv-lang">
+          <span class="cv-lang__name" data-i18n="lang.english">Anglais</span>
+          <span class="cv-lang__level" data-i18n="lang.english.level">Courant</span>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ DIVERS ═══════════ -->
+    <section class="cv-section">
+      <h2 class="cv-h2" data-i18n="misc.title">Divers</h2>
+      <div class="cv-misc">
+        <div class="cv-misc__item">
+          <p class="cv-misc__title" data-i18n="misc.tt.title">Tennis de Table</p>
+          <p class="cv-misc__desc" data-i18n="misc.tt.desc">Activité pratiquée pendant plus de 10 ans en club.</p>
+        </div>
+        <div class="cv-misc__item">
+          <p class="cv-misc__title" data-i18n="misc.travel.title">Voyages</p>
+          <p class="cv-misc__desc" data-i18n="misc.travel.desc">Déjà 17 pays explorés, et bien d'autres à venir.</p>
+        </div>
+      </div>
+    </section>
+
+    <!-- ═══════════ RÉFÉRENCES ═══════════ -->
+    <!-- Names, personal emails and phone numbers belong in the copy sent to a
+         recruiter, not in a public repository. -->
+    <section class="cv-section">
+      <h2 class="cv-h2" data-i18n="cv.refs.title">Références</h2>
+      <div id="cvRefs">
+        <p class="cv-refs" data-i18n="cv.refs.body">Disponibles sur demande.</p>
+      </div>
+    </section>
+
+
+  </article>
+
+  <!-- Same load order as index.html: i18n.js defines translations / applyLang,
+       skills-data.js the shared catalogue, cv.js consumes both. -->
+  <script src="/i18n.js?v=27"></script>
+  <script src="/skills-data.js?v=1"></script>
+  <script src="/cv.js?v=9"></script>
+</body>
+</html>

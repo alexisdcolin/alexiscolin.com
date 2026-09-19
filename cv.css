@@ -1,0 +1,379 @@
+/* ═══════════════════════════════════════════
+   CV — print view
+   Single column on purpose: an ATS reads the PDF as one linear text flow, and
+   a side column interleaves skills into the middle of a job description.
+   Screen preview mimics the printed A4 page, so what you see is what prints.
+═══════════════════════════════════════════ */
+
+:root {
+  --cv-ink:    #2a2622;
+  --cv-muted:  #5d564f;
+  --cv-accent: #7c4a15;
+  --cv-rule:   #3f2a10;
+  --cv-hair:   #c9c2ba;
+  /* Same rule, one rank down: used between roles of a single employer */
+  --cv-hair-soft: #e0dad3;
+  --cv-chip:   #b8b0a6;
+  /* Humanist sans, close to the LaTeX original and free of any webfont to load */
+  --cv-sans:   -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+}
+
+*, *::before, *::after { box-sizing: border-box; }
+
+body {
+  margin: 0;
+  background: #e8e2db;
+  color: var(--cv-ink);
+  font-family: var(--cv-sans);
+  font-size: 9.6pt;
+  line-height: 1.34;
+  -webkit-text-size-adjust: 100%;
+}
+
+a { color: inherit; text-decoration: none; }
+
+.ico {
+  width: 1em;
+  height: 1em;
+  flex-shrink: 0;
+  fill: none;
+  stroke: currentColor;
+  stroke-width: 2;
+  stroke-linecap: round;
+  stroke-linejoin: round;
+  vertical-align: -0.12em;
+}
+
+/* ── Screen-only toolbar ── */
+.cv-toolbar {
+  position: sticky;
+  top: 0;
+  z-index: 10;
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  flex-wrap: wrap;
+  padding: 0.7rem 1rem;
+  background: #faf5f0;
+  border-bottom: 1px solid var(--cv-hair);
+  font-size: 12px;
+}
+
+.cv-toolbar__link { color: var(--cv-muted); }
+.cv-toolbar__link:hover { color: var(--cv-accent); }
+.cv-toolbar__actions { display: flex; align-items: center; gap: 0.5rem; }
+
+.cv-toolbar__btn {
+  display: inline-flex;
+  align-items: center;
+  gap: 0.4em;
+  padding: 0.35rem 0.8rem;
+  border: 1px solid var(--cv-hair);
+  border-radius: 6px;
+  background: transparent;
+  color: var(--cv-muted);
+  font-family: inherit;
+  font-size: 12px;
+  cursor: pointer;
+}
+.cv-toolbar__btn:hover { border-color: var(--cv-accent); color: var(--cv-accent); }
+
+/* The references button swaps its own label between two states — "References"
+   and "Lock" differ by a third — so it needs the same floor as the print
+   button, or the language toggle slides sideways on every unlock. */
+#refsUnlock { justify-content: center; min-width: 9.2em; }
+/* Wide enough for the longest label so the toolbar does not jump when the
+   language changes: "Imprimer / PDF" is a quarter wider than "Print / PDF",
+   and the toggle beside it would slide across on every switch. In em, so the
+   floor follows the font rather than a pixel value frozen at one size. */
+.cv-toolbar__btn--accent {
+  justify-content: center;
+  min-width: 9.5em;
+  border-color: transparent;
+  background: var(--cv-accent);
+  color: #fff;
+}
+.cv-toolbar__btn--accent:hover { background: var(--cv-rule); color: #fff; }
+.cv-toolbar__sep { opacity: 0.4; margin: 0 1px; }
+.cv-toolbar__btn [data-lang] { opacity: 0.45; }
+.cv-toolbar__btn [data-lang].active { opacity: 1; font-weight: 700; }
+
+/* ── The page ── */
+.cv {
+  max-width: 210mm;
+  margin: 1.5rem auto;
+  padding: 14mm 15mm;
+  background: #fff;
+  box-shadow: 0 2px 16px rgba(0,0,0,.12);
+}
+
+/* ── Header ── */
+.cv-head { margin-bottom: 0.9rem; }
+
+.cv-name {
+  margin: 0;
+  font-size: 27pt;
+  font-weight: 800;
+  line-height: 1;
+  letter-spacing: -0.5px;
+  text-transform: uppercase;
+}
+
+.cv-role {
+  margin: 0.35rem 0 0;
+  font-size: 13pt;
+  font-weight: 700;
+  color: var(--cv-accent);
+}
+
+.cv-tagline {
+  margin: 0.25rem 0 0.55rem;
+  font-size: 10pt;
+  font-weight: 700;
+}
+
+/* One single row on the printed page: the six items are kept short enough to
+   fit, the LinkedIn and GitHub entries showing the handle alone since the
+   icon already says which platform it is. On screen the row wraps rather
+   than overflow, the viewport being narrower than A4 on most windows. */
+.cv-contact {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.9rem;
+  margin: 0.2rem 0 0;
+  padding: 0;
+  list-style: none;
+  font-size: 8.4pt;
+}
+.cv-contact li { display: flex; align-items: center; gap: 0.32em; white-space: nowrap; }
+.cv-contact .ico { color: var(--cv-accent); }
+
+/* ── Sections ── */
+/* Eight sections: every tenth of a rem here is worth ~3mm over the document,
+   and the referenced version needs that margin to stay on two pages. */
+.cv-section { margin-top: 0.55rem; }
+
+.cv-h2 {
+  margin: 0 0 0.35rem;
+  padding-bottom: 0.08rem;
+  border-bottom: 1.5pt solid var(--cv-rule);
+  font-size: 13.5pt;
+  font-weight: 700;
+  line-height: 1.1;
+  text-transform: uppercase;
+  color: var(--cv-accent);
+}
+
+/* ── Entries (jobs, degrees, projects) ── */
+.cv-entry { padding-bottom: 0.4rem; }
+
+.cv-entry + .cv-entry {
+  margin-top: 0.4rem;
+  border-top: 1px dashed var(--cv-hair);
+  padding-top: 0.4rem;
+}
+
+.cv-entry__title {
+  margin: 0;
+  font-size: 11pt;
+  font-weight: 400;
+}
+
+.cv-entry__org {
+  margin: 0.08rem 0 0;
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: var(--cv-accent);
+}
+
+.cv-entry__meta {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.15rem 1.6rem;
+  margin: 0.15rem 0 0.25rem;
+  font-size: 8.6pt;
+  color: var(--cv-muted);
+}
+.cv-meta { display: flex; align-items: center; gap: 0.35em; }
+
+.cv-entry__desc { margin: 0 0 0.2rem; }
+
+.cv-entry__list {
+  margin: 0;
+  padding-left: 1.05rem;
+}
+.cv-entry__list li { margin-bottom: 0.05rem; }
+
+/* ── A company with several successive roles ── */
+.cv-group { padding-bottom: 0.4rem; }
+.cv-entry + .cv-group,
+.cv-group + .cv-entry {
+  margin-top: 0.4rem;
+  border-top: 1px dashed var(--cv-hair);
+  padding-top: 0.4rem;
+}
+
+/* An employer looks the same whether it carries one role or three: same size,
+   weight and colour as the company line of a standalone entry. */
+.cv-group__company {
+  margin: 0;
+  font-size: 9.5pt;
+  font-weight: 700;
+  color: var(--cv-accent);
+}
+.cv-group__head .cv-entry__meta { margin-bottom: 0.3rem; }
+
+/* Roles align on the margin like any other entry. What sets them apart from
+   a change of employer is the separator: a short centred rule instead of the
+   full-width dashed one, dotted and in a paler grey. */
+.cv-group .cv-entry { padding: 0 0 0.3rem; }
+
+.cv-group .cv-entry + .cv-entry {
+  position: relative;
+  margin-top: 0.35rem;
+  border-top: 0;
+  padding-top: 0.35rem;
+}
+.cv-group .cv-entry + .cv-entry::before {
+  content: '';
+  position: absolute;
+  top: 0;
+  left: 0;
+  right: 0;
+  width: 60%;
+  /* auto margins rather than a transform: centring that survives print
+     without relying on the engine compositing a transformed box. */
+  margin: 0 auto;
+  border-top: 0.5pt dotted var(--cv-hair-soft);
+}
+.cv-group .cv-entry:last-child { padding-bottom: 0; }
+
+/* Role titles keep the shared .cv-entry__title treatment — only the client
+   line differs, being a client and not an employer. */
+.cv-group .cv-entry__org { font-weight: 400; color: var(--cv-muted); }
+
+/* ── Skills ── */
+.cv-skills {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.5rem 1.6rem;
+}
+
+.cv-skills__cat {
+  display: flex;
+  align-items: center;
+  gap: 0.4em;
+  margin: 0 0 0.22rem;
+  font-size: 9.5pt;
+  font-weight: 700;
+}
+.cv-skills__cat::before {
+  content: '';
+  width: 4px;
+  height: 4px;
+  border-radius: 50%;
+  background: var(--cv-accent);
+}
+
+.cv-skills__chips { display: flex; flex-wrap: wrap; gap: 0.25rem; }
+
+.cv-chip {
+  padding: 0.08rem 0.45rem;
+  border: 0.8pt solid var(--cv-chip);
+  border-radius: 3px;
+  font-size: 8.8pt;
+  white-space: nowrap;
+}
+
+/* ── Languages ── */
+.cv-langs {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.3rem 1.6rem;
+}
+
+.cv-lang {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+.cv-lang__name { font-weight: 700; }
+.cv-lang__level { color: var(--cv-muted); font-size: 9pt; }
+
+
+/* ── Misc ── */
+.cv-misc {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem 1.6rem;
+}
+.cv-misc__title { margin: 0; font-weight: 700; }
+.cv-misc__desc  { margin: 0; color: var(--cv-muted); font-size: 9.5pt; }
+
+.cv-refs { margin: 0; color: var(--cv-muted); }
+
+/* Referees, once decrypted */
+.cv-refs-list {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.4rem 1.6rem;
+}
+.cv-ref__name { margin: 0; font-weight: 700; }
+.cv-ref__line {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.1rem 0.4em;
+  margin: 0;
+  color: var(--cv-muted);
+  font-size: 8.8pt;
+}
+/* Space before the phone icon, none before its number */
+.cv-ref__line .ico + .ico { margin-left: 0.5em; }
+.cv-ref__line .ico { color: var(--cv-accent); }
+.cv-ref__role { margin: 0; color: var(--cv-muted); font-size: 9pt; }
+
+/* ── Small screens: the A4 frame stops helping ── */
+@media (max-width: 560px) {
+  .cv { margin: 0; padding: 20px 16px; box-shadow: none; }
+  .cv-name { font-size: 24pt; }
+  .cv-skills, .cv-langs, .cv-misc, .cv-refs-list { grid-template-columns: 1fr; }
+  .cv-entry__meta { gap: 0.15rem 0.9rem; }
+}
+
+/* ═══════════════════════════════════════════
+   PRINT — this is the actual deliverable
+═══════════════════════════════════════════ */
+@page {
+  size: A4;
+  margin: 13mm 14mm;
+}
+
+@media print {
+  body { background: #fff; font-size: 9.2pt; line-height: 1.3; }
+
+  [data-screen-only] { display: none !important; }
+
+  .cv { max-width: none; margin: 0; padding: 0; box-shadow: none; }
+
+  /* At A4 width the six items fit, spread edge to edge */
+  .cv-contact { flex-wrap: nowrap; justify-content: space-between; }
+
+  /* A heading stranded at the foot of a page looks amateurish, so headings
+     and entry titles never end a page. Job entries themselves DO split: at
+     ~48mm each, forbidding it strands one whole entry per page break and
+     that wasted whitespace is what pushed the PDF onto a third page.
+     orphans/widows keep the split from leaving one lonely line behind. */
+  .cv-h2 { break-after: avoid; }
+  .cv-entry { break-inside: auto; orphans: 3; widows: 3; }
+  .cv-group__head { break-after: avoid; }
+  .cv-lang, .cv-misc__item, .cv-ref { break-inside: avoid; }
+  .cv-entry__title, .cv-entry__org, .cv-entry__meta { break-after: avoid; }
+  .cv-entry__list { orphans: 2; widows: 2; }
+  .cv-head { break-after: avoid; }
+
+  /* Links stay clickable; printing their href inline would bloat a document
+     whose header already lists every address. */
+  a { color: inherit; text-decoration: none; }
+}
