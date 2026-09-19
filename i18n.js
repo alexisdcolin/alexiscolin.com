@@ -213,10 +213,6 @@ const translations = {
     'aria.terminal.input': 'Commande',
 
     // Cookie banner
-    'cookie.text':   'Ce site utilise des cookies pour mesurer son audience.',
-    'cookie.more':   'En savoir plus',
-    'cookie.accept': 'Accepter',
-    'cookie.refuse': 'Refuser',
   },
 
   en: {
@@ -397,10 +393,6 @@ const translations = {
     'aria.terminal.input': 'Command',
 
     // Cookie banner
-    'cookie.text':   'This site uses cookies to measure its audience.',
-    'cookie.more':   'Learn more',
-    'cookie.accept': 'Accept',
-    'cookie.refuse': 'Decline',
   }
 };
 

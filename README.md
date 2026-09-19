@@ -12,7 +12,6 @@ Vanilla HTML / CSS / JavaScript — no framework, no build step.
 | `style.css` | All styles (responsive, dark mode, animations) |
 | `scroll.js` | Nav, skills rendering, counters, interactions, keyboard shortcuts, terminal easter egg |
 | `i18n.js` | FR / EN translations and language switching |
-| `cookie-banner.js` | GDPR cookie consent + Google Analytics loader |
 
 ## Features
 
@@ -23,7 +22,7 @@ Vanilla HTML / CSS / JavaScript — no framework, no build step.
 - **Skills** — dynamic grid with proficiency levels and usage duration
 - **Timeline** — git-style branching for multi-role positions
 - **Contact form** — AJAX via Formspree, client-side validation
-- **GDPR** — cookie consent banner, GA loaded only on acceptance
+- **Privacy** — no cookies at all; traffic measured with Cloudflare Web Analytics, so no consent banner
 - **Terminal easter egg** — fake zsh shell (`` ` `` / `$` or the `>_` footer button) with ~15 commands to browse the CV, open socials, switch lang/theme and navigate sections
 
 ## Development
