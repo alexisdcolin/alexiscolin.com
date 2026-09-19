@@ -1,0 +1,12 @@
+# Politique de divulgation de vulnérabilités — alexiscolin.com
+# Vulnerability disclosure policy — alexiscolin.com
+
+Contact: mailto:contact@alexiscolin.com
+Expires: 2027-09-19T00:00:00.000Z
+Preferred-Languages: fr, en
+Canonical: https://alexiscolin.com/.well-known/security.txt
+
+# Site statique hébergé sur GitHub Pages.
+# Merci de signaler tout problème de sécurité à l'adresse ci-dessus.
+# Static site hosted on GitHub Pages.
+# Please report any security issue to the address above.
