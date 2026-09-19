@@ -903,7 +903,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
 
     contact() {
       print([
-        `email     contact@alexiscolin.fr`,
+        `email     contact@alexiscolin.com`,
         `${tt().lblPhone.padEnd(9)} +1 (438) 543-6098`,
         `github    github.com/alexisdcolin`,
         `linkedin  linkedin.com/in/alexisdcolin`,
