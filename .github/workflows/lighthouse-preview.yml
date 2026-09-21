@@ -1,0 +1,35 @@
+name: Lighthouse (preview)
+
+# Cloudflare Pages publie un GitHub deployment à chaque build. On attend qu'il
+# soit réellement en ligne, puis on audite l'URL servie par le CDN — contrairement
+# au job `staticDistDir` de ci.yml, celui-ci voit les vrais en-têtes de `_headers`,
+# donc une CSP qui casserait un script se verrait ici.
+#
+# Note : un workflow `deployment_status` ne se déclenche que depuis la branche par
+# défaut. Il ne tournera donc qu'une fois cette branche mergée dans main.
+
+on:
+  deployment_status:
+
+permissions:
+  contents: read
+
+jobs:
+  lighthouse:
+    name: Lighthouse
+    # GitHub Pages émet aussi des deployment_status : on l'exclut pour ne pas
+    # auditer la prod pendant la période où les deux hébergeurs coexistent.
+    if: >-
+      github.event.deployment_status.state == 'success'
+      && github.event.deployment_status.environment != 'github-pages'
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      - uses: treosh/lighthouse-ci-action@v12
+        with:
+          urls: |
+            ${{ github.event.deployment_status.environment_url }}
+            ${{ github.event.deployment_status.environment_url }}/privacy.html
+          configPath: .lighthouserc.preview.json
+          uploadArtifacts: true
+          temporaryPublicStorage: true

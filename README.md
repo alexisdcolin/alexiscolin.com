@@ -15,6 +15,7 @@ Vanilla HTML / CSS / JavaScript — no framework, no build step.
 | `skills-data.js` | Skills catalogue, shared by the site and the CV |
 | `cv.html` `cv.css` `cv.js` | Print view of the CV — wording reused from `i18n.js` |
 | `cv-refs.enc` | Referees, AES-GCM encrypted — unlocked in `cv.html` with a passphrase |
+| `_headers` | Security + cache HTTP headers served by Cloudflare Pages |
 
 ## Features
 
@@ -40,4 +41,6 @@ npx serve .
 
 ## Deployment
 
-Hosted on GitHub Pages via the `main` branch. Pushing to `main` deploys automatically.
+Hosted on Cloudflare Pages, built from the `main` branch — no build command, output directory `/`. Pushing to `main` deploys automatically; every pull request gets its own preview URL.
+
+HTTP response headers (security + cache) live in `_headers`. The `www` → apex redirect and the `alexiscolin.fr` → `.com` redirect are Cloudflare Redirect Rules, not repo files — `_redirects` cannot match a hostname.
