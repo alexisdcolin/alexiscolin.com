@@ -447,7 +447,7 @@ function applyLang(lang) {
 
   // CV button — open the print view already in the right language
   const cvBtn = document.getElementById('cvDownload');
-  if (cvBtn) cvBtn.href = `/cv.html?lang=${lang}`;
+  if (cvBtn) cvBtn.href = `/cv?lang=${lang}`;
 
   // <html lang> + toggle button state
   document.documentElement.lang = lang;

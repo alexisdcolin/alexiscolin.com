@@ -1,8 +1,13 @@
 # En-têtes HTTP — alexiscolin.com
 # Doc : https://developers.cloudflare.com/pages/configuration/headers/
 # Limites : 100 règles, 2 000 caractères par ligne.
-# ATTENTION : ne jamais définir le même en-tête dans deux blocs qui matchent la
-# même URL — Pages concatène les valeurs avec une virgule au lieu de remplacer.
+#
+# ATTENTION : un en-tête défini dans deux blocs qui matchent la même URL n'est
+# pas remplacé, il est concaténé avec une virgule. Les splats sont gourmands et
+# traversent les répertoires : /*.js matche aussi /assets/sous-dossier/x.js.
+# Les blocs Cache-Control ci-dessous sont donc volontairement disjoints — un
+# fichier ne doit jamais en matcher deux. Le script de vérification est décrit
+# dans le README.
 
 /*
   Strict-Transport-Security: max-age=31536000; includeSubDomains
@@ -10,15 +15,32 @@
   X-Frame-Options: DENY
   Referrer-Policy: strict-origin-when-cross-origin
   Cross-Origin-Opener-Policy: same-origin
-  Permissions-Policy: accelerometer=(), autoplay=(), camera=(), display-capture=(), encrypted-media=(), geolocation=(), gyroscope=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=()
+  Permissions-Policy: accelerometer=(), autoplay=(), browsing-topics=(), camera=(), display-capture=(), encrypted-media=(), geolocation=(), gyroscope=(), interest-cohort=(), magnetometer=(), microphone=(), midi=(), payment=(), usb=()
   Content-Security-Policy: default-src 'self'; script-src 'self' 'unsafe-inline' https://static.cloudflareinsights.com; style-src 'self' 'unsafe-inline'; img-src 'self' data:; font-src 'self'; connect-src 'self' https://formspree.io https://cloudflareinsights.com; form-action 'self' https://formspree.io; frame-ancestors 'none'; base-uri 'none'; object-src 'none'; manifest-src 'self'; upgrade-insecure-requests
 
-# Polices, icônes, photos : noms de fichiers stables, contenu jamais réécrit.
-# Si un jour tu remplaces un fichier sans changer son nom, renomme-le.
-/assets/*
+# Contenu figé : le fichier est remplacé par un nouveau nom, jamais réécrit.
+/assets/fonts/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/icons/*
+  Cache-Control: public, max-age=31536000, immutable
+/assets/*.webp
+  Cache-Control: public, max-age=31536000, immutable
+/assets/*.jpg
+  Cache-Control: public, max-age=31536000, immutable
+/assets/*.png
   Cache-Control: public, max-age=31536000, immutable
 
-# CSS et JS sont busting par ?v=N dans le HTML : une semaine, puis revalidation.
+# Métadonnées éditables à URL stable : surtout pas d'immutable. Le manifeste
+# fait partie de l'identité d'une PWA installée, on ne peut pas le renommer
+# pour casser le cache — il doit donc rester revalidable.
+/assets/site.webmanifest
+  Cache-Control: public, max-age=86400
+/assets/favicon.ico
+  Cache-Control: public, max-age=604800
+/assets/favicon.svg
+  Cache-Control: public, max-age=604800
+
+# CSS et JS sont bustés par ?v=N dans le HTML : une semaine, puis revalidation.
 /*.css
   Cache-Control: public, max-age=604800
 /*.js

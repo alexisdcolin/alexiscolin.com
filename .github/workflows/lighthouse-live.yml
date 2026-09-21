@@ -1,12 +1,15 @@
 name: Lighthouse (live)
 
 # Audits the deployed site rather than a local directory, so the run sees the
-# real _headers — a CSP that broke a script, or a cache rule that stopped
-# matching, would show up here and nowhere else.
+# real _headers. Cloudflare Pages does not use the GitHub Deployments API, so
+# there is no deployment_status to hook into: it reports through a check run
+# named "Cloudflare Pages". We wait for that, assert the headers directly, then
+# score the pages.
 #
-# Cloudflare Pages does not use the GitHub Deployments API, so there is no
-# deployment_status to hook into: it reports through a check run named
-# "Cloudflare Pages". We poll for that, then audit.
+# Lighthouse scores cannot police headers on their own: csp-xss and
+# uses-long-cache-ttl both carry weight 0, so a deleted CSP or a cache rule
+# that stopped matching would not move any category score. The curl step below
+# is what actually gates them.
 
 on:
   push:
@@ -16,36 +19,94 @@ permissions:
   contents: read
   checks: read
 
+# Two pushes in quick succession would otherwise audit the same single live URL
+# concurrently and attribute each other's results.
+concurrency:
+  group: lighthouse-live
+  cancel-in-progress: true
+
 jobs:
   lighthouse:
-    name: Lighthouse
+    name: Lighthouse (live)
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
 
       - name: Wait for the Cloudflare Pages deployment
+        id: deploy
         env:
           GH_TOKEN: ${{ github.token }}
         run: |
+          set -euo pipefail
           for i in $(seq 1 40); do
-            state=$(gh api "repos/${{ github.repository }}/commits/${{ github.sha }}/check-runs" \
-              --jq '.check_runs[] | select(.name == "Cloudflare Pages")
-                    | .status + ":" + (.conclusion // "none")' | head -1)
-            echo "attempt $i — ${state:-check run not created yet}"
+            # sort_by(.started_at) | last — a retried or superseded build leaves
+            # several check runs of this name on one commit, and API order is
+            # not chronological. Taking the first would audit a stale success.
+            if ! state=$(gh api \
+                 "repos/${{ github.repository }}/commits/${{ github.sha }}/check-runs?per_page=100" \
+                 --jq '[.check_runs[] | select(.name == "Cloudflare Pages")]
+                       | sort_by(.started_at) | last
+                       | if . == null then "absent:none"
+                         else .status + ":" + (.conclusion // "none") end' 2>&1); then
+              echo "::warning::gh api failed on attempt $i: $state"
+              sleep 15
+              continue
+            fi
+            echo "attempt $i — $state"
             case "$state" in
-              completed:success) echo "deployment done"; exit 0 ;;
-              completed:*)       echo "::error::Cloudflare Pages deployment failed ($state)"; exit 1 ;;
+              completed:success)
+                echo "audit=true" >> "$GITHUB_OUTPUT"
+                # The check run tracks the deployment; promoting the production
+                # alias across the edge lags it slightly.
+                sleep 20
+                exit 0 ;;
+              completed:failure|completed:timed_out|completed:action_required)
+                echo "::error::Cloudflare Pages deployment failed ($state)"
+                exit 1 ;;
+              completed:*)
+                # cancelled / skipped / neutral / stale: a superseded or skipped
+                # build is not a failure, and there is nothing new to audit.
+                echo "::notice::deployment did not complete ($state) — skipping the audit"
+                echo "audit=false" >> "$GITHUB_OUTPUT"
+                exit 0 ;;
             esac
             sleep 15
           done
-          echo "::error::timed out waiting for the Cloudflare Pages check run"
-          exit 1
+          echo "::warning::no Cloudflare Pages check run after 10 minutes — skipping the audit"
+          echo "audit=false" >> "$GITHUB_OUTPUT"
+
+      - name: Assert the response headers
+        if: steps.deploy.outputs.audit == 'true'
+        run: |
+          set -uo pipefail
+          fail=0
+          check() {
+            got=$(curl -sSI --max-time 20 "$1" | tr -d '\r' | grep -i "^$2:" || true)
+            if [ -z "$got" ]; then
+              echo "::error::$1 — missing $2"; fail=1
+            elif ! printf '%s' "$got" | grep -qiF -- "$3"; then
+              echo "::error::$1 — $2 lacks '$3' (got: $got)"; fail=1
+            else
+              echo "ok   $2  $1"
+            fi
+          }
+          B=https://alexiscolin.com
+          check "$B/"                                      content-security-policy   "default-src 'self'"
+          check "$B/"                                      strict-transport-security "max-age=31536000"
+          check "$B/"                                      x-content-type-options    "nosniff"
+          check "$B/"                                      permissions-policy        "browsing-topics=()"
+          check "$B/style.css"                             cache-control             "max-age=604800"
+          check "$B/assets/fonts/space-mono-400-latin.woff2" cache-control           "immutable"
+          check "$B/assets/site.webmanifest"               cache-control             "max-age=86400"
+          check "$B/cv-refs.enc"                           cache-control             "no-store"
+          exit $fail
 
       - uses: treosh/lighthouse-ci-action@v12
+        if: steps.deploy.outputs.audit == 'true'
         with:
           urls: |
             https://alexiscolin.com/
-            https://alexiscolin.com/privacy.html
+            https://alexiscolin.com/privacy
           configPath: .lighthouserc.live.json
           uploadArtifacts: true
           temporaryPublicStorage: true

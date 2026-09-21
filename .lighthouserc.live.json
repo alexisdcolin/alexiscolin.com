@@ -1,8 +1,8 @@
 {
-  "//": "Lighthouse against the deployed site, so the run sees the real _headers. No staticDistDir and no url: the workflow passes the URLs. Same thresholds as .lighthouserc.json.",
+  "//": "Lighthouse against the deployed site. Category scores stay at warn: they are measured over the public network and drift. errors-in-console is an error because a CSP that blocks a script surfaces there and nowhere else in the scoring. Header regressions are gated by the curl step in the workflow, not here — csp-xss and uses-long-cache-ttl carry weight 0. Promote the deterministic categories (accessibility, seo) to error once a few runs have shown their real scores.",
   "ci": {
     "collect": {
-      "numberOfRuns": 1
+      "numberOfRuns": 3
     },
     "assert": {
       "assertions": {
@@ -29,6 +29,10 @@
           {
             "minScore": 0.9
           }
+        ],
+        "errors-in-console": [
+          "error",
+          {}
         ]
       }
     }

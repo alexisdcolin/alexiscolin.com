@@ -24,16 +24,29 @@ jobs:
       - uses: lycheeverse/lychee-action@v2
         with:
           # --root-dir: resolve root-relative links (/assets/..., /#about) against the repo
+          # --fallback-extensions: Cloudflare Pages serves /privacy for privacy.html and
+          # 308s the .html form, so internal links are extensionless and have no file
           # --exclude formspree: the form endpoint only accepts POST, HEAD checks get a 405
           # 403/429/999: LinkedIn and the like block bots — don't fail
           # the CI over a link that is actually valid
           args: >-
             --no-progress
             --root-dir "${{ github.workspace }}"
+            --fallback-extensions html
             --exclude 'formspree\.io'
             --accept '200..=299,403,429,999'
             './*.html'
           fail: true
+
+  headers:
+    name: Header rules
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v5
+      # Pages joins duplicate header values instead of replacing them, and its
+      # splats cross directory boundaries — adding a file is enough to make two
+      # Cache-Control blocks match one URL. This asserts they stay disjoint.
+      - run: python3 scripts/check-headers.py
 
   lighthouse:
     name: Lighthouse

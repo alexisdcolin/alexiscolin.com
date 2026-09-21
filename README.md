@@ -16,6 +16,7 @@ Vanilla HTML / CSS / JavaScript — no framework, no build step.
 | `cv.html` `cv.css` `cv.js` | Print view of the CV — wording reused from `i18n.js` |
 | `cv-refs.enc` | Referees, AES-GCM encrypted — unlocked in `cv.html` with a passphrase |
 | `_headers` | Security + cache HTTP headers served by Cloudflare Pages |
+| `scripts/check-headers.py` | Asserts no file matches two `_headers` blocks setting the same header |
 
 ## Features
 
@@ -43,6 +44,6 @@ npx serve .
 
 Hosted on Cloudflare Pages, built from the `main` branch — no build command, output directory `/`. Pushing to `main` deploys automatically; every pull request gets its own preview URL, gated behind a Cloudflare Access policy.
 
-`.github/workflows/lighthouse-live.yml` audits the deployed site after each push to `main`. It waits on the `Cloudflare Pages` check run rather than a `deployment_status` event — Cloudflare does not use the GitHub Deployments API.
+`.github/workflows/lighthouse-live.yml` audits the deployed site after each push to `main`. It waits on the `Cloudflare Pages` check run rather than a `deployment_status` event — Cloudflare does not use the GitHub Deployments API. It asserts the response headers with `curl` before scoring: Lighthouse weights `csp-xss` and `uses-long-cache-ttl` at 0, so category scores cannot police headers on their own.
 
 HTTP response headers (security + cache) live in `_headers`. The `www` → apex redirect and the `alexiscolin.fr` → `.com` redirect are Cloudflare Redirect Rules, not repo files — `_redirects` cannot match a hostname.
