@@ -667,7 +667,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
         '  projects            projets',
         '  contact             email, téléphone, réseaux',
         '  open <réseau>       ouvrir un profil (github, linkedin…)',
-        '  cv [fr|en]          télécharger le CV',
+        '  cv [fr|en]          ouvrir le CV',
         '  ls                  lister les sections',
         '  cd <section>        aller à une section',
         '  lang [fr|en]        changer la langue',
@@ -703,7 +703,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
         '  projects            projects',
         '  contact             email, phone, socials',
         '  open <network>      open a profile (github, linkedin…)',
-        '  cv [fr|en]          download the resume',
+        '  cv [fr|en]          open the resume',
         '  ls                  list sections',
         '  cd <section>        jump to a section',
         '  lang [fr|en]        switch language',
@@ -888,7 +888,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     cv(args) {
       const lang = args[0] === 'en' || args[0] === 'fr' ? args[0] : currentLang;
       print(`${tt().cvOpen} (${lang})…`);
-      window.open(`assets/cv-${lang}.pdf`, '_blank', 'noopener');
+      window.open(`/cv?lang=${lang}`, '_blank', 'noopener');
     },
 
     ls() {
