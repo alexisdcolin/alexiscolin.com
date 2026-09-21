@@ -41,6 +41,8 @@ npx serve .
 
 ## Deployment
 
-Hosted on Cloudflare Pages, built from the `main` branch — no build command, output directory `/`. Pushing to `main` deploys automatically; every pull request gets its own preview URL.
+Hosted on Cloudflare Pages, built from the `main` branch — no build command, output directory `/`. Pushing to `main` deploys automatically; every pull request gets its own preview URL, gated behind a Cloudflare Access policy.
+
+`.github/workflows/lighthouse-live.yml` audits the deployed site after each push to `main`. It waits on the `Cloudflare Pages` check run rather than a `deployment_status` event — Cloudflare does not use the GitHub Deployments API.
 
 HTTP response headers (security + cache) live in `_headers`. The `www` → apex redirect and the `alexiscolin.fr` → `.com` redirect are Cloudflare Redirect Rules, not repo files — `_redirects` cannot match a hostname.
