@@ -17,7 +17,11 @@ permissions:
 jobs:
   lighthouse:
     name: Lighthouse
-    if: github.event.deployment_status.state == 'success'
+    # GitHub Pages émet aussi des deployment_status : on l'exclut pour ne pas
+    # auditer la prod pendant la période où les deux hébergeurs coexistent.
+    if: >-
+      github.event.deployment_status.state == 'success'
+      && github.event.deployment_status.environment != 'github-pages'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
