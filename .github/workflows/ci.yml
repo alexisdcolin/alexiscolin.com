@@ -37,6 +37,9 @@ jobs:
 
   lighthouse:
     name: Lighthouse
+    # Pre-merge signal only: on a push to main, lighthouse-live.yml audits the
+    # deployed site instead, which sees the real headers this job cannot.
+    if: github.event_name == 'pull_request'
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v5
