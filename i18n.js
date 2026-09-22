@@ -219,6 +219,11 @@ const translations = {
     // those out in separate slots and has no use for the emoji.
     'cv.laps.duration':  currentJobDuration('fr'),
     'cv.bialr.duration': '3 ans 4 mois',
+    // Employer first, then the client, in one string: under a job title,
+    // "chez Bial-S" reads to an ATS as the employer, and BIAL-R gets lost.
+    'cv.bialr1.org': 'BIAL-R · client : Bial-S',
+    'cv.bialr2.org': 'BIAL-R · client : Clariane',
+    'cv.bialr3.org': 'BIAL-R · client : APRR',
     'cv.tagline':   'De leur source jusqu\'aux agents IA : des données fiables, gouvernées, dignes de confiance',
     'cv.refs.title': 'Références',
     // Names and personal contact details stay out of a public repository;
@@ -413,6 +418,9 @@ const translations = {
     'cv.print': 'Print / PDF',
     'cv.laps.duration':  currentJobDuration('en'),
     'cv.bialr.duration': '3 yrs 4 mos',
+    'cv.bialr1.org': 'BIAL-R · client: Bial-S',
+    'cv.bialr2.org': 'BIAL-R · client: Clariane',
+    'cv.bialr3.org': 'BIAL-R · client: APRR',
     'cv.tagline':   'From their source to AI agents: data that is reliable, governed and trustworthy',
     'cv.refs.title': 'References',
     'cv.refs.body':  'Available on request.',

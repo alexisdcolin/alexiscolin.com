@@ -13,7 +13,6 @@
   --cv-hair:   #c9c2ba;
   /* Same rule, one rank down: used between roles of a single employer */
   --cv-hair-soft: #e0dad3;
-  --cv-chip:   #b8b0a6;
   /* Humanist sans, close to the LaTeX original and free of any webfont to load */
   --cv-sans:   -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
@@ -133,10 +132,9 @@ a { color: inherit; text-decoration: none; }
   font-weight: 700;
 }
 
-/* One single row on the printed page: the six items are kept short enough to
-   fit, the LinkedIn and GitHub entries showing the handle alone since the
-   icon already says which platform it is. On screen the row wraps rather
-   than overflow, the viewport being narrower than A4 on most windows. */
+/* LinkedIn and GitHub spell the profile out in full: an ATS reads the text,
+   not the icon, and a bare handle twice over says nothing about which
+   platform each one is. */
 .cv-contact {
   display: flex;
   flex-wrap: wrap;
@@ -148,6 +146,17 @@ a { color: inherit; text-decoration: none; }
 }
 .cv-contact li { display: flex; align-items: center; gap: 0.32em; white-space: nowrap; }
 .cv-contact .ico { color: var(--cv-accent); }
+
+/* On the page, and on any screen wide enough to preview it, two rows of
+   three spread edge to edge: how to reach you, then where to read more.
+   The grid needs ~480px; below 640px the list simply wraps. */
+@media print, (min-width: 640px) {
+  .cv-contact {
+    display: grid;
+    grid-template-columns: repeat(3, max-content);
+    justify-content: space-between;
+  }
+}
 
 /* ── Sections ── */
 /* Eight sections: every tenth of a rem here is worth ~3mm over the document,
@@ -254,36 +263,21 @@ a { color: inherit; text-decoration: none; }
 .cv-group .cv-entry__org { font-weight: 400; color: var(--cv-muted); }
 
 /* ── Skills ── */
-.cv-skills {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem 1.6rem;
-}
+/* One line per category, rendered by cv.js as a single comma-separated text
+   run. Chips side by side leave no space character in the PDF, and a
+   two-column grid is read row by row, one category running into the next. */
+.cv-skills__row { margin: 0 0 0.12rem; }
 
-.cv-skills__cat {
-  display: flex;
-  align-items: center;
-  gap: 0.4em;
-  margin: 0 0 0.22rem;
-  font-size: 9.5pt;
-  font-weight: 700;
-}
+.cv-skills__cat { font-weight: 700; }
 .cv-skills__cat::before {
   content: '';
+  display: inline-block;
   width: 4px;
   height: 4px;
+  margin-right: 0.45em;
   border-radius: 50%;
   background: var(--cv-accent);
-}
-
-.cv-skills__chips { display: flex; flex-wrap: wrap; gap: 0.25rem; }
-
-.cv-chip {
-  padding: 0.08rem 0.45rem;
-  border: 0.8pt solid var(--cv-chip);
-  border-radius: 3px;
-  font-size: 8.8pt;
-  white-space: nowrap;
+  vertical-align: 0.2em;
 }
 
 /* ── Languages ── */
@@ -303,10 +297,14 @@ a { color: inherit; text-decoration: none; }
 
 
 /* ── Misc ── */
-.cv-misc {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.4rem 1.6rem;
+/* One item per line, title then description: in two columns the PDF reads
+   both titles first, then both descriptions. */
+.cv-misc { display: grid; gap: 0.15rem; }
+.cv-misc__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.5rem;
 }
 .cv-misc__title { margin: 0; font-weight: 700; }
 .cv-misc__desc  { margin: 0; color: var(--cv-muted); font-size: 9.5pt; }
@@ -338,7 +336,7 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 560px) {
   .cv { margin: 0; padding: 20px 16px; box-shadow: none; }
   .cv-name { font-size: 24pt; }
-  .cv-skills, .cv-langs, .cv-misc, .cv-refs-list { grid-template-columns: 1fr; }
+  .cv-langs, .cv-refs-list { grid-template-columns: 1fr; }
   .cv-entry__meta { gap: 0.15rem 0.9rem; }
 }
 
@@ -356,9 +354,6 @@ a { color: inherit; text-decoration: none; }
   [data-screen-only] { display: none !important; }
 
   .cv { max-width: none; margin: 0; padding: 0; box-shadow: none; }
-
-  /* At A4 width the six items fit, spread edge to edge */
-  .cv-contact { flex-wrap: nowrap; justify-content: space-between; }
 
   /* A heading stranded at the foot of a page looks amateurish, so headings
      and entry titles never end a page. Job entries themselves DO split: at

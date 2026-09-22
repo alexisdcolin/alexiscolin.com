@@ -18,12 +18,16 @@
 // The name is deliberate: scroll.js already defines a renderSkills(), and both
 // files are classic scripts sharing one global scope.
 // Most proficient first. Every skill is listed rather than a hand-picked
-// subset: the extra keywords cost two lines and are what an ATS matches on.
+// subset: the extra keywords are what an ATS matches on. The separator and
+// the names share one text node so the PDF carries real spaces and commas —
+// Chrome paints no glyph for a space that sits alone between two elements.
 function renderCvSkills() {
   var host = document.getElementById('cvSkills');
   if (!host) return;
 
   var t = translations[currentLang] || translations.fr;
+  // French sets a space before the colon, English does not
+  var sep = currentLang === 'en' ? ': ' : ' : ';
   host.textContent = '';
 
   categoryDefs.forEach(function (cat) {
@@ -33,24 +37,16 @@ function renderCvSkills() {
       .map(function (s) { return s.name; });
     if (!names.length) return;
 
-    var group = document.createElement('div');
+    var row = document.createElement('p');
+    row.className = 'cv-skills__row';
 
-    var label = document.createElement('p');
+    var label = document.createElement('span');
     label.className = 'cv-skills__cat';
     label.textContent = t['skills.' + cat] || cat;
 
-    var chips = document.createElement('div');
-    chips.className = 'cv-skills__chips';
-    names.forEach(function (name) {
-      var chip = document.createElement('span');
-      chip.className = 'cv-chip';
-      chip.textContent = name;
-      chips.appendChild(chip);
-    });
-
-    group.appendChild(label);
-    group.appendChild(chips);
-    host.appendChild(group);
+    row.appendChild(label);
+    row.appendChild(document.createTextNode(sep + names.join(', ')));
+    host.appendChild(row);
   });
 }
 
