@@ -132,15 +132,17 @@ a { color: inherit; text-decoration: none; }
   font-weight: 700;
 }
 
-/* Two lines of plain text, how to reach you then where to read more, each a
-   single run with real separators so an ATS reads it in order. A grid of
-   icons was read column by column: pdfminer dropped half the contacts into
-   the first job. LinkedIn and GitHub spell the profile out in full, and no
-   item ever breaks across two lines: the line wraps between items. */
+/* Two lines, how to reach you then where to read more: each item an icon and
+   its text, with a real " · " between items so an ATS reads every line in
+   order. A grid was read column by column: pdfminer dropped half the
+   contacts into the first job. LinkedIn and GitHub spell the profile out in
+   full, and no item ever breaks across two lines: the line wraps between
+   items. */
 .cv-contact { margin: 0.2rem 0 0; font-size: 8.4pt; font-style: normal; }
 .cv-contact p { margin: 0; }
 .cv-contact p + p { margin-top: 0.2rem; }
-.cv-contact a, .cv-contact__item { white-space: nowrap; }
+.cv-contact__item { white-space: nowrap; }
+.cv-contact__item .ico { margin-right: 0.3em; color: var(--cv-accent); }
 /* The dot between items of a one-line list: contacts, languages */
 .cv-sep { color: var(--cv-accent); }
 
