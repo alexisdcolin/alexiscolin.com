@@ -108,7 +108,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ── Header ── */
-.cv-head { margin-bottom: 0.9rem; }
+.cv-head { margin-bottom: 0.9rem; text-align: center; }
 
 .cv-name {
   margin: 0;
