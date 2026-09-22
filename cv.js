@@ -121,14 +121,10 @@ function refIcon(id) {
   return svg;
 }
 
-function refLine(iconId, value) {
-  var p = document.createElement('p');
-  p.className = 'cv-ref__line';
-  p.appendChild(refIcon(iconId));
-  p.appendChild(document.createTextNode(value));
-  return p;
-}
-
+// One referee under the other: side by side, the PDF reads both names, then
+// both contact lines, one person's email next to the other's phone. Name and
+// role share the first line, email and phone the second, so the block costs
+// one line more than the old two-column grid and the CV stays on two pages.
 function renderRefs(refs) {
   var host = document.getElementById('cvRefs');
   if (!host) return;
@@ -141,13 +137,22 @@ function renderRefs(refs) {
     var item = document.createElement('div');
     item.className = 'cv-ref';
 
-    var name = document.createElement('p');
+    var head = document.createElement('p');
+    head.className = 'cv-ref__head';
+    var name = document.createElement('span');
     name.className = 'cv-ref__name';
     name.textContent = ref.name;
-    item.appendChild(name);
+    head.appendChild(name);
+    if (ref.role) {
+      var role = document.createElement('span');
+      role.className = 'cv-ref__role';
+      // The dash travels with the role: a space alone between two elements
+      // gets no glyph in the PDF, and the name would run into the role.
+      role.textContent = ' — ' + ref.role;
+      head.appendChild(role);
+    }
+    item.appendChild(head);
 
-    // Email and phone share a line: on four referee lines the block costs
-    // 26mm and tips the printed CV onto a third page.
     var contact = document.createElement('p');
     contact.className = 'cv-ref__line';
     if (ref.email) {
@@ -159,13 +164,6 @@ function renderRefs(refs) {
       contact.appendChild(document.createTextNode(ref.phone));
     }
     item.appendChild(contact);
-
-    if (ref.role) {
-      var role = document.createElement('p');
-      role.className = 'cv-ref__role';
-      role.textContent = ref.role;
-      item.appendChild(role);
-    }
 
     list.appendChild(item);
   });

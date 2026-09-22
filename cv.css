@@ -269,14 +269,16 @@ a { color: inherit; text-decoration: none; }
 .cv-skills__row { margin: 0 0 0.12rem; }
 
 .cv-skills__cat { font-weight: 700; }
+/* Drawn with a border, not a background: browsers drop backgrounds when
+   printing unless "background graphics" is ticked, and the dot vanished. */
 .cv-skills__cat::before {
   content: '';
   display: inline-block;
   width: 4px;
   height: 4px;
   margin-right: 0.45em;
+  border: 2px solid var(--cv-accent);
   border-radius: 50%;
-  background: var(--cv-accent);
   vertical-align: 0.2em;
 }
 
@@ -311,13 +313,10 @@ a { color: inherit; text-decoration: none; }
 
 .cv-refs { margin: 0; color: var(--cv-muted); }
 
-/* Referees, once decrypted */
-.cv-refs-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.4rem 1.6rem;
-}
-.cv-ref__name { margin: 0; font-weight: 700; }
+/* Referees, once decrypted: one under the other (see renderRefs in cv.js) */
+.cv-refs-list { display: grid; gap: 0.3rem; }
+.cv-ref__head { margin: 0; }
+.cv-ref__name { font-weight: 700; }
 .cv-ref__line {
   display: flex;
   align-items: center;
@@ -330,13 +329,13 @@ a { color: inherit; text-decoration: none; }
 /* Space before the phone icon, none before its number */
 .cv-ref__line .ico + .ico { margin-left: 0.5em; }
 .cv-ref__line .ico { color: var(--cv-accent); }
-.cv-ref__role { margin: 0; color: var(--cv-muted); font-size: 9pt; }
+.cv-ref__role { color: var(--cv-muted); font-size: 9pt; }
 
 /* ── Small screens: the A4 frame stops helping ── */
 @media (max-width: 560px) {
   .cv { margin: 0; padding: 20px 16px; box-shadow: none; }
   .cv-name { font-size: 24pt; }
-  .cv-langs, .cv-refs-list { grid-template-columns: 1fr; }
+  .cv-langs { grid-template-columns: 1fr; }
   .cv-entry__meta { gap: 0.15rem 0.9rem; }
 }
 
