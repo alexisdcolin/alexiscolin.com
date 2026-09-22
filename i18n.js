@@ -37,8 +37,7 @@ let currentLang = (function(){
 const translations = {
   fr: {
     'hero.role':           'Développeur Data & IA',
-    'hero.location':       'Montréal, QC',
-    'hero.location.short': 'Montréal',
+    'hero.location':       'Montréal, Canada',
     'links.cv':           'CV imprimable',
     'status.available':   'Disponible immédiatement',
     'status.open':        'En poste · À l\'écoute du marché',
@@ -74,7 +73,7 @@ const translations = {
     'exp.laps.role':    'Développeur Data & IA',
     'exp.laps.start':   'Févr. 2024',
     'exp.laps.end':     "Aujourd'hui",
-    'exp.laps.total':   `${currentJobDuration('fr')} · Montréal, QC 🇨🇦`,
+    'exp.laps.total':   `${currentJobDuration('fr')} · Montréal, Canada\u00a0🇨🇦`,
     'exp.laps.desc':    'Conception et mise en place de l\'ensemble de l\'infrastructure de données de Laps, réseau e-commerce spécialisé dans le matériel de golf, depuis l\'ingestion et le traitement jusqu\'à la valorisation des données via des rapports stratégiques et opérationnels et leur exposition aux assistants IA (serveur MCP). Participation au développement d\'un système automatisé de gestion des prix d\'achat et de vente, renforçant les marges et la compétitivité de l\'entreprise.',
     'exp.laps.li1':     'Conception, déploiement et automatisation de flux de données en Python sur AWS',
     'exp.laps.li2':     'Modélisation et implémentation d\'un entrepôt de données centralisé',
@@ -83,7 +82,7 @@ const translations = {
 
     'exp.bialr.start':   'Sept. 2020',
     'exp.bialr.end':     'Déc. 2023',
-    'exp.bialr.total':   '3 ans 4 mois · Lyon 🇫🇷',
+    'exp.bialr.total':   '3 ans 4 mois · Lyon, France\u00a0🇫🇷',
     'exp.bialr1.role':   'Développeur Data',
     'exp.bialr1.start':  'Janv. 2023',
     'exp.bialr1.end':    'Déc. 2023',
@@ -114,7 +113,7 @@ const translations = {
     'exp.hyatt.role':    'Technicien Support IT',
     'exp.hyatt.start':   'Avr. 2018',
     'exp.hyatt.end':     'Juill. 2018',
-    'exp.hyatt.total':   '3 mois · Paris 🇫🇷',
+    'exp.hyatt.total':   '3 mois · Paris, France\u00a0🇫🇷',
     'exp.hyatt.desc':    'Stage de fin de DUT au sein du service informatique d\'un palace parisien.',
     'exp.hyatt.li1':     'Maintenance et support du parc informatique (poste de travail, réseaux, serveurs)',
     'exp.hyatt.li2':     'Participation au déploiement de nouveaux projets IT',
@@ -140,7 +139,7 @@ const translations = {
 
     // Education
     'edu.title':        'Formation',
-    'edu.miage.degree': 'Master Méthodes Informatiques Appliquées à la Gestion des Entreprises - MIAGE',
+    'edu.miage.degree': 'Master Méthodes Informatiques Appliquées à la Gestion des Entreprises — MIAGE',
     'edu.miage.dates':  'Sept. 2019 – Juin 2021',
     'edu.miage.desc':   'Parcours Systèmes d\'Information de Gestion de Santé.',
     'edu.uqac.degree':  'Baccalauréat en Informatique',
@@ -151,7 +150,7 @@ const translations = {
 
     // Projects
     'projects.title':        'Projets',
-    'projects.etl.meta':     'Juin - Sept. 2025 · 4 mois',
+    'projects.etl.meta':     'Laps · Juin – Sept. 2025 · 4 mois',
     'projects.etl.desc':     'Développement d\'un framework ETL serverless sur AWS Lambda, permettant la création de pipelines modulaires, évolutifs et économiques pour l\'automatisation des flux de données.',
     'projects.etl.title.main': 'AWS Lambda ETL',
     'projects.etl.title.sub': 'Framework de pipelines serverless',
@@ -238,8 +237,7 @@ const translations = {
 
   en: {
     'hero.role':           'Data & AI Engineer',
-    'hero.location':       'Montreal, QC',
-    'hero.location.short': 'Montreal',
+    'hero.location':       'Montreal, Canada',
     'links.cv':           'Printable CV',
     'status.available':   'Available now',
     'status.open':        'Employed · Open to opportunities',
@@ -275,16 +273,16 @@ const translations = {
     'exp.laps.role':    'Data & AI Engineer',
     'exp.laps.start':   'Feb. 2024',
     'exp.laps.end':     'Present',
-    'exp.laps.total':   `${currentJobDuration('en')} · Montreal, QC 🇨🇦`,
+    'exp.laps.total':   `${currentJobDuration('en')} · Montreal, Canada\u00a0🇨🇦`,
     'exp.laps.desc':    'Designed and implemented the entire data infrastructure for Laps, an e-commerce network specialized in golf equipment, covering everything from data ingestion and processing to value creation through strategic and operational reporting and data exposure to AI assistants (MCP server). Contributed to the development of an automated pricing system for purchase and sales, strengthening the company\'s margins and competitiveness.',
     'exp.laps.li1':     'Designed, deployed, and automated data pipelines in Python on AWS',
     'exp.laps.li2':     'Modeled and implemented a centralized data warehouse',
     'exp.laps.li3':     'Developed operational reports and dashboards with Grafana',
     'exp.laps.li4':     'Built a Python MCP server connecting the data warehouse to AI assistants, with SQL governance and sensitive-data masking',
 
-    'exp.bialr.start':   'Sept. 2020',
+    'exp.bialr.start':   'Sep. 2020',
     'exp.bialr.end':     'Dec. 2023',
-    'exp.bialr.total':   '3 yrs 4 mos · Lyon 🇫🇷',
+    'exp.bialr.total':   '3 yrs 4 mos · Lyon, France\u00a0🇫🇷',
     'exp.bialr1.role':   'Data Developer',
     'exp.bialr1.start':  'Jan. 2023',
     'exp.bialr1.end':    'Dec. 2023',
@@ -315,7 +313,7 @@ const translations = {
     'exp.hyatt.role':    'IT Support Trainee',
     'exp.hyatt.start':   'Apr. 2018',
     'exp.hyatt.end':     'Jul. 2018',
-    'exp.hyatt.total':   '3 mos · Paris 🇫🇷',
+    'exp.hyatt.total':   '3 mos · Paris, France\u00a0🇫🇷',
     'exp.hyatt.desc':    'Final-year DUT internship within the IT department of a luxury hotel in Paris.',
     'exp.hyatt.li1':     'Maintained and supported IT infrastructure (workstations, networks, servers)',
     'exp.hyatt.li2':     'Participated in the deployment of new IT projects',
@@ -341,7 +339,7 @@ const translations = {
 
     // Education
     'edu.title':        'Education',
-    'edu.miage.degree': "Master's degree in Computer Science Applied to Business Management - MIAGE",
+    'edu.miage.degree': "Master's degree in Computer Science Applied to Business Management — MIAGE",
     'edu.miage.dates':  'Sep. 2019 – Jun. 2021',
     'edu.miage.desc':   'Specialization in Health Management Information Systems.',
     'edu.uqac.degree':  "Bachelor's degree in Computer Science",
@@ -352,7 +350,7 @@ const translations = {
 
     // Projects
     'projects.title':        'Projects',
-    'projects.etl.meta':     'Jun. - Sep. 2025 · 4 mos',
+    'projects.etl.meta':     'Laps · Jun. – Sep. 2025 · 4 mos',
     'projects.etl.desc':     'Developed a serverless ETL framework on AWS Lambda, enabling the creation of modular, scalable, and cost-effective pipelines for automated data workflows.',
     'projects.etl.title.main': 'AWS Lambda ETL',
     'projects.etl.title.sub': 'Serverless Pipeline Framework',
