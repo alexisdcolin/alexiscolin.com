@@ -179,7 +179,7 @@ const translations = {
     'projects.github':       'Voir sur GitHub',
 
     // Misc
-    'misc.title':        'Divers',
+    'misc.title':        'Centres d\'intérêt',
     'misc.tt.title':     'Tennis de Table',
     'misc.tt.desc':      'Activité pratiquée pendant plus de 10 ans en club.',
     'misc.travel.title': 'Voyages',

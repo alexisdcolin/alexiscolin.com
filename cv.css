@@ -132,31 +132,17 @@ a { color: inherit; text-decoration: none; }
   font-weight: 700;
 }
 
-/* LinkedIn and GitHub spell the profile out in full: an ATS reads the text,
-   not the icon, and a bare handle twice over says nothing about which
-   platform each one is. */
-.cv-contact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.2rem 0.9rem;
-  margin: 0.2rem 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 8.4pt;
-}
-.cv-contact li { display: flex; align-items: center; gap: 0.32em; white-space: nowrap; }
-.cv-contact .ico { color: var(--cv-accent); }
-
-/* On the page, and on any screen wide enough to preview it, two rows of
-   three spread edge to edge: how to reach you, then where to read more.
-   The grid needs ~480px; below 640px the list simply wraps. */
-@media print, (min-width: 640px) {
-  .cv-contact {
-    display: grid;
-    grid-template-columns: repeat(3, max-content);
-    justify-content: space-between;
-  }
-}
+/* Two lines of plain text, how to reach you then where to read more, each a
+   single run with real separators so an ATS reads it in order. A grid of
+   icons was read column by column: pdfminer dropped half the contacts into
+   the first job. LinkedIn and GitHub spell the profile out in full, and no
+   item ever breaks across two lines: the line wraps between items. */
+.cv-contact { margin: 0.2rem 0 0; font-size: 8.4pt; font-style: normal; }
+.cv-contact p { margin: 0; }
+.cv-contact p + p { margin-top: 0.2rem; }
+.cv-contact a, .cv-contact__item { white-space: nowrap; }
+/* The dot between items of a one-line list: contacts, languages */
+.cv-sep { color: var(--cv-accent); }
 
 /* ── Sections ── */
 /* Eight sections: every tenth of a rem here is worth ~3mm over the document,
@@ -204,6 +190,9 @@ a { color: inherit; text-decoration: none; }
   font-size: 8.6pt;
   color: var(--cv-muted);
 }
+/* The icon and one inline run of text. Dates wrap their parts in
+   .cv-meta__text: as separate flex items, the spaces around – and · were
+   trimmed and replaced by the gap, leaving no space character in the PDF. */
 .cv-meta { display: flex; align-items: center; gap: 0.35em; }
 
 .cv-entry__desc { margin: 0 0 0.2rem; }
@@ -283,14 +272,12 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ── Languages ── */
-.cv-langs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.3rem 1.6rem;
-}
+/* One line, the languages joined by a real separator: in two grid columns,
+   pdfminer read the second language under the next section's heading. */
+.cv-langs { margin: 0; }
 
 .cv-lang {
-  display: flex;
+  display: inline-flex;
   align-items: baseline;
   gap: 0.5rem;
 }
@@ -335,7 +322,6 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 560px) {
   .cv { margin: 0; padding: 20px 16px; box-shadow: none; }
   .cv-name { font-size: 24pt; }
-  .cv-langs { grid-template-columns: 1fr; }
   .cv-entry__meta { gap: 0.15rem 0.9rem; }
 }
 

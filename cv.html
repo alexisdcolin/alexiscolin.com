@@ -9,7 +9,7 @@
   <meta name="robots" content="noindex, follow" />
   <link rel="icon" href="/assets/favicon.ico" sizes="any" />
   <link rel="icon" type="image/svg+xml" href="/assets/favicon.svg" />
-  <link rel="stylesheet" href="/cv.css?v=13" />
+  <link rel="stylesheet" href="/cv.css?v=14" />
   <!-- Cloudflare Web Analytics — cookieless, no consent banner needed -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1e7d4c7d044344bfbb5808d2bf1a1fc0"}'></script>
 </head>
@@ -20,9 +20,7 @@
     <symbol id="i-mail" viewBox="0 0 24 24"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></symbol>
     <symbol id="i-phone" viewBox="0 0 24 24"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></symbol>
     <symbol id="i-pin" viewBox="0 0 24 24"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></symbol>
-    <symbol id="i-link" viewBox="0 0 24 24"><path d="M10 13a5 5 0 0 0 7.54.54l3-3a5 5 0 0 0-7.07-7.07l-1.72 1.71"/><path d="M14 11a5 5 0 0 0-7.54-.54l-3 3a5 5 0 0 0 7.07 7.07l1.71-1.71"/></symbol>
     <symbol id="i-cal" viewBox="0 0 24 24"><rect x="3" y="4" width="18" height="18" rx="2"/><line x1="16" y1="2" x2="16" y2="6"/><line x1="8" y1="2" x2="8" y2="6"/><line x1="3" y1="10" x2="21" y2="10"/></symbol>
-    <symbol id="i-in" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></symbol>
     <symbol id="i-unlock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
     <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol>
@@ -51,14 +49,10 @@
       <h1 class="cv-name">Alexis Colin</h1>
       <p class="cv-role" data-i18n="hero.role">Développeur Data &amp; IA</p>
       <p class="cv-tagline" data-i18n="cv.tagline">De leur source jusqu'aux agents IA : des données fiables, gouvernées, dignes de confiance</p>
-      <ul class="cv-contact">
-        <li><svg class="ico"><use href="#i-mail"/></svg><a href="mailto:contact@alexiscolin.com">contact@alexiscolin.com</a></li>
-        <li><svg class="ico"><use href="#i-phone"/></svg><a href="tel:+14385436098">(438)&nbsp;543&#8209;6098</a></li>
-        <li><svg class="ico"><use href="#i-pin"/></svg><span data-i18n="hero.location">Montréal, Canada</span></li>
-        <li><svg class="ico"><use href="#i-link"/></svg><a href="https://alexiscolin.com">alexiscolin.com</a></li>
-        <li><svg class="ico"><use href="#i-in"/></svg><a href="https://www.linkedin.com/in/alexisdcolin">linkedin.com/in/alexisdcolin</a></li>
-        <li><svg class="ico"><use href="#i-gh"/></svg><a href="https://github.com/alexisdcolin">github.com/alexisdcolin</a></li>
-      </ul>
+      <address class="cv-contact">
+        <p><a href="mailto:contact@alexiscolin.com">contact@alexiscolin.com</a><span class="cv-sep"> · </span><a href="tel:+14385436098">(438) 543-6098</a><span class="cv-sep"> · </span><span class="cv-contact__item" data-i18n="hero.location">Montréal, Canada</span></p>
+        <p><a href="https://alexiscolin.com">alexiscolin.com</a><span class="cv-sep"> · </span><a href="https://www.linkedin.com/in/alexisdcolin">linkedin.com/in/alexisdcolin</a><span class="cv-sep"> · </span><a href="https://github.com/alexisdcolin">github.com/alexisdcolin</a></p>
+      </address>
     </header>
 
     <!-- ═══════════ EXPÉRIENCE ═══════════ -->
@@ -69,7 +63,7 @@
         <h3 class="cv-entry__title" data-i18n="exp.laps.role">Développeur Data &amp; IA</h3>
         <p class="cv-entry__org">Laps</p>
         <p class="cv-entry__meta">
-          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span> · <span data-i18n="cv.laps.duration">2 ans 7 mois</span></span>
+          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span> · <span data-i18n="cv.laps.duration">2 ans 7 mois</span></span></span>
           <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg><span data-i18n="hero.location">Montréal, Canada</span></span>
         </p>
         <p class="cv-entry__desc" data-i18n="exp.laps.desc">Conception et mise en place de l'ensemble de l'infrastructure de données de Laps, réseau e-commerce spécialisé dans le matériel de golf, depuis l'ingestion et le traitement jusqu'à la valorisation des données via des rapports stratégiques et opérationnels et leur exposition aux assistants IA (serveur MCP).</p>
@@ -87,7 +81,7 @@
         <div class="cv-group__head">
           <h3 class="cv-group__company">BIAL-R</h3>
           <p class="cv-entry__meta">
-            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.bialr.start">Sept. 2020</span> – <span data-i18n="exp.bialr.end">Déc. 2023</span> · <span data-i18n="cv.bialr.duration">3 ans 4 mois</span></span>
+            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.bialr.start">Sept. 2020</span> – <span data-i18n="exp.bialr.end">Déc. 2023</span> · <span data-i18n="cv.bialr.duration">3 ans 4 mois</span></span></span>
             <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg>Lyon, France</span>
           </p>
         </div>
@@ -96,7 +90,7 @@
           <h3 class="cv-entry__title" data-i18n="exp.bialr1.role">Développeur Data</h3>
           <p class="cv-entry__org" data-i18n="cv.bialr1.org">BIAL-R · client : Bial-S</p>
           <p class="cv-entry__meta">
-            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.bialr1.start">Janv. 2023</span> – <span data-i18n="exp.bialr1.end">Déc. 2023</span> · <span data-i18n="exp.bialr1.meta">1 an</span></span>
+            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.bialr1.start">Janv. 2023</span> – <span data-i18n="exp.bialr1.end">Déc. 2023</span> · <span data-i18n="exp.bialr1.meta">1 an</span></span></span>
           </p>
           <p class="cv-entry__desc" data-i18n="exp.bialr1.desc">Participation à l'industrialisation d'une plateforme décisionnelle Cloud automatisée sur AWS, permettant l'ingestion, la visualisation et l'analyse prédictive de données pour des Offices Publics de l'Habitat.</p>
           <ul class="cv-entry__list">
@@ -110,7 +104,7 @@
           <h3 class="cv-entry__title" data-i18n="exp.bialr2.role">Consultant ETL</h3>
           <p class="cv-entry__org" data-i18n="cv.bialr2.org">BIAL-R · client : Clariane</p>
           <p class="cv-entry__meta">
-            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.bialr2.start">Sept. 2021</span> – <span data-i18n="exp.bialr2.end">Déc. 2022</span> · <span data-i18n="exp.bialr2.meta">1 an 4 mois</span></span>
+            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.bialr2.start">Sept. 2021</span> – <span data-i18n="exp.bialr2.end">Déc. 2022</span> · <span data-i18n="exp.bialr2.meta">1 an 4 mois</span></span></span>
           </p>
           <p class="cv-entry__desc" data-i18n="exp.bialr2.desc">Référent MCO de l'ensemble des flux inter-applicatifs de Clariane, couvrant les domaines finance, RH, santé et relation client.</p>
           <ul class="cv-entry__list">
@@ -124,7 +118,7 @@
           <h3 class="cv-entry__title" data-i18n="exp.bialr3.role">Consultant Data</h3>
           <p class="cv-entry__org" data-i18n="cv.bialr3.org">BIAL-R · client : APRR</p>
           <p class="cv-entry__meta">
-            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.bialr3.start">Sept. 2020</span> – <span data-i18n="exp.bialr3.end">Août 2021</span> · <span data-i18n="exp.bialr3.meta">1 an</span></span>
+            <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.bialr3.start">Sept. 2020</span> – <span data-i18n="exp.bialr3.end">Août 2021</span> · <span data-i18n="exp.bialr3.meta">1 an</span></span></span>
           </p>
           <p class="cv-entry__desc" data-i18n="exp.bialr3.desc">Alternance en dernière année de Master MIAGE, principalement réalisée sur des missions pour le client Autoroutes Paris-Rhin-Rhône (APRR) dans les domaines finance, péage, autoroute et relation clientèle.</p>
           <ul class="cv-entry__list">
@@ -140,7 +134,7 @@
         <h3 class="cv-entry__title" data-i18n="exp.hyatt.role">Technicien Support IT</h3>
         <p class="cv-entry__org">Park Hyatt Paris-Vendôme</p>
         <p class="cv-entry__meta">
-          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span data-i18n="exp.hyatt.start">Avr. 2018</span> – <span data-i18n="exp.hyatt.end">Juill. 2018</span></span>
+          <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.hyatt.start">Avr. 2018</span> – <span data-i18n="exp.hyatt.end">Juill. 2018</span></span></span>
           <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg>Paris, France</span>
         </p>
         <p class="cv-entry__desc" data-i18n="exp.hyatt.desc">Stage de fin de DUT au sein du service informatique d'un palace parisien.</p>
@@ -221,21 +215,12 @@
     <!-- ═══════════ LANGUES ═══════════ -->
     <section class="cv-section">
       <h2 class="cv-h2" data-i18n="skills.languages">Langues</h2>
-      <div class="cv-langs">
-        <div class="cv-lang">
-          <span class="cv-lang__name" data-i18n="lang.french">Français</span>
-          <span class="cv-lang__level" data-i18n="lang.french.level">Natif</span>
-        </div>
-        <div class="cv-lang">
-          <span class="cv-lang__name" data-i18n="lang.english">Anglais</span>
-          <span class="cv-lang__level" data-i18n="lang.english.level">Courant</span>
-        </div>
-      </div>
+      <p class="cv-langs"><span class="cv-lang"><span class="cv-lang__name" data-i18n="lang.french">Français</span><span class="cv-lang__level" data-i18n="lang.french.level">Natif</span></span><span class="cv-sep"> · </span><span class="cv-lang"><span class="cv-lang__name" data-i18n="lang.english">Anglais</span><span class="cv-lang__level" data-i18n="lang.english.level">Courant</span></span></p>
     </section>
 
     <!-- ═══════════ DIVERS ═══════════ -->
     <section class="cv-section">
-      <h2 class="cv-h2" data-i18n="misc.title">Divers</h2>
+      <h2 class="cv-h2" data-i18n="misc.title">Centres d'intérêt</h2>
       <div class="cv-misc">
         <div class="cv-misc__item">
           <p class="cv-misc__title" data-i18n="misc.tt.title">Tennis de Table</p>
