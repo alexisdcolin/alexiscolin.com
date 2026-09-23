@@ -223,11 +223,34 @@ a { color: inherit; text-decoration: none; }
 }
 .cv-group__head .cv-entry__meta { margin-bottom: 0.3rem; }
 
-/* Roles align on the margin like any other entry and follow one another
-   without a rule, half a line apart: closer than two employers, which the
-   full-width dashed line still separates. */
-.cv-group .cv-entry { padding: 0; }
+/* Roles of one employer hang off a thin vertical line with a dot at each
+   title, as LinkedIn draws them, half a line apart. Line and dots are
+   borders on empty pseudo-elements: no character reaches the PDF's text,
+   and borders print even with "background graphics" off. The dot's top
+   puts its centre on the title's first line (11pt × 1.3 ÷ 2 ≈ 7.2pt). A
+   hanging line in the page margin would keep the roles on the margin, but
+   print clips anything drawn outside the page area. */
+.cv-group .cv-entry { position: relative; padding: 0 0 0 1.05rem; }
 .cv-group .cv-entry + .cv-entry { margin-top: 0.5rem; border-top: 0; padding-top: 0; }
+.cv-group .cv-entry::before {
+  content: '';
+  position: absolute;
+  top: 4.8pt;
+  left: 0.1rem;
+  width: 0;
+  height: 0;
+  border: 3.2px solid var(--cv-hair);
+  border-radius: 50%;
+}
+/* From just below this role's dot to just above the next one */
+.cv-group .cv-entry:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: calc(9.6pt + 2.5px);
+  bottom: calc(-0.5rem - 4.8pt + 2.5px);
+  left: calc(0.1rem + 2.6px);
+  border-left: 1.2px solid var(--cv-hair);
+}
 
 /* Role titles keep the shared .cv-entry__title treatment — only the client
    line differs, being a client and not an employer. */
