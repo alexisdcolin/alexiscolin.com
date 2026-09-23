@@ -18,12 +18,16 @@
 // The name is deliberate: scroll.js already defines a renderSkills(), and both
 // files are classic scripts sharing one global scope.
 // Most proficient first. Every skill is listed rather than a hand-picked
-// subset: the extra keywords cost two lines and are what an ATS matches on.
+// subset: the extra keywords are what an ATS matches on. The separator and
+// the names share one text node so the PDF carries real spaces and commas —
+// Chrome paints no glyph for a space that sits alone between two elements.
 function renderCvSkills() {
   var host = document.getElementById('cvSkills');
   if (!host) return;
 
   var t = translations[currentLang] || translations.fr;
+  // French sets a space before the colon, English does not
+  var sep = currentLang === 'en' ? ': ' : ' : ';
   host.textContent = '';
 
   categoryDefs.forEach(function (cat) {
@@ -33,24 +37,16 @@ function renderCvSkills() {
       .map(function (s) { return s.name; });
     if (!names.length) return;
 
-    var group = document.createElement('div');
+    var row = document.createElement('p');
+    row.className = 'cv-skills__row';
 
-    var label = document.createElement('p');
+    var label = document.createElement('span');
     label.className = 'cv-skills__cat';
     label.textContent = t['skills.' + cat] || cat;
 
-    var chips = document.createElement('div');
-    chips.className = 'cv-skills__chips';
-    names.forEach(function (name) {
-      var chip = document.createElement('span');
-      chip.className = 'cv-chip';
-      chip.textContent = name;
-      chips.appendChild(chip);
-    });
-
-    group.appendChild(label);
-    group.appendChild(chips);
-    host.appendChild(group);
+    row.appendChild(label);
+    row.appendChild(document.createTextNode(sep + names.join(', ')));
+    host.appendChild(row);
   });
 }
 
@@ -125,14 +121,10 @@ function refIcon(id) {
   return svg;
 }
 
-function refLine(iconId, value) {
-  var p = document.createElement('p');
-  p.className = 'cv-ref__line';
-  p.appendChild(refIcon(iconId));
-  p.appendChild(document.createTextNode(value));
-  return p;
-}
-
+// One referee under the other: side by side, the PDF reads both names, then
+// both contact lines, one person's email next to the other's phone. Name and
+// role share the first line, email and phone the second, so the block costs
+// one line more than the old two-column grid and the CV stays on two pages.
 function renderRefs(refs) {
   var host = document.getElementById('cvRefs');
   if (!host) return;
@@ -145,13 +137,22 @@ function renderRefs(refs) {
     var item = document.createElement('div');
     item.className = 'cv-ref';
 
-    var name = document.createElement('p');
+    var head = document.createElement('p');
+    head.className = 'cv-ref__head';
+    var name = document.createElement('span');
     name.className = 'cv-ref__name';
     name.textContent = ref.name;
-    item.appendChild(name);
+    head.appendChild(name);
+    if (ref.role) {
+      var role = document.createElement('span');
+      role.className = 'cv-ref__role';
+      // The dash travels with the role: a space alone between two elements
+      // gets no glyph in the PDF, and the name would run into the role.
+      role.textContent = ' — ' + ref.role;
+      head.appendChild(role);
+    }
+    item.appendChild(head);
 
-    // Email and phone share a line: on four referee lines the block costs
-    // 26mm and tips the printed CV onto a third page.
     var contact = document.createElement('p');
     contact.className = 'cv-ref__line';
     if (ref.email) {
@@ -163,13 +164,6 @@ function renderRefs(refs) {
       contact.appendChild(document.createTextNode(ref.phone));
     }
     item.appendChild(contact);
-
-    if (ref.role) {
-      var role = document.createElement('p');
-      role.className = 'cv-ref__role';
-      role.textContent = ref.role;
-      item.appendChild(role);
-    }
 
     list.appendChild(item);
   });

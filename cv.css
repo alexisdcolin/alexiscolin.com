@@ -11,9 +11,6 @@
   --cv-accent: #7c4a15;
   --cv-rule:   #3f2a10;
   --cv-hair:   #c9c2ba;
-  /* Same rule, one rank down: used between roles of a single employer */
-  --cv-hair-soft: #e0dad3;
-  --cv-chip:   #b8b0a6;
   /* Humanist sans, close to the LaTeX original and free of any webfont to load */
   --cv-sans:   -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
@@ -109,7 +106,7 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ── Header ── */
-.cv-head { margin-bottom: 0.9rem; }
+.cv-head { margin-bottom: 0.9rem; text-align: center; }
 
 .cv-name {
   margin: 0;
@@ -133,21 +130,19 @@ a { color: inherit; text-decoration: none; }
   font-weight: 700;
 }
 
-/* One single row on the printed page: the six items are kept short enough to
-   fit, the LinkedIn and GitHub entries showing the handle alone since the
-   icon already says which platform it is. On screen the row wraps rather
-   than overflow, the viewport being narrower than A4 on most windows. */
-.cv-contact {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 0.2rem 0.9rem;
-  margin: 0.2rem 0 0;
-  padding: 0;
-  list-style: none;
-  font-size: 8.4pt;
-}
-.cv-contact li { display: flex; align-items: center; gap: 0.32em; white-space: nowrap; }
-.cv-contact .ico { color: var(--cv-accent); }
+/* Two lines, how to reach you then where to read more: each item an icon and
+   its text, with a real " · " between items so an ATS reads every line in
+   order. A grid was read column by column: pdfminer dropped half the
+   contacts into the first job. LinkedIn and GitHub spell the profile out in
+   full, and no item ever breaks across two lines: the line wraps between
+   items. */
+.cv-contact { margin: 0.2rem 0 0; font-size: 8.4pt; font-style: normal; }
+.cv-contact p { margin: 0; }
+.cv-contact p + p { margin-top: 0.2rem; }
+.cv-contact__item { white-space: nowrap; }
+.cv-contact__item .ico { margin-right: 0.3em; color: var(--cv-accent); }
+/* The dot between the contacts of one line */
+.cv-sep { color: var(--cv-accent); }
 
 /* ── Sections ── */
 /* Eight sections: every tenth of a rem here is worth ~3mm over the document,
@@ -187,14 +182,18 @@ a { color: inherit; text-decoration: none; }
   color: var(--cv-accent);
 }
 
+/* The icons already set date, place and link apart: a moderate gap is enough */
 .cv-entry__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.15rem 1.6rem;
+  gap: 0.15rem 0.9rem;
   margin: 0.15rem 0 0.25rem;
   font-size: 8.6pt;
   color: var(--cv-muted);
 }
+/* The icon and one inline run of text. Dates wrap their parts in
+   .cv-meta__text: as separate flex items, the spaces around – and · were
+   trimmed and replaced by the gap, leaving no space character in the PDF. */
 .cv-meta { display: flex; align-items: center; gap: 0.35em; }
 
 .cv-entry__desc { margin: 0 0 0.2rem; }
@@ -224,102 +223,94 @@ a { color: inherit; text-decoration: none; }
 }
 .cv-group__head .cv-entry__meta { margin-bottom: 0.3rem; }
 
-/* Roles align on the margin like any other entry. What sets them apart from
-   a change of employer is the separator: a short centred rule instead of the
-   full-width dashed one, dotted and in a paler grey. */
-.cv-group .cv-entry { padding: 0 0 0.3rem; }
-
-.cv-group .cv-entry + .cv-entry {
-  position: relative;
-  margin-top: 0.35rem;
-  border-top: 0;
-  padding-top: 0.35rem;
-}
-.cv-group .cv-entry + .cv-entry::before {
+/* Roles of one employer hang off a thin vertical line with a dot at each
+   title, as LinkedIn draws them, half a line apart. Line and dots are
+   borders on empty pseudo-elements: no character reaches the PDF's text,
+   and borders print even with "background graphics" off. The dot's top
+   puts its centre on the title's first line (11pt × 1.3 ÷ 2 ≈ 7.2pt). A
+   hanging line in the page margin would keep the roles on the margin, but
+   print clips anything drawn outside the page area. */
+.cv-group .cv-entry { position: relative; padding: 0 0 0 1.05rem; }
+.cv-group .cv-entry + .cv-entry { margin-top: 0.5rem; border-top: 0; padding-top: 0; }
+.cv-group .cv-entry::before {
   content: '';
   position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 60%;
-  /* auto margins rather than a transform: centring that survives print
-     without relying on the engine compositing a transformed box. */
-  margin: 0 auto;
-  border-top: 0.5pt dotted var(--cv-hair-soft);
+  top: 4.8pt;
+  left: 0.1rem;
+  width: 0;
+  height: 0;
+  border: 3.2px solid var(--cv-hair);
+  border-radius: 50%;
 }
-.cv-group .cv-entry:last-child { padding-bottom: 0; }
+/* From just below this role's dot to just above the next one */
+.cv-group .cv-entry:not(:last-child)::after {
+  content: '';
+  position: absolute;
+  top: calc(9.6pt + 2.5px);
+  bottom: calc(-0.5rem - 4.8pt + 2.5px);
+  left: calc(0.1rem + 2.6px);
+  border-left: 1.2px solid var(--cv-hair);
+}
 
 /* Role titles keep the shared .cv-entry__title treatment — only the client
    line differs, being a client and not an employer. */
 .cv-group .cv-entry__org { font-weight: 400; color: var(--cv-muted); }
 
 /* ── Skills ── */
-.cv-skills {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.5rem 1.6rem;
-}
+/* One line per category, rendered by cv.js as a single comma-separated text
+   run. Chips side by side leave no space character in the PDF, and a
+   two-column grid is read row by row, one category running into the next. */
+.cv-skills__row { margin: 0 0 0.12rem; }
 
-.cv-skills__cat {
-  display: flex;
-  align-items: center;
-  gap: 0.4em;
-  margin: 0 0 0.22rem;
-  font-size: 9.5pt;
-  font-weight: 700;
-}
+.cv-skills__cat { font-weight: 700; }
+/* Drawn with a border, not a background: browsers drop backgrounds when
+   printing unless "background graphics" is ticked, and the dot vanished. */
 .cv-skills__cat::before {
   content: '';
+  display: inline-block;
   width: 4px;
   height: 4px;
+  margin-right: 0.45em;
+  border: 2px solid var(--cv-accent);
   border-radius: 50%;
-  background: var(--cv-accent);
-}
-
-.cv-skills__chips { display: flex; flex-wrap: wrap; gap: 0.25rem; }
-
-.cv-chip {
-  padding: 0.08rem 0.45rem;
-  border: 0.8pt solid var(--cv-chip);
-  border-radius: 3px;
-  font-size: 8.8pt;
-  white-space: nowrap;
+  vertical-align: 0.2em;
 }
 
 /* ── Languages ── */
-.cv-langs {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.3rem 1.6rem;
-}
+/* One per line, like the interests below: in two grid columns, pdfminer
+   read the second language under the next section's heading. */
+.cv-langs { display: grid; gap: 0.15rem; }
 
 .cv-lang {
   display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.5rem;
+  gap: 0 0.5rem;
+  margin: 0;
 }
 .cv-lang__name { font-weight: 700; }
 .cv-lang__level { color: var(--cv-muted); font-size: 9pt; }
 
 
 /* ── Misc ── */
-.cv-misc {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.4rem 1.6rem;
+/* One item per line, title then description: in two columns the PDF reads
+   both titles first, then both descriptions. */
+.cv-misc { display: grid; gap: 0.15rem; }
+.cv-misc__item {
+  display: flex;
+  flex-wrap: wrap;
+  align-items: baseline;
+  gap: 0 0.5rem;
 }
 .cv-misc__title { margin: 0; font-weight: 700; }
 .cv-misc__desc  { margin: 0; color: var(--cv-muted); font-size: 9.5pt; }
 
 .cv-refs { margin: 0; color: var(--cv-muted); }
 
-/* Referees, once decrypted */
-.cv-refs-list {
-  display: grid;
-  grid-template-columns: repeat(2, minmax(0, 1fr));
-  gap: 0.4rem 1.6rem;
-}
-.cv-ref__name { margin: 0; font-weight: 700; }
+/* Referees, once decrypted: one under the other (see renderRefs in cv.js) */
+.cv-refs-list { display: grid; gap: 0.3rem; }
+.cv-ref__head { margin: 0; }
+.cv-ref__name { font-weight: 700; }
 .cv-ref__line {
   display: flex;
   align-items: center;
@@ -332,14 +323,12 @@ a { color: inherit; text-decoration: none; }
 /* Space before the phone icon, none before its number */
 .cv-ref__line .ico + .ico { margin-left: 0.5em; }
 .cv-ref__line .ico { color: var(--cv-accent); }
-.cv-ref__role { margin: 0; color: var(--cv-muted); font-size: 9pt; }
+.cv-ref__role { color: var(--cv-muted); font-size: 9pt; }
 
 /* ── Small screens: the A4 frame stops helping ── */
 @media (max-width: 560px) {
   .cv { margin: 0; padding: 20px 16px; box-shadow: none; }
   .cv-name { font-size: 24pt; }
-  .cv-skills, .cv-langs, .cv-misc, .cv-refs-list { grid-template-columns: 1fr; }
-  .cv-entry__meta { gap: 0.15rem 0.9rem; }
 }
 
 /* ═══════════════════════════════════════════
@@ -356,9 +345,6 @@ a { color: inherit; text-decoration: none; }
   [data-screen-only] { display: none !important; }
 
   .cv { max-width: none; margin: 0; padding: 0; box-shadow: none; }
-
-  /* At A4 width the six items fit, spread edge to edge */
-  .cv-contact { flex-wrap: nowrap; justify-content: space-between; }
 
   /* A heading stranded at the foot of a page looks amateurish, so headings
      and entry titles never end a page. Job entries themselves DO split: at
