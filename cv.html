@@ -51,8 +51,11 @@
       <h1 class="cv-name">Alexis Colin</h1>
       <p class="cv-role" data-i18n="hero.role">Développeur Data &amp; IA</p>
       <p class="cv-tagline" data-i18n="cv.tagline">De leur source jusqu'aux agents IA : des données fiables, gouvernées, dignes de confiance</p>
+      <!-- The phone keeps a plain space and hyphen, which every PDF extractor
+           reads as such. html-validate's tel-non-breaking accepts the inline
+           nowrap in place of &nbsp; and &#8209;. -->
       <address class="cv-contact">
-        <p><span class="cv-contact__item"><svg class="ico"><use href="#i-mail"/></svg><a href="mailto:contact@alexiscolin.com">contact@alexiscolin.com</a></span><span class="cv-sep"> · </span><span class="cv-contact__item"><svg class="ico"><use href="#i-phone"/></svg><a href="tel:+14385436098">(438) 543-6098</a></span><span class="cv-sep"> · </span><span class="cv-contact__item"><svg class="ico"><use href="#i-pin"/></svg><span data-i18n="hero.location">Montréal, Canada</span></span></p>
+        <p><span class="cv-contact__item"><svg class="ico"><use href="#i-mail"/></svg><a href="mailto:contact@alexiscolin.com">contact@alexiscolin.com</a></span><span class="cv-sep"> · </span><span class="cv-contact__item"><svg class="ico"><use href="#i-phone"/></svg><a href="tel:+14385436098" style="white-space: nowrap">(438) 543-6098</a></span><span class="cv-sep"> · </span><span class="cv-contact__item"><svg class="ico"><use href="#i-pin"/></svg><span data-i18n="hero.location">Montréal, Canada</span></span></p>
         <p><span class="cv-contact__item"><svg class="ico"><use href="#i-link"/></svg><a href="https://alexiscolin.com">alexiscolin.com</a></span><span class="cv-sep"> · </span><span class="cv-contact__item"><svg class="ico"><use href="#i-in"/></svg><a href="https://www.linkedin.com/in/alexisdcolin">linkedin.com/in/alexisdcolin</a></span><span class="cv-sep"> · </span><span class="cv-contact__item"><svg class="ico"><use href="#i-gh"/></svg><a href="https://github.com/alexisdcolin">github.com/alexisdcolin</a></span></p>
       </address>
     </header>
