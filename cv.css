@@ -141,7 +141,7 @@ a { color: inherit; text-decoration: none; }
 .cv-contact p + p { margin-top: 0.2rem; }
 .cv-contact__item { white-space: nowrap; }
 .cv-contact__item .ico { margin-right: 0.3em; color: var(--cv-accent); }
-/* The dot between items of a one-line list: contacts, languages */
+/* The dot between the contacts of one line */
 .cv-sep { color: var(--cv-accent); }
 
 /* ── Sections ── */
@@ -254,14 +254,16 @@ a { color: inherit; text-decoration: none; }
 }
 
 /* ── Languages ── */
-/* One line, the languages joined by a real separator: in two grid columns,
-   pdfminer read the second language under the next section's heading. */
-.cv-langs { margin: 0; }
+/* One per line, like the interests below: in two grid columns, pdfminer
+   read the second language under the next section's heading. */
+.cv-langs { display: grid; gap: 0.15rem; }
 
 .cv-lang {
-  display: inline-flex;
+  display: flex;
+  flex-wrap: wrap;
   align-items: baseline;
-  gap: 0.5rem;
+  gap: 0 0.5rem;
+  margin: 0;
 }
 .cv-lang__name { font-weight: 700; }
 .cv-lang__level { color: var(--cv-muted); font-size: 9pt; }
