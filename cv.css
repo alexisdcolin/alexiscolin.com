@@ -11,8 +11,6 @@
   --cv-accent: #7c4a15;
   --cv-rule:   #3f2a10;
   --cv-hair:   #c9c2ba;
-  /* Same rule, one rank down: used between roles of a single employer */
-  --cv-hair-soft: #e0dad3;
   /* Humanist sans, close to the LaTeX original and free of any webfont to load */
   --cv-sans:   -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
 }
@@ -184,10 +182,11 @@ a { color: inherit; text-decoration: none; }
   color: var(--cv-accent);
 }
 
+/* The icons already set date, place and link apart: a moderate gap is enough */
 .cv-entry__meta {
   display: flex;
   flex-wrap: wrap;
-  gap: 0.15rem 1.6rem;
+  gap: 0.15rem 0.9rem;
   margin: 0.15rem 0 0.25rem;
   font-size: 8.6pt;
   color: var(--cv-muted);
@@ -224,30 +223,11 @@ a { color: inherit; text-decoration: none; }
 }
 .cv-group__head .cv-entry__meta { margin-bottom: 0.3rem; }
 
-/* Roles align on the margin like any other entry. What sets them apart from
-   a change of employer is the separator: a short centred rule instead of the
-   full-width dashed one, dotted and in a paler grey. */
-.cv-group .cv-entry { padding: 0 0 0.3rem; }
-
-.cv-group .cv-entry + .cv-entry {
-  position: relative;
-  margin-top: 0.35rem;
-  border-top: 0;
-  padding-top: 0.35rem;
-}
-.cv-group .cv-entry + .cv-entry::before {
-  content: '';
-  position: absolute;
-  top: 0;
-  left: 0;
-  right: 0;
-  width: 60%;
-  /* auto margins rather than a transform: centring that survives print
-     without relying on the engine compositing a transformed box. */
-  margin: 0 auto;
-  border-top: 0.5pt dotted var(--cv-hair-soft);
-}
-.cv-group .cv-entry:last-child { padding-bottom: 0; }
+/* Roles align on the margin like any other entry and follow one another
+   without a rule, half a line apart: closer than two employers, which the
+   full-width dashed line still separates. */
+.cv-group .cv-entry { padding: 0; }
+.cv-group .cv-entry + .cv-entry { margin-top: 0.5rem; border-top: 0; padding-top: 0; }
 
 /* Role titles keep the shared .cv-entry__title treatment — only the client
    line differs, being a client and not an employer. */
@@ -324,7 +304,6 @@ a { color: inherit; text-decoration: none; }
 @media (max-width: 560px) {
   .cv { margin: 0; padding: 20px 16px; box-shadow: none; }
   .cv-name { font-size: 24pt; }
-  .cv-entry__meta { gap: 0.15rem 0.9rem; }
 }
 
 /* ═══════════════════════════════════════════
