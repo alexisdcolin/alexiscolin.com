@@ -3,13 +3,24 @@ const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)
 
 // ─── Dynamic duration for current job ────────────────────────────────────────
 const CURRENT_JOB_START = new Date(2024, 1); // February 2024
+// Past roles: BIALR, Sept. 2020 – Dec. 2023 (40) + Hyatt, Apr. – July 2018 (4)
+const PRIOR_EXPERIENCE_MONTHS = 40 + 4;
+
+function currentJobMonths() {
+  const now = new Date();
+  return (now.getFullYear() - CURRENT_JOB_START.getFullYear()) * 12
+       + (now.getMonth()    - CURRENT_JOB_START.getMonth());
+}
+
+// Whole years across all roles, for the "N+ years of experience" stat
+function yearsOfExperience() {
+  return Math.floor((PRIOR_EXPERIENCE_MONTHS + currentJobMonths()) / 12);
+}
 
 function currentJobDuration(lang) {
-  const start = CURRENT_JOB_START;
-  const now   = new Date();
-  let years  = now.getFullYear() - start.getFullYear();
-  let months = now.getMonth()    - start.getMonth();
-  if (months < 0) { years--; months += 12; }
+  const total  = currentJobMonths();
+  const years  = Math.floor(total / 12);
+  const months = total % 12;
 
   if (lang === 'fr') {
     const y = years  > 0 ? `${years} an${years  > 1 ? 's' : ''}` : '';

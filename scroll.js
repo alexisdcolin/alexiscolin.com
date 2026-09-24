@@ -321,6 +321,10 @@ const counterObserver = new IntersectionObserver(
   { threshold: 0.3 }
 );
 
+// yearsOfExperience comes from i18n.js; the HTML value is only a fallback
+const expCounter = document.querySelector('[data-stat="exp"] [data-count]');
+if (expCounter) expCounter.dataset.count = yearsOfExperience();
+
 const statsBlock = document.querySelector('.about-stats');
 if (statsBlock) counterObserver.observe(statsBlock);
 
