@@ -17,10 +17,15 @@
 // ─── Skills, grouped by category ─────────────────────────────────────────────
 // The name is deliberate: scroll.js already defines a renderSkills(), and both
 // files are classic scripts sharing one global scope.
-// Most proficient first. Every skill is listed rather than a hand-picked
-// subset: the extra keywords are what an ATS matches on. The separator and
+// Most proficient first. Every skill is listed unless flagged `cv: false`:
+// the extra keywords are what an ATS matches on. The separator and
 // the names share one text node so the PDF carries real spaces and commas —
 // Chrome paints no glyph for a space that sits alone between two elements.
+// The CV pairs up the site's smaller categories: two rows more and the
+// version with the references runs onto a third page. A row is named after
+// its first category, under the cv.skills.* key when the pair needs one.
+var CV_SKILL_ROWS = [['dataeng'], ['lang', 'db'], ['cloud'], ['bi'], ['devops', 'pm']];
+
 function renderCvSkills() {
   var host = document.getElementById('cvSkills');
   if (!host) return;
@@ -30,11 +35,14 @@ function renderCvSkills() {
   var sep = currentLang === 'en' ? ': ' : ' : ';
   host.textContent = '';
 
-  categoryDefs.forEach(function (cat) {
-    var names = skillsData
-      .filter(function (s) { return s.category === cat; })
-      .sort(function (a, b) { return b.level - a.level; })
-      .map(function (s) { return s.name; });
+  CV_SKILL_ROWS.forEach(function (cats) {
+    var names = [];
+    cats.forEach(function (cat) {
+      skillsData
+        .filter(function (s) { return s.category === cat && s.cv !== false; })
+        .sort(function (a, b) { return b.level - a.level; })
+        .forEach(function (s) { names.push(skillLabel(s)); });
+    });
     if (!names.length) return;
 
     var row = document.createElement('p');
@@ -42,7 +50,7 @@ function renderCvSkills() {
 
     var label = document.createElement('span');
     label.className = 'cv-skills__cat';
-    label.textContent = t['skills.' + cat] || cat;
+    label.textContent = t['cv.skills.' + cats[0]] || t['skills.' + cats[0]] || cats[0];
 
     row.appendChild(label);
     row.appendChild(document.createTextNode(sep + names.join(', ')));

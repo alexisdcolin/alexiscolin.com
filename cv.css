@@ -11,8 +11,10 @@
   --cv-accent: #7c4a15;
   --cv-rule:   #3f2a10;
   --cv-hair:   #c9c2ba;
-  /* Humanist sans, close to the LaTeX original and free of any webfont to load */
-  --cv-sans:   -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, 'Helvetica Neue', Arial, sans-serif;
+  /* Humanist sans, close to the LaTeX original and free of any webfont to load.
+     No -apple-system: Chrome writes San Francisco into the PDF in fragments,
+     and text extractors read "jusq u'aux" or "Bitbu cket". */
+  --cv-sans:   'Helvetica Neue', Helvetica, 'Segoe UI', Roboto, Arial, sans-serif;
 }
 
 *, *::before, *::after { box-sizing: border-box; }
@@ -24,6 +26,9 @@ body {
   font-family: var(--cv-sans);
   font-size: 9.6pt;
   line-height: 1.34;
+  /* Helvetica Neue joins "ffi" into one glyph, which reaches the PDF's text
+     as U+FB03: an ATS searching "Offices" would not find it */
+  font-variant-ligatures: none;
   -webkit-text-size-adjust: 100%;
 }
 
@@ -231,6 +236,10 @@ a { color: inherit; text-decoration: none; }
    hanging line in the page margin would keep the roles on the margin, but
    print clips anything drawn outside the page area. */
 .cv-group .cv-entry { position: relative; padding: 0 0 0 1.05rem; }
+/* Chrome paints positioned boxes after the rest, and writes the PDF's text
+   in paint order: the roles above, alone positioned, were read after the
+   next employer. Positioning every block of a section keeps document order. */
+.cv-section > *, .cv-group > * { position: relative; }
 .cv-group .cv-entry + .cv-entry { margin-top: 0.5rem; border-top: 0; padding-top: 0; }
 .cv-group .cv-entry::before {
   content: '';
