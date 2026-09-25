@@ -89,6 +89,8 @@ window.addEventListener('afterprint', function () { document.title = screenTitle
 //
 // cv-refs.enc holds, base64-encoded:
 //   salt[16] | iv[12] | AES-GCM ciphertext
+// over a JSON array of { name, role, email, phone }, where role is either a
+// string or { fr, en }.
 // with the key derived by PBKDF2-SHA256 over 600 000 iterations — the current
 // OWASP figure. It costs half a second on unlock and multiplies the cost of an
 // offline attack by the same factor, which is what buys a shorter passphrase.
@@ -160,12 +162,15 @@ function renderRefs(refs) {
     name.className = 'cv-ref__name';
     name.textContent = ref.name;
     head.appendChild(name);
-    if (ref.role) {
+    var roleText = typeof ref.role === 'object' && ref.role
+      ? ref.role[currentLang] || ref.role.fr
+      : ref.role;
+    if (roleText) {
       var role = document.createElement('span');
       role.className = 'cv-ref__role';
       // The dash travels with the role: a space alone between two elements
       // gets no glyph in the PDF, and the name would run into the role.
-      role.textContent = ' — ' + ref.role;
+      role.textContent = ' — ' + roleText;
       head.appendChild(role);
     }
     item.appendChild(head);
@@ -216,6 +221,12 @@ if (refsBtn) {
   // versions in one sitting — does not mean retyping the passphrase. Closing
   // the tab drops it; nothing is ever persisted.
   var refsPlain = null;
+
+  // The roles are data, not data-i18n keys: shown refs are rebuilt on a
+  // language change, the same way the skills are.
+  new MutationObserver(function () {
+    if (refsPlain && document.querySelector('#cvRefs .cv-ref')) renderRefs(refsPlain);
+  }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
   refsBtn.addEventListener('click', async function () {
     var t = translations[currentLang] || translations.fr;
