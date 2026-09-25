@@ -71,6 +71,15 @@ new MutationObserver(renderCvSkills).observe(document.documentElement, {
 var printBtn = document.getElementById('cvPrint');
 if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
 
+// Browsers name the saved PDF after the title. Swapped on beforeprint rather
+// than in the button handler, so Cmd+P gets the same file name. English says
+// "resume": in North America a CV is the long academic document.
+var screenTitle = document.title;
+window.addEventListener('beforeprint', function () {
+  document.title = currentLang === 'en' ? 'Alexis-Colin-Resume' : 'Alexis-Colin-CV';
+});
+window.addEventListener('afterprint', function () { document.title = screenTitle; });
+
 // ─── References, unlocked with a passphrase ──────────────────────────────────
 // The site is static, so anything shipped to the browser is readable by anyone.
 // The referees' names and contact details therefore travel as AES-GCM
