@@ -85,50 +85,8 @@ window.addEventListener('afterprint', function () { document.title = screenTitle
 // The referees' names and contact details therefore travel as AES-GCM
 // ciphertext in cv-refs.enc and are only ever legible to someone holding the
 // passphrase. Decrypted values live in memory for the tab's lifetime — never in
-// localStorage, never written back into the served page.
-//
-// cv-refs.enc holds, base64-encoded:
-//   salt[16] | iv[12] | AES-GCM ciphertext
-// over a JSON array of { name, role, email, phone }, where role is either a
-// string or { fr, en }.
-// with the key derived by PBKDF2-SHA256 over 600 000 iterations — the current
-// OWASP figure. It costs half a second on unlock and multiplies the cost of an
-// offline attack by the same factor, which is what buys a shorter passphrase.
-var REFS_URL = '/cv-refs.enc';
-var REFS_ITERATIONS = 600000;
-
-function b64ToBytes(b64) {
-  var bin = atob(b64.trim());
-  var out = new Uint8Array(bin.length);
-  for (var i = 0; i < bin.length; i++) out[i] = bin.charCodeAt(i);
-  return out;
-}
-
-async function deriveRefsKey(passphrase, salt) {
-  var material = await crypto.subtle.importKey(
-    'raw', new TextEncoder().encode(passphrase), 'PBKDF2', false, ['deriveKey']
-  );
-  return crypto.subtle.deriveKey(
-    { name: 'PBKDF2', salt: salt, iterations: REFS_ITERATIONS, hash: 'SHA-256' },
-    material,
-    { name: 'AES-GCM', length: 256 },
-    false,
-    ['decrypt']
-  );
-}
-
-// Throws on a wrong passphrase: AES-GCM authenticates, so a bad key fails the
-// tag check rather than returning plausible-looking garbage.
-async function decryptRefs(passphrase) {
-  var res = await fetch(REFS_URL, { cache: 'no-store' });
-  if (!res.ok) throw new Error('missing');
-  var blob = b64ToBytes(await res.text());
-  var key = await deriveRefsKey(passphrase, blob.slice(0, 16));
-  var plain = await crypto.subtle.decrypt(
-    { name: 'AES-GCM', iv: blob.slice(16, 28) }, key, blob.slice(28)
-  );
-  return JSON.parse(new TextDecoder().decode(plain));
-}
+// localStorage, never written back into the served page. The file format and
+// decryptRefs() live in refs-crypto.js, shared with the terminal's `refs`.
 
 function refIcon(id) {
   var NS = 'http://www.w3.org/2000/svg';

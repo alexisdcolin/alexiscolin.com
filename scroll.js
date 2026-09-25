@@ -683,6 +683,8 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
         '  contact             email, téléphone, réseaux',
         '  open <réseau>       ouvrir un profil (github, linkedin…)',
         '  cv [fr|en]          ouvrir le CV',
+        '  ping [n]            latence vers Cloudflare',
+        '  refs                références du CV (propriétaire)',
         '  ls                  lister les sections',
         '  cd <section>        aller à une section',
         '  lang [fr|en]        changer la langue',
@@ -703,6 +705,30 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       langSet:   'Langue',
       themeSet:  'Thème',
       lastLogin: 'Dernière connexion :',
+      pingFail:  'ping : Cloudflare ne répond pas ici (en local ?)',
+      refs: {
+        pass:      'Phrase de passe :',
+        newPass:   'Nouvelle phrase de passe (Entrée = garder l\'actuelle) :',
+        confirm:   'Confirmation :',
+        loading:   'Déchiffrement…',
+        wrong:     'Phrase de passe incorrecte.',
+        missing:   'cv-refs.enc introuvable.',
+        failed:    'Échec : rien n\'a été écrit.',
+        mismatch:  'Les deux phrases diffèrent : rien n\'a été écrit.',
+        locked:    'Références verrouillées.',
+        noSession: 'Aucune référence ouverte : tapez « refs ».',
+        badIndex:  'numéro de référence invalide :',
+        badField:  'champ inconnu :',
+        saved:     'cv-refs.enc téléchargé : remplacez celui du dépôt, puis commit et push.',
+        usage: [
+          'refs                           déverrouiller et afficher',
+          'refs set <n> <champ> <valeur>  name, email, phone, role, role.fr, role.en',
+          'refs add <nom>                 ajouter une référence',
+          'refs rm <n>                    supprimer une référence',
+          'refs save                      chiffrer et télécharger cv-refs.enc',
+          'refs lock                      oublier les références',
+        ],
+      },
     },
     en: {
       welcome: "Type 'help' to list the commands.",
@@ -719,6 +745,8 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
         '  contact             email, phone, socials',
         '  open <network>      open a profile (github, linkedin…)',
         '  cv [fr|en]          open the resume',
+        '  ping [n]            latency to Cloudflare',
+        '  refs                CV references (owner only)',
         '  ls                  list sections',
         '  cd <section>        jump to a section',
         '  lang [fr|en]        switch language',
@@ -739,6 +767,30 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       langSet:   'Language',
       themeSet:  'Theme',
       lastLogin: 'Last login:',
+      pingFail:  'ping: Cloudflare is not answering here (running locally?)',
+      refs: {
+        pass:      'Passphrase:',
+        newPass:   'New passphrase (Enter = keep the current one):',
+        confirm:   'Confirm:',
+        loading:   'Decrypting…',
+        wrong:     'Wrong passphrase.',
+        missing:   'cv-refs.enc not found.',
+        failed:    'Failed: nothing was written.',
+        mismatch:  'The passphrases differ: nothing was written.',
+        locked:    'References locked.',
+        noSession: "No references open: type 'refs'.",
+        badIndex:  'invalid reference number:',
+        badField:  'unknown field:',
+        saved:     'cv-refs.enc downloaded: replace the one in the repo, then commit and push.',
+        usage: [
+          'refs                           unlock and list',
+          'refs set <n> <field> <value>   name, email, phone, role, role.fr, role.en',
+          'refs add <name>                add a reference',
+          'refs rm <n>                    remove a reference',
+          'refs save                      encrypt and download cv-refs.enc',
+          'refs lock                      forget the references',
+        ],
+      },
     }
   };
 
@@ -825,6 +877,207 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     const datePart = new Intl.DateTimeFormat(currentLang, { weekday: 'short', day: '2-digit', month: 'short' }).format(d);
     const time = new Intl.DateTimeFormat(currentLang, { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(d);
     return `${tt().lastLogin} ${datePart} ${time}`;
+  }
+
+  // One pending question at a time: the next Enter answers it instead of
+  // running a command. A secret answer is typed masked, echoed as dots and
+  // kept out of the history. Closing the terminal answers null.
+  let pending = null;
+
+  function ask(label, secret) {
+    print(label, 'terminal__line--muted');
+    input.type = secret ? 'password' : 'text';
+    return new Promise(resolve => { pending = { resolve, secret }; });
+  }
+
+  function settle(value) {
+    const p = pending;
+    pending = null;
+    input.type = 'text';
+    if (p) p.resolve(value);
+  }
+
+  // ─── refs: edit the CV references (for the owner, flagged so in help) ─────
+  // Unlocks cv-refs.enc, edits the referees in memory and downloads the
+  // re-encrypted file, to commit in place of the old one: the site is static,
+  // nothing is sent anywhere. The plain text lives in refsSession until
+  // `refs lock` or the terminal closes.
+  let refsSession = null;
+  let refsLib = null;
+
+  // Fetched on first use only. Keep ?v= in step with the tag in cv.html.
+  const loadRefsLib = () => refsLib || (refsLib = new Promise((resolve, reject) => {
+    const s = document.createElement('script');
+    s.src = '/refs-crypto.js?v=1';
+    s.onload = resolve;
+    s.onerror = () => { refsLib = null; reject(new Error('load')); };
+    document.head.appendChild(s);
+  }));
+
+  function showRefs() {
+    refsSession.refs.forEach((ref, i) => {
+      const role = ref.role && typeof ref.role === 'object'
+        ? `${ref.role.fr} / ${ref.role.en}`
+        : ref.role || '';
+      print(`  ${i + 1}  ${ref.name}${role ? ' — ' + role : ''}`);
+      const contact = [ref.email, ref.phone].filter(Boolean).join(' · ');
+      if (contact) print(`     ${contact}`, 'terminal__line--muted');
+    });
+  }
+
+  async function refsCommand(args) {
+    const r = tt().refs;
+    const sub = (args[0] || '').toLowerCase();
+
+    if (sub === 'help') { print(r.usage); return; }
+    if (sub === 'lock') {
+      // The scrollback holds the listed referees too
+      refsSession = null;
+      clearQueue();
+      output.innerHTML = '';
+      print(r.locked);
+      return;
+    }
+
+    if (!refsSession) {
+      if (sub && sub !== 'show') { print(r.noSession, 'terminal__line--error'); return; }
+      const pass = await ask(r.pass, true);
+      if (!pass) return;
+      print(r.loading, 'terminal__line--muted');
+      try {
+        await loadRefsLib();
+        refsSession = { refs: await decryptRefs(pass), pass };
+      } catch (e) {
+        const msg = e.message === 'missing' ? r.missing : e.message === 'load' ? r.failed : r.wrong;
+        print(msg, 'terminal__line--error');
+        return;
+      }
+      showRefs();
+      print('');
+      print(r.usage, 'terminal__line--muted');
+      return;
+    }
+
+    const refs = refsSession.refs;
+    if (!sub || sub === 'show') { showRefs(); return; }
+    if (sub === 'add') { refs.push({ name: args.slice(1).join(' ') || '?' }); showRefs(); return; }
+
+    if (sub === 'rm' || sub === 'set') {
+      const n = Number(args[1]);
+      const ref = Number.isInteger(n) ? refs[n - 1] : undefined;
+      if (!ref) { print(`${r.badIndex} ${args[1] || ''}`, 'terminal__line--error'); return; }
+      if (sub === 'rm') { refs.splice(n - 1, 1); showRefs(); return; }
+
+      const field = (args[2] || '').toLowerCase();
+      const value = args.slice(3).join(' ');
+      if (['name', 'email', 'phone', 'role'].includes(field)) {
+        if (value) ref[field] = value;
+        else delete ref[field];
+      } else if (field === 'role.fr' || field === 'role.en') {
+        // A plain role becomes { fr, en }, both starting from the old text
+        const role = ref.role && typeof ref.role === 'object'
+          ? ref.role
+          : { fr: ref.role || '', en: ref.role || '' };
+        role[field.slice(5)] = value;
+        ref.role = role;
+      } else {
+        print(`${r.badField} ${args[2] || ''}`, 'terminal__line--error');
+        return;
+      }
+      showRefs();
+      return;
+    }
+
+    if (sub === 'save') {
+      const next = await ask(r.newPass, true);
+      if (next === null || !refsSession) return;
+      let pass = refsSession.pass;
+      if (next) {
+        if ((await ask(r.confirm, true)) !== next) { print(r.mismatch, 'terminal__line--error'); return; }
+        pass = next;
+      }
+      if (!refsSession) return;
+      try {
+        const file = await encryptRefs(refs, pass);
+        const a = document.createElement('a');
+        a.href = URL.createObjectURL(new Blob([file], { type: 'application/octet-stream' }));
+        a.download = 'cv-refs.enc';
+        a.click();
+        // Revoked later: some browsers start the download after click() returns
+        setTimeout(() => URL.revokeObjectURL(a.href), 10000);
+        refsSession.pass = pass;
+        print(r.saved);
+      } catch (e) {
+        print(r.failed, 'terminal__line--error');
+      }
+      return;
+    }
+
+    print(r.usage, 'terminal__line--muted');
+  }
+
+  // ─── ping: real round trips to the Cloudflare edge ──────────────────────────
+  // /cdn-cgi/trace answers on every hostname Cloudflare proxies, is never
+  // cached, and names the datacenter that served it (colo, an airport code).
+  // Same origin, so the CSP's connect-src 'self' already allows it. The output
+  // stays in English, like the real ping's.
+  const COLOS = {
+    YUL: 'Montreal', YYZ: 'Toronto', YVR: 'Vancouver', YOW: 'Ottawa',
+    EWR: 'Newark', IAD: 'Ashburn', ORD: 'Chicago', BOS: 'Boston',
+    SJC: 'San Jose', LAX: 'Los Angeles', CDG: 'Paris', MRS: 'Marseille',
+    LHR: 'London', FRA: 'Frankfurt', AMS: 'Amsterdam', GVA: 'Geneva',
+  };
+  let pinging = false;
+  const terminalClosed = () => overlay.hidden || overlay.classList.contains('terminal-overlay--closing');
+
+  async function pingCommand(args) {
+    if (pinging) return;
+    pinging = true;
+    const count = Math.min(Math.max(parseInt(args[0], 10) || 4, 1), 10);
+    const host = location.hostname;
+    const times = [];
+    let sent = 0;
+    try {
+      for (let seq = 0; seq < count && !terminalClosed(); seq++) {
+        const t0 = performance.now();
+        sent++;
+        let text = null;
+        try {
+          const res = await fetch('/cdn-cgi/trace', { cache: 'no-store' });
+          if (res.ok) text = await res.text();
+        } catch (e) {}
+        const ms = performance.now() - t0;
+        if (terminalClosed()) return;
+
+        if (text === null) {
+          // Nothing from the very first one: no Cloudflare in front, say so once
+          if (seq === 0) { print(tt().pingFail, 'terminal__line--error'); return; }
+          print(`Request timeout for icmp_seq ${seq}`, 'terminal__line--error');
+        } else {
+          if (seq === 0) {
+            const colo = (text.match(/^colo=(\w+)$/m) || [])[1] || '?';
+            print(`PING ${host} via Cloudflare ${colo}${COLOS[colo] ? ` (${COLOS[colo]})` : ''}`);
+          }
+          times.push(ms);
+          print(`${text.length} bytes from ${host}: icmp_seq=${seq} time=${ms.toFixed(1)} ms`);
+        }
+        // A second between pings, like the real one
+        if (seq < count - 1) await new Promise(r => setTimeout(r, Math.max(0, 1000 - ms)));
+      }
+      if (!sent || terminalClosed()) return;
+
+      const loss = Math.round((1 - times.length / sent) * 100);
+      print('');
+      print(`--- ${host} ping statistics ---`);
+      print(`${sent} packets transmitted, ${times.length} packets received, ${loss}% packet loss`);
+      if (times.length) {
+        const avg = times.reduce((a, b) => a + b, 0) / times.length;
+        const fmt = n => n.toFixed(1);
+        print(`round-trip min/avg/max = ${fmt(Math.min(...times))}/${fmt(avg)}/${fmt(Math.max(...times))} ms`);
+      }
+    } finally {
+      pinging = false;
+    }
   }
 
   function gotoSection(id) {
@@ -939,6 +1192,8 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
 
     clear() { clearQueue(); output.innerHTML = ''; },
     exit() { closeTerminal(); },
+    ping: pingCommand,
+    refs: refsCommand,
   };
 
   // Short aliases for the two longest command names
@@ -995,6 +1250,10 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
   function closeTerminal() {
     if (overlay.hidden) return;
     const focus = lastFocus;
+    // Dropped now rather than after the animation: the plain-text references
+    // should not outlive the click on close
+    settle(null);
+    refsSession = null;
     // No close animation under reduced motion → animationend never fires, so
     // hide immediately rather than waiting for an event that won't come.
     if (prefersReducedMotion) { finishClose(focus); return; }
@@ -1038,9 +1297,18 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       e.preventDefault();
       const value = input.value;
       input.value = '';
-      if (value.trim()) { history.push(value); }
+      if (pending) {
+        print(pending.secret ? '••••••••' : value);
+        settle(value);
+        return;
+      }
+      // refs lines carry names, emails and phones: ↑ must not bring them back
+      // once the references are locked
+      if (value.trim() && !/^\s*refs\b/i.test(value)) { history.push(value); }
       histIdx = history.length;
       run(value);
+    } else if (pending) {
+      // No history recall into an answer, least of all a passphrase
     } else if (e.key === 'ArrowUp') {
       if (histIdx > 0) { histIdx--; input.value = history[histIdx]; }
       e.preventDefault();

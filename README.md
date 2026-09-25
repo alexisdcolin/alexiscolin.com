@@ -15,6 +15,7 @@ Vanilla HTML / CSS / JavaScript — no framework, no build step.
 | `skills-data.js` | Skills catalogue, shared by the site and the CV |
 | `cv.html` `cv.css` `cv.js` | Print view of the CV — wording reused from `i18n.js` |
 | `cv-refs.enc` | Referees, AES-GCM encrypted — unlocked in `cv.html` with a passphrase |
+| `refs-crypto.js` | `cv-refs.enc` format — decrypted by the CV, re-encrypted by the terminal's `refs` command |
 | `_headers` | Security + cache HTTP headers served by Cloudflare Pages |
 | `scripts/check-headers.py` | Asserts no file matches two `_headers` blocks setting the same header |
 
