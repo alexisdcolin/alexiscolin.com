@@ -13,6 +13,7 @@ const skillsData = [
   { id: 'mcp',        name: 'MCP',        level: 2, category: 'dataeng', icon: 'fastmcp' },
   { id: 'pentaho',    name: 'Pentaho',    level: 2, category: 'dataeng', icon: 'hitachi', cv: false },
   { id: 'prefect',    name: 'Prefect',    level: 1, category: 'dataeng', icon: 'prefect' },
+  { id: 'dbt',        name: 'dbt',        level: 1, category: 'dataeng', icon: null },
   // Languages
   { id: 'python',     name: 'Python',     level: 3, category: 'lang',  icon: 'python' },
   { id: 'sql',        name: 'SQL',        level: 3, category: 'lang',  icon: null },
@@ -32,6 +33,7 @@ const skillsData = [
   { id: 'postgresql', name: 'PostgreSQL', level: 3, category: 'db',    icon: 'postgresql' },
   { id: 'mssql',      name: 'SQL Server', level: 2, category: 'db',    icon: 'microsoftsqlserver' },
   { id: 'oracle',     name: 'Oracle',     level: 2, category: 'db',    icon: 'oracle' },
+  { id: 'duckdb',     name: 'DuckDB',     level: 1, category: 'db',    icon: 'duckdb' },
   // BI & data visualization
   { id: 'grafana',    name: 'Grafana',    level: 3, category: 'bi',    icon: 'grafana' },
   { id: 'tableau',    name: 'Tableau',    level: 1, category: 'bi',    icon: 'tableau' },

@@ -40,6 +40,9 @@ const customIcons = {
   agile: 'M12 4V1L8 5l4 4V6c3.31 0 6 2.69 6 6 0 1.01-.25 1.97-.7 2.8l1.46 1.46C19.54 15.03 20 13.57 20 12c0-4.42-3.58-8-8-8zm0 14c-3.31 0-6-2.69-6-6 0-1.01.25-1.97.7-2.8L5.24 7.74C4.46 8.97 4 10.43 4 12c0 4.42 3.58 8 8 8v3l4-4-4-4v3z',
   // "sparkles" glyph (Material auto_awesome) for the LLM skill
   llm: 'M19 9l1.25-2.75L23 5l-2.75-1.25L19 1l-1.25 2.75L15 5l2.75 1.25L19 9zm-7.5.5L9 4 6.5 9.5 1 12l5.5 2.5L9 20l2.5-5.5L17 12l-5.5-2.5zM19 15l-1.25 2.75L15 19l2.75 1.25L19 23l1.25-2.75L23 19l-2.75-1.25L19 15z',
+  // Material account_tree, a model DAG: dbt Labs' guidelines require permission
+  // to redistribute their logo, which is why Simple Icons dropped it
+  dbt:   'M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3z',
 };
 
 function makeCustomSvg(pathData) {
@@ -122,12 +125,12 @@ const roleSkills = {
     start: CURRENT_JOB_START,
     end: null,                  // ongoing
     skills: [
-      { id: 'llm',            key: true  },
       { id: 'mcp',            key: true,  start: new Date(2026, 3) },  // Apr 2026
       { id: 'python',         key: true  },
       { id: 'aws',            key: true  },
       { id: 'grafana',        key: true  },
       { id: 'mysql',          key: true  },
+      { id: 'llm',            key: false },
       { id: 'sql',            key: false },
       { id: 'snowflake',      key: false },
       { id: 'docker',         key: false },
@@ -138,6 +141,8 @@ const roleSkills = {
       { id: 'pulumi',         key: false },
       { id: 'git',            key: false },
       { id: 'stepfunctions',  key: false },
+      { id: 'dbt',            key: false, start: new Date(2026, 8) },  // Sep 2026
+      { id: 'duckdb',         key: false, start: new Date(2026, 8) },  // Sep 2026
     ]
   },
   bialr1: {

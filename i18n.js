@@ -301,7 +301,7 @@ const translations = {
     'exp.bialr.start':   'Sep. 2020',
     'exp.bialr.end':     'Dec. 2023',
     'exp.bialr.total':   '3 yrs 4 mos · Lyon, France\u00a0🇫🇷',
-    'exp.bialr1.role':   'Data Developer',
+    'exp.bialr1.role':   'Data Engineer',
     'exp.bialr1.start':  'Jan. 2023',
     'exp.bialr1.end':    'Dec. 2023',
     'exp.bialr1.meta':   '1 yr',
