@@ -1,7 +1,38 @@
 
 // ─── Shared helpers ───────────────────────────────────────────────────────────
-// Current translation table, with the fr fallback every caller in this file wants
-const t = () => translations[currentLang] || translations.fr;
+// A row that scrolls sideways fades on the side that has more to show
+// (.fade-l / .fade-r in style.css): the chronology and the position tabs on phones
+function edgeFades(box) {
+  const update = () => {
+    const max = box.scrollWidth - box.clientWidth;
+    box.classList.toggle('fade-l', box.scrollLeft > 2);
+    box.classList.toggle('fade-r', max > 2 && box.scrollLeft < max - 2);
+  };
+  box.addEventListener('scroll', update, { passive: true });
+  addEventListener('resize', update);
+  update();
+}
+
+// A small scroll bar under a sideways scroller: the thumb's width shows how much
+// is in view, its place where (--w and --p, read by style.css)
+function scrollThumb(box, bar) {
+  const update = () => {
+    const max = box.scrollWidth - box.clientWidth;
+    bar.style.setProperty('--w', `${Math.min(100, box.clientWidth / box.scrollWidth * 100).toFixed(1)}%`);
+    bar.style.setProperty('--p', max > 0 ? (box.scrollLeft / max).toFixed(3) : 0);
+  };
+  box.addEventListener('scroll', update, { passive: true });
+  addEventListener('resize', update);
+  update();
+}
+
+// Brings el to the middle of a sideways scroller — when it scrolls at all
+function centerIn(box, el) {
+  if (!box || box.scrollWidth <= box.clientWidth) return;
+  const d = el.getBoundingClientRect().left - box.getBoundingClientRect().left;
+  box.scrollBy({ left: d - (box.clientWidth - el.offsetWidth) / 2, behavior: prefersReducedMotion ? 'auto' : 'smooth' });
+  box.dispatchEvent(new Event('scroll')); // the fades follow at once, not a frame later
+}
 
 // One scroll listener for the whole page, coalesced into a single rAF: each job
 // runs at most once per frame, so a fast scroll can't queue up a layout read per
@@ -25,15 +56,6 @@ window.addEventListener('scroll', () => {
   });
 }, { passive: true });
 
-// ─── Scroll progress bar ──────────────────────────────────────────────────────
-const scrollProgressBar = document.getElementById('scrollProgress');
-if (scrollProgressBar) {
-  onScroll(y => {
-    const total = document.documentElement.scrollHeight - window.innerHeight;
-    scrollProgressBar.style.width = total > 0 ? (y / total * 100) + '%' : '0%';
-  });
-}
-
 // ─── Custom SVG icons (for skills without a simple-icons slug) ────────────────
 const customIcons = {
   sql:   'M12 3C7.58 3 4 4.79 4 7v10c0 2.21 3.58 4 8 4s8-1.79 8-4V7c0-2.21-3.58-4-8-4zm0 2c3.87 0 6 1.5 6 2s-2.13 2-6 2-6-1.5-6-2 2.13-2 6-2zm0 16c-3.87 0-6-1.5-6-2v-2.23C7.61 17.63 9.72 18 12 18s4.39-.37 6-1.23V19c0 .5-2.13 2-6 2zm0-4c-3.87 0-6-1.5-6-2v-2.23C7.61 13.63 9.72 14 12 14s4.39-.37 6-1.23V15c0 .5-2.13 2-6 2zm0-4c-3.87 0-6-1.5-6-2V9.77C7.61 10.63 9.72 11 12 11s4.39-.37 6-1.23V11c0 .5-2.13 2-6 2z',
@@ -43,6 +65,12 @@ const customIcons = {
   // Material account_tree, a model DAG: dbt Labs' guidelines require permission
   // to redistribute their logo, which is why Simple Icons dropped it
   dbt:   'M22 11V3h-7v3H9V3H2v8h7V8h2v10h4v3h7v-8h-7v3h-2V8h2v3z',
+  // Three nodes of a DAG — Dagster's logo isn't in Simple Icons
+  dagster: 'M5 3a3 3 0 1 1 0 6a3 3 0 1 1 0-6Zm0 12a3 3 0 1 1 0 6a3 3 0 1 1 0-6ZM19 9a3 3 0 1 1 0 6a3 3 0 1 1 0-6ZM7.4 8.01 15.89 11.65 16.6 9.99 8.11 6.36ZM8.11 17.64 16.6 14.01 15.89 12.35 7.4 15.99Z',
+  // Material sync_alt, schema and verified_user — no logo exists for a practice
+  etl:        'M7.5 21 3 16.5 7.5 12l1.05 1.05-2.7 2.7H21v1.5H5.85l2.7 2.7Zm9-9-1.05-1.05 2.7-2.7H3v-1.5h15.15l-2.7-2.7L16.5 3 21 7.5Z',
+  dwh:        'M14 9v2h-3V9H8.5V7H11V1H4v6h2.5v2H4v6h2.5v2H4v6h7v-6H8.5v-2H11v-2h3v2h7V9h-7zM6 3h3v2H6V3zm3 18H6v-2h3v2zm0-8H6v-2h3v2zm10 0h-3v-2h3v2z',
+  governance: 'M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z',
 };
 
 function makeCustomSvg(pathData) {
@@ -56,6 +84,19 @@ function makeCustomSvg(pathData) {
   return svg;
 }
 
+// A skill's logo, or its custom glyph — null when it has neither
+function skillIcon(s) {
+  if (s.icon) {
+    const img = document.createElement('img');
+    img.src = `assets/icons/${s.icon}.svg`;
+    img.alt = '';
+    img.loading = 'lazy';
+    img.addEventListener('error', () => { img.style.display = 'none'; });
+    return img;
+  }
+  return customIcons[s.id] ? makeCustomSvg(customIcons[s.id]) : null;
+}
+
 // Skills of a category, ordered by level then tenure — shared by the cards UI
 // and the terminal `skills` command so both always show the same ordering.
 function skillsByCategory(cat) {
@@ -64,58 +105,74 @@ function skillsByCategory(cat) {
     .sort((a, b) => b.level - a.level || (skillMonths[b.id] || 0) - (skillMonths[a.id] || 0));
 }
 
+// Translation key of each level, read out by screen readers next to the meter
+const LEVEL_KEYS = { 3: 'skills.level.expert', 2: 'skills.level.mid', 1: 'skills.level.basic' };
+
 function renderSkills() {
-  const container = document.querySelector('.skills-cards');
+  const container = document.querySelector('.skills-grid');
   if (!container) return;
-  container.innerHTML = '';
-  const lang = document.documentElement.lang || 'fr';
-  const t = translations[lang] || translations.fr;
+  const staticTile = container.querySelector('[data-static]'); // languages & co. stay last
+  const tr = t();
 
   categoryDefs.forEach(cat => {
     const items = skillsByCategory(cat);
     if (!items.length) return;
 
-    const card = document.createElement('div');
-    card.className = 'skill-card';
+    const tile = document.createElement('article');
+    tile.className = 'tile reveal';
 
-    const label = document.createElement('span');
-    label.className = 'skill-card__label';
+    const label = document.createElement('p');
+    label.className = 'label';
     label.dataset.i18n = `skills.${cat}`;
-    label.textContent = t[`skills.${cat}`] || cat;
-    card.appendChild(label);
+    label.textContent = tr[`skills.${cat}`] || cat;
+    tile.appendChild(label);
 
-    const itemsDiv = document.createElement('div');
-    itemsDiv.className = 'skill-card__items';
+    const rows = document.createElement('div');
+    rows.className = 'skill-rows';
 
     items.forEach(s => {
-      // <button> so the skill → experience filter is keyboard accessible
-      const div = document.createElement('button');
-      div.type = 'button';
-      div.className = 'stack-item';
-      div.dataset.level = s.level;
-      div.dataset.skill = s.id;
-      div.setAttribute('aria-pressed', 'false');
-
-      if (s.icon) {
-        const img = document.createElement('img');
-        img.src = `assets/icons/${s.icon}.svg`;
-        img.alt = '';
-        img.loading = 'lazy';
-        img.addEventListener('error', () => { img.style.display = 'none'; });
-        div.appendChild(img);
-      } else if (customIcons[s.id]) {
-        div.appendChild(makeCustomSvg(customIcons[s.id]));
+      // <button> so the skill → experience filter is keyboard accessible; a
+      // skill no position lists has nothing to filter, so it stays a plain row
+      const filterable = Object.values(roleSkills).some(r => r.skills.some(x => x.id === s.id));
+      const row = document.createElement(filterable ? 'button' : 'div');
+      row.className = filterable ? 'skill-row' : 'skill-row is-static';
+      row.dataset.level = s.level;
+      row.dataset.skill = s.id;
+      if (filterable) {
+        row.type = 'button';
+        row.setAttribute('aria-pressed', 'false');
       }
 
-      const nameSpan = document.createElement('span');
-      setSkillName(nameSpan, s.id);
-      div.appendChild(nameSpan);
+      const icon = skillIcon(s);
+      if (icon) row.appendChild(icon);
 
-      itemsDiv.appendChild(div);
+      const name = document.createElement('span');
+      name.className = 'skill-row__name';
+      setSkillName(name, s.id);
+      row.appendChild(name);
+
+      // Filled by updateSkillDurations(), which re-runs on a language change
+      const dur = document.createElement('span');
+      dur.className = 'skill-row__dur';
+      row.appendChild(dur);
+
+      const meter = document.createElement('span');
+      meter.className = 'lvl';
+      meter.dataset.level = s.level;
+      meter.setAttribute('aria-hidden', 'true');
+      row.appendChild(meter);
+
+      const level = document.createElement('span');
+      level.className = 'sr-only';
+      level.dataset.i18n = LEVEL_KEYS[s.level];
+      level.textContent = tr[LEVEL_KEYS[s.level]];
+      row.appendChild(level);
+
+      rows.appendChild(row);
     });
 
-    card.appendChild(itemsDiv);
-    container.appendChild(card);
+    tile.appendChild(rows);
+    container.insertBefore(tile, staticTile);
   });
 }
 
@@ -132,17 +189,20 @@ const roleSkills = {
       { id: 'mysql',          key: true  },
       { id: 'llm',            key: false },
       { id: 'sql',            key: false },
-      { id: 'snowflake',      key: false },
+      { id: 'snowflake',      key: false, months: 6 },
       { id: 'docker',         key: false },
       { id: 'bitbucket',      key: false },
       { id: 'agile',          key: false },
-      { id: 'databricks',     key: false },
+      { id: 'databricks',     key: false, months: 6 },
       { id: 'jira',           key: false },
       { id: 'pulumi',         key: false },
       { id: 'git',            key: false },
-      { id: 'stepfunctions',  key: false },
       { id: 'dbt',            key: false, start: new Date(2026, 8) },  // Sep 2026
       { id: 'duckdb',         key: false, start: new Date(2026, 8) },  // Sep 2026
+      { id: 'etl',            key: false },
+      { id: 'dwh',            key: false },
+      { id: 'governance',     key: false },
+      { id: 'dagster',        key: false, start: new Date(2026, 3) },  // Apr 2026
     ]
   },
   bialr1: {
@@ -157,6 +217,7 @@ const roleSkills = {
       { id: 'agile',      key: false },
       { id: 'jira',       key: false },
       { id: 'git',        key: false },
+      { id: 'etl',        key: false },
     ]
   },
   bialr2: {
@@ -167,6 +228,7 @@ const roleSkills = {
       { id: 'oracle',  key: true  },
       { id: 'git',     key: true  },
       { id: 'sql',     key: false },
+      { id: 'etl',     key: false },
     ]
   },
   bialr3: {
@@ -181,6 +243,8 @@ const roleSkills = {
       { id: 'tableau', key: false },
       { id: 'powerbi', key: false },
       { id: 'git',     key: false },
+      { id: 'etl',     key: false },
+      { id: 'governance', key: false },
     ]
   }
 };
@@ -191,26 +255,23 @@ const roleSkills = {
 const skillMonths = {};
 Object.values(roleSkills).forEach(role => {
   const end = role.end || new Date();
-  const months = Math.max(1,
-    (end.getFullYear() - role.start.getFullYear()) * 12 +
-    end.getMonth() - role.start.getMonth()
-  );
+  const months = Math.max(1, monthsBetween(role.start, end));
   role.skills.forEach(s => {
-    // A skill picked up mid-role counts from its own start
-    const m = s.start ? Math.max(1,
-      (end.getFullYear() - s.start.getFullYear()) * 12 +
-      end.getMonth() - s.start.getMonth()
-    ) : months;
+    // A skill picked up mid-role counts from its own start, and one used for a
+    // set span only (a proof of concept) gives its months outright
+    const m = s.months || (s.start ? Math.max(1, monthsBetween(s.start, end)) : months);
     skillMonths[s.id] = (skillMonths[s.id] || 0) + m;
   });
 });
 
-// Writes a skill's name into el, keyed for applyLang() when it is translated
+// Writes a skill's name into el — its short form when it has one — keyed for
+// applyLang() when it is translated
 const skillById = Object.fromEntries(skillsData.map(s => [s.id, s]));
 function setSkillName(el, id) {
   const s = skillById[id];
-  el.textContent = s ? skillLabel(s) : id;
-  if (s && s.i18n) el.dataset.i18n = s.i18n;
+  const key = s && (s.short || s.i18n);
+  el.textContent = s ? (key && t()[key]) || s.name : id;
+  if (key) el.dataset.i18n = key;
 }
 
 function formatSkillDuration(months, lang) {
@@ -230,199 +291,222 @@ function formatSkillDuration(months, lang) {
 }
 
 function updateSkillDurations(lang) {
-  document.querySelectorAll('.stack-item[data-skill]').forEach(el => {
-    el.dataset.years = formatSkillDuration(skillMonths[el.dataset.skill] || 0, lang);
+  document.querySelectorAll('.skill-row[data-skill]').forEach(el => {
+    const months = skillMonths[el.dataset.skill];
+    el.querySelector('.skill-row__dur').textContent = months ? formatSkillDuration(months, lang) : '';
   });
 }
 
-function generateExperienceTags() {
-  document.querySelectorAll('.timeline-subitem[data-role]').forEach(el => {
+// Each position lists its key skills, with their logos. The filter still
+// matches every skill a position used, listed here or not.
+function renderRoleSkills() {
+  document.querySelectorAll('.xp-panel[data-role]').forEach(el => {
     const role = roleSkills[el.dataset.role];
-    if (!role) return;
-    const container = el.querySelector('.tags');
-    if (!container) return;
-    container.innerHTML = '';
-    role.skills
-      .filter(s => s.key)
-      .forEach(s => {
-        const span = document.createElement('span');
-        span.className = 'tag';
-        span.dataset.skill = s.id;
-        setSkillName(span, s.id);
-        container.appendChild(span);
-      });
+    const keyList = el.querySelector('.key-skills');
+    if (!role || !keyList) return;
+
+    keyList.replaceChildren(...role.skills.filter(s => s.key).map(s => {
+      const li = document.createElement('li');
+      li.dataset.skill = s.id;
+      const icon = skillById[s.id] && skillIcon(skillById[s.id]);
+      if (icon) li.appendChild(icon);
+      const name = document.createElement('span');
+      setSkillName(name, s.id);
+      li.appendChild(name);
+      return li;
+    }));
   });
 }
 
-// ─── Expand / collapse toggles ────────────────────────────────────────────────
-// Shared by the About "read more", the per-experience task lists, the project
-// descriptions and "show more projects". The button's [data-i18n] span is
-// re-keyed on every state change, so applyLang() re-translates the label from
-// the attribute alone and needs no per-toggle special-casing.
-//   toggleClass — class carrying the expanded state on `target` (default 'expanded')
-//   delayLabel  — ms to wait before restoring the collapsed label, so the text
-//                 doesn't swap while the block is still visibly closing
-function setupToggle(btn, target, expandedKey, collapsedKey, opts = {}) {
-  const span = btn.querySelector('[data-i18n]');
-  const { toggleClass = 'expanded', delayLabel = 0 } = opts;
-  let labelTimer = null;
+// ─── Chronology: work and studies on one axis ─────────────────────────────────
+// Months count from 0, an end month is excluded. Laps runs to today and the
+// axis stretches with it, so the tile never goes stale. A work span names the
+// position tab it stands for, so the two point at each other.
+const CHRONO = {
+  work: [
+    { cls: 'c-hyatt', role: 'hyatt',  from: [2018, 3], to: [2018, 7], tip: 'Park Hyatt · 2018' },
+    { cls: 'c-bialr', role: 'bialr3', label: 'APRR',     from: [2020, 8], to: [2021, 8], tip: 'BIAL-R · APRR · 2020 – 2021' },
+    { cls: 'c-bialr', role: 'bialr2', label: 'Clariane', from: [2021, 8], to: [2023, 0], tip: 'BIAL-R · Clariane · 2021 – 2022' },
+    { cls: 'c-bialr', role: 'bialr1', label: 'Bial-S',   from: [2023, 0], to: [2024, 0], tip: 'BIAL-R · Bial-S · 2023' },
+    { cls: 'c-laps',  role: 'laps',   label: 'Laps',     from: [2024, 1], to: null },
+  ],
+  study: [
+    { cls: 'c-edu', label: 'UVSQ', from: [2016, 8], to: [2018, 6], tip: 'UVSQ · DUT · 2016 – 2018' },
+    { cls: 'c-edu', label: 'UQAC', from: [2018, 8], to: [2019, 6], tip: 'UQAC · 2018 – 2019' },
+    { cls: 'c-edu', label: 'UCBL', from: [2019, 8], to: [2021, 6], tip: 'UCBL · Master MIAGE · 2019 – 2021' },
+  ],
+};
 
-  const isExpanded = () => target.classList.contains(toggleClass);
+function renderChrono() {
+  const tl = document.querySelector('.chrono__tl');
+  if (!tl) return;
+  const now = new Date();
+  const today = now.getFullYear() + (now.getMonth() + now.getDate() / 31) / 12;
+  const start = 2016.5;
+  const end = Math.max(2027, Math.ceil((today + 0.25) * 2) / 2);
+  const at = y => (y - start) / (end - start) * 100;
+  const year = ([y, m]) => y + m / 12;
 
-  function set(expanded) {
-    target.classList.toggle(toggleClass, expanded);
-    btn.classList.toggle('expanded', expanded);
-    btn.setAttribute('aria-expanded', String(expanded));
+  Object.entries(CHRONO).forEach(([track, spans]) => {
+    const box = tl.querySelector(`[data-track="${track}"]`);
+    box.replaceChildren(...spans.map(sp => {
+      const el = document.createElement('span');
+      const from = year(sp.from), to = sp.to ? year(sp.to) : today;
+      el.className = sp.cls;
+      el.style.setProperty('--s', at(from).toFixed(2));
+      el.style.setProperty('--w', (at(to) - at(from)).toFixed(2));
+      if (sp.label) el.textContent = sp.label;
+      if (sp.tip) el.title = sp.tip;
+      if (sp.role) {
+        el.dataset.role = sp.role;
+        // A shortcut for the mouse: the tabs below stay the accessible control
+        el.addEventListener('click', () => {
+          const tab = document.querySelector(`.xp-tab[data-role="${sp.role}"]`);
+          if (tab && roleTabs) roleTabs.select(tab);
+        });
+      }
+      return el;
+    }));
+  });
 
-    // Drop any label swap still pending from an earlier click — otherwise a
-    // quick collapse→expand lets the stale timer relabel an open block.
-    clearTimeout(labelTimer);
-    const key = expanded ? expandedKey : collapsedKey;
-    const apply = () => {
-      span.dataset.i18n = key;
-      span.textContent = t()[key];
-    };
-    if (!expanded && delayLabel) labelTimer = setTimeout(apply, delayLabel);
-    else apply();
+  const axis = tl.querySelector('.chrono__axis');
+  const ticks = [];
+  for (let y = Math.ceil(start / 2) * 2; y < end; y += 2) {
+    const tick = document.createElement('span');
+    tick.style.setProperty('--s', at(y).toFixed(2));
+    tick.textContent = y;
+    ticks.push(tick);
   }
+  axis.replaceChildren(...ticks);
 
-  btn.addEventListener('click', () => set(!isExpanded()));
-  return { set, isExpanded };
+  const mark = document.createElement('div');
+  mark.className = 'chrono__now';
+  mark.style.setProperty('--s', at(today).toFixed(2));
+  const label = document.createElement('span');
+  label.dataset.i18n = 'chrono.now';
+  label.textContent = t()['chrono.now'];
+  mark.appendChild(label);
+  tl.appendChild(mark);
 }
 
-// ─── About read more ──────────────────────────────────────────────────────────
-const aboutBody   = document.getElementById('aboutBody');
-const aboutToggle = document.getElementById('aboutToggle');
-if (aboutBody && aboutToggle) {
-  setupToggle(aboutToggle, aboutBody, 'about.readless', 'about.readmore', { delayLabel: 400 });
+// The position open below, picked out on the timeline once one is chosen —
+// and scrolled into view on a phone
+function markChrono(role) {
+  const chrono = document.querySelector('.chrono');
+  if (!chrono) return;
+  chrono.classList.add('has-current');
+  chrono.querySelectorAll('.chrono__track [data-role]').forEach(el => el.classList.toggle('is-current', el.dataset.role === role));
+  const current = chrono.querySelector('.is-current');
+  if (current) centerIn(chrono.querySelector('.chrono__scroll'), current);
 }
 
-// ─── Experience tasks toggles ─────────────────────────────────────────────────
-document.querySelectorAll('.tasks-toggle').forEach(btn => {
-  const list = document.getElementById(btn.getAttribute('aria-controls'));
-  if (list) setupToggle(btn, list, 'exp.tasks.hide', 'exp.tasks.show');
-});
+// ─── Skill tiles & role skills ────────────────────────────────────────────────
+// Rendered before the reveal observer below starts, so the tiles get observed
+renderSkills();
+updateSkillDurations(currentLang);
+renderRoleSkills();
+renderChrono();
 
-// ─── Stat counters ────────────────────────────────────────────────────────────
-// prefersReducedMotion comes from i18n.js (loaded first) — one query, both files
-function animateCounter(el) {
-  const target = parseInt(el.dataset.count, 10);
-  const suffix = el.dataset.suffix || '';
-
-  if (prefersReducedMotion) {
-    el.textContent = target + suffix;
-    return;
-  }
-
-  const duration = 1300;
-  const start = performance.now();
-
-  function update(now) {
-    const progress = Math.min((now - start) / duration, 1);
-    const eased = 1 - Math.pow(1 - progress, 3); // ease-out cubic
-    el.textContent = Math.round(eased * target) + suffix;
-    if (progress < 1) requestAnimationFrame(update);
-  }
-
-  requestAnimationFrame(update);
+// On a phone the chronology is wider than the screen: it opens on today
+const chronoScroll = document.querySelector('.chrono__scroll');
+if (chronoScroll) {
+  chronoScroll.scrollLeft = chronoScroll.scrollWidth;
+  edgeFades(chronoScroll);
+  const bar = document.querySelector('.chrono__bar');
+  if (bar) scrollThumb(chronoScroll, bar);
 }
-
-const counterObserver = new IntersectionObserver(
-  entries => entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.querySelectorAll('[data-count]').forEach(animateCounter);
-      counterObserver.unobserve(e.target);
-    }
-  }),
-  { threshold: 0.3 }
-);
-
-// yearsOfExperience comes from i18n.js; the HTML value is only a fallback
-const expCounter = document.querySelector('[data-stat="exp"] [data-count]');
-if (expCounter) expCounter.dataset.count = yearsOfExperience();
-
-const statsBlock = document.querySelector('.about-stats');
-if (statsBlock) counterObserver.observe(statsBlock);
 
 // ─── Scroll Reveal ────────────────────────────────────────────────────────────
+// Content is only hidden while the observer can show it: if it never reports
+// (background tab, some link previews), everything is revealed anyway.
+const revealAll = () => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+let revealSeen = false;
 const revealObserver = new IntersectionObserver(
-  entries => entries.forEach(e => {
-    if (e.isIntersecting) {
-      e.target.classList.add('visible');
-      revealObserver.unobserve(e.target);
-    }
-  }),
+  entries => {
+    revealSeen = true;
+    entries.forEach(e => {
+      if (e.isIntersecting) {
+        e.target.classList.add('visible');
+        revealObserver.unobserve(e.target);
+      }
+    });
+  },
   { threshold: 0.08 }
 );
 
 document.querySelectorAll('.reveal').forEach(el => revealObserver.observe(el));
+setTimeout(() => { if (!revealSeen) revealAll(); }, 1500);
+window.addEventListener('beforeprint', revealAll);
 
-// ─── Sticky Nav show/hide (desktop only) ─────────────────────────────────────
-const nav = document.getElementById('siteNav');
-if (nav) {
-  const mq = window.matchMedia('(min-width: 901px)');
-  let navVisible = false;
+// ─── Top bar: glass background once the page scrolls ─────────────────────────
+const topbar = document.getElementById('topbar');
+if (topbar) onScroll(y => topbar.classList.toggle('is-stuck', y > 8));
 
-  function setNav(show) {
-    if (show === navVisible) return;
-    navVisible = show;
-    nav.classList.toggle('visible', show);
+// ─── Active nav link + sliding indicator ──────────────────────────────────────
+// The active section is the last one whose top has crossed 40% of the viewport
+// (the last one too once the page bottoms out). A click lights its link at once
+// and holds it until the smooth scroll settles.
+(() => {
+  const nav = document.getElementById('siteNav');
+  if (!nav) return;
+  const links = [...nav.querySelectorAll('a[href^="#"]')];
+  const ind = nav.querySelector('.site-nav__ind');
+  const sections = links.map(a => document.getElementById(a.getAttribute('href').slice(1)));
+  let current = null;
+  let clickedLink = null;
+  let clickTimer = null;
+
+  function place() {
+    if (!ind) return;
+    if (!current) { ind.classList.remove('is-on'); return; }
+    ind.style.setProperty('--x', current.offsetLeft + 'px');
+    ind.style.setProperty('--y', current.offsetTop + 'px');
+    ind.style.width = current.offsetWidth + 'px';
+    ind.style.height = current.offsetHeight + 'px';
+    ind.classList.add('is-on');
   }
 
-  onScroll(y => { if (mq.matches) setNav(y > 80); });
+  function setActive(link) {
+    if (link === current) return;
+    current = link;
+    links.forEach(a => {
+      if (a === link) a.setAttribute('aria-current', 'true');
+      else a.removeAttribute('aria-current');
+    });
+    place();
+  }
 
-  // On resize to mobile, remove visible class
-  mq.addEventListener('change', e => { if (!e.matches) setNav(false); });
-}
+  onScroll(y => {
+    if (clickedLink) return;
+    const line = window.innerHeight * 0.4;
+    const atBottom = window.innerHeight + y >= document.documentElement.scrollHeight - 2;
+    let active = null;
+    sections.forEach((s, i) => {
+      if (s && (atBottom || s.getBoundingClientRect().top <= line)) active = links[i];
+    });
+    setActive(active);
+  });
 
-// ─── Active nav link ──────────────────────────────────────────────────────────
-const sections = document.querySelectorAll('main section[id]');
-const navLinks  = document.querySelectorAll('.nav-links a');
-
-let clickedLink = null;
-
-function setActive(link) {
-  navLinks.forEach(a => a.classList.toggle('active', a === link));
-  scrollNavToActive(link);
-}
-
-function scrollNavToActive(link) {
-  const container = link.closest('.nav-links');
-  if (!container) return;
-  const linkCenter = link.offsetLeft + link.offsetWidth / 2;
-  const target = linkCenter - container.offsetWidth / 2;
-  container.scrollTo({ left: target, behavior: 'smooth' });
-}
-
-navLinks.forEach(a => {
-  a.addEventListener('click', () => {
+  links.forEach(a => a.addEventListener('click', () => {
     clickedLink = a;
     setActive(a);
-    // Release click lock once scroll settles
-    setTimeout(() => { clickedLink = null; }, 1000);
-  });
-});
+    clearTimeout(clickTimer);
+    clickTimer = setTimeout(() => { clickedLink = null; }, 1000);
+  }));
 
-const activeObserver = new IntersectionObserver(
-  entries => entries.forEach(e => {
-    if (e.isIntersecting && !clickedLink) {
-      navLinks.forEach(a => {
-        const isActive = a.getAttribute('href') === '#' + e.target.id;
-        a.classList.toggle('active', isActive);
-        if (isActive) scrollNavToActive(a);
-      });
-    }
-  }),
-  { rootMargin: '-40% 0px -55% 0px' }
-);
-
-sections.forEach(s => activeObserver.observe(s));
+  // The labels change width with the language and once the fonts load, and the
+  // bar changes shape across the mobile breakpoint
+  new MutationObserver(place).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+  window.addEventListener('resize', place);
+  if (document.fonts) document.fonts.ready.then(place);
+  requestAnimationFrame(() => { if (ind) ind.classList.add('is-ready'); });
+})();
 
 // Active theme: explicit data-theme override, else the OS preference.
 // Shared by the theme toggle and the terminal `theme` command.
 function isDarkTheme() {
-  const t = document.documentElement.dataset.theme;
-  return t ? t === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
+  const theme = document.documentElement.dataset.theme;
+  return theme ? theme === 'dark' : window.matchMedia('(prefers-color-scheme: dark)').matches;
 }
 
 // ─── Theme toggle ─────────────────────────────────────────────────────────────
@@ -443,18 +527,58 @@ function isDarkTheme() {
 const yearEl = document.getElementById('footerYear');
 if (yearEl) yearEl.textContent = new Date().getFullYear();
 
-// ─── Skill durations & experience tags ───────────────────────────────────────
-const initLang = document.documentElement.lang || 'fr';
-renderSkills();
-updateSkillDurations(initLang);
-generateExperienceTags();
+// ─── Experience: one position at a time ──────────────────────────────────────
+// Tabs, arrow keys included. Without JS no panel is hidden: they all show.
+const roleTabs = (() => {
+  const tabs = [...document.querySelectorAll('.xp-tab')];
+  if (!tabs.length) return null;
+
+  function select(tab, focus, mark = true) {
+    if (mark) {
+      markChrono(tab.dataset.role);
+      centerIn(tab.closest('.xp-tabs'), tab); // phones: the open chip stays in view
+    }
+    tabs.forEach(el => {
+      const on = el === tab;
+      el.setAttribute('aria-selected', String(on));
+      el.tabIndex = on ? 0 : -1;
+      document.getElementById(el.getAttribute('aria-controls')).hidden = !on;
+    });
+    if (focus) tab.focus();
+  }
+
+  const MOVES = { ArrowDown: 1, ArrowRight: 1, ArrowUp: -1, ArrowLeft: -1 };
+  const box = document.querySelector('.xp-tabs');
+  tabs.forEach((tab, i) => {
+    tab.addEventListener('click', () => select(tab));
+    tab.addEventListener('keydown', e => {
+      let to = -1;
+      let step = MOVES[e.key];
+      // Phones lay the row out oldest first, the reverse of the markup:
+      // left and right follow what the eye sees
+      if (/^Arrow(Left|Right)$/.test(e.key) && getComputedStyle(box).flexDirection === 'row') step = -step;
+      if (e.key in MOVES) to = (i + step + tabs.length) % tabs.length;
+      else if (e.key === 'Home') to = 0;
+      else if (e.key === 'End') to = tabs.length - 1;
+      if (to < 0) return;
+      e.preventDefault();
+      select(tabs[to], true);
+    });
+  });
+
+  // The page opens on the current position without singling it out
+  select(tabs.find(el => el.getAttribute('aria-selected') === 'true') || tabs[0], false, false);
+  box.scrollLeft = box.scrollWidth; // phones: the row opens on the latest position, at its end
+  edgeFades(box);
+  return { select };
+})();
 
 // ─── Skill → experience cross-filter ─────────────────────────────────────────
-// Click a skill chip to highlight the experiences where it was used
-// (data comes from roleSkills). Click again / × pill / Escape to clear.
+// Click a skill row to dim the positions that didn't use it and open the first
+// that did (data comes from roleSkills). Click again / × pill / Escape to clear.
 (() => {
   const expSection = document.getElementById('experience');
-  const skillsContainer = document.querySelector('.skills-cards');
+  const skillsContainer = document.querySelector('.skills-grid');
   if (!expSection || !skillsContainer) return;
 
   let activeSkill = null;
@@ -466,13 +590,18 @@ generateExperienceTags();
 
   function clearFilter() {
     activeSkill = null;
-    skillsContainer.querySelectorAll('.stack-item.is-selected').forEach(el => {
+    skillsContainer.querySelectorAll('.skill-row.is-selected').forEach(el => {
       el.classList.remove('is-selected');
       el.setAttribute('aria-pressed', 'false');
     });
     expSection.querySelectorAll('.skill-dim').forEach(el => el.classList.remove('skill-dim'));
     expSection.querySelectorAll('.skill-match-tag').forEach(el => el.classList.remove('skill-match-tag'));
-    if (pill) { pill.remove(); pill = null; }
+    if (pill) {
+      // Focus would drop to <body> with the pill
+      if (pill.contains(document.activeElement)) expSection.querySelector('.xp-tab[aria-selected="true"]')?.focus();
+      pill.remove();
+      pill = null;
+    }
   }
 
   function applyFilter(skillId, chip) {
@@ -482,18 +611,14 @@ generateExperienceTags();
     chip.setAttribute('aria-pressed', 'true');
 
     const matches = rolesUsing(skillId);
-    expSection.querySelectorAll('.timeline-subitem').forEach(item => {
-      const ok = item.dataset.role && matches.has(item.dataset.role);
-      item.classList.toggle('skill-dim', !ok);
-      if (ok) item.querySelectorAll(`.tag[data-skill="${skillId}"]`)
-        .forEach(t => t.classList.add('skill-match-tag'));
+    let first = null;
+    expSection.querySelectorAll('.xp-tab[data-role]').forEach(tab => {
+      const ok = matches.has(tab.dataset.role);
+      tab.classList.toggle('skill-dim', !ok);
+      if (ok && !first) first = tab;
     });
-    expSection.querySelectorAll('.timeline-group').forEach(group => {
-      const header = group.querySelector('.timeline-group__header');
-      const any = [...group.querySelectorAll('.timeline-subitem')]
-        .some(i => i.dataset.role && matches.has(i.dataset.role));
-      if (header) header.classList.toggle('skill-dim', !any);
-    });
+    expSection.querySelectorAll(`.xp-panel [data-skill="${skillId}"]`).forEach(el => el.classList.add('skill-match-tag'));
+    if (first && roleTabs) roleTabs.select(first);
 
     pill = document.createElement('button');
     pill.type = 'button';
@@ -508,70 +633,42 @@ generateExperienceTags();
     cross.textContent = '×';
     pill.append(label, ' ', name, ' ', cross);
     pill.addEventListener('click', clearFilter);
-    expSection.querySelector('.section-title').insertAdjacentElement('afterend', pill);
+    expSection.querySelector('.sec-head').insertAdjacentElement('afterend', pill);
+    // Focus follows the jump to the positions
+    pill.focus({ preventScroll: true });
 
     expSection.scrollIntoView({ behavior: prefersReducedMotion ? 'auto' : 'smooth' });
   }
 
   skillsContainer.addEventListener('click', e => {
-    const chip = e.target.closest('.stack-item');
+    const chip = e.target.closest('button.skill-row');
     if (!chip || !chip.dataset.skill) return;
     if (activeSkill === chip.dataset.skill) clearFilter();
     else applyFilter(chip.dataset.skill, chip);
   });
 
   document.addEventListener('keydown', e => {
-    if (e.key === 'Escape' && activeSkill) clearFilter();
+    if (e.key !== 'Escape' || !activeSkill) return;
+    // Escape then belongs to the CV dialog or the terminal
+    if (document.documentElement.classList.contains('cv-open') || !document.getElementById('terminalOverlay').hidden) return;
+    clearFilter();
   });
 })();
 
-// ─── Project read more ────────────────────────────────────────────────────────
-document.querySelectorAll('.project-readmore').forEach(btn => {
-  const body = document.getElementById(btn.dataset.desc);
-  if (body) setupToggle(btn, body, 'projects.readless', 'projects.readmore', { delayLabel: 400 });
-});
-
-// ─── Projects: show more / less (reveal the collapsed academic cards) ─────────
+// ─── Copy the e-mail address ──────────────────────────────────────────────────
 (() => {
-  const toggle  = document.getElementById('projectsToggle');
-  const section = document.getElementById('projects');
-  if (!toggle || !section) return;
-
-  const projects = setupToggle(
-    toggle, section, 'projects.showless', 'projects.showmore', { toggleClass: 'show-all' }
-  );
-
-  // Deep links (e.g. #project-swarm): when the hash targets a card inside the
-  // collapsed block, expand it first, then scroll once the height animation
-  // is done (the card's final position isn't known before that).
-  function revealHashTarget() {
-    const id = location.hash.slice(1);
-    if (!id) return;
-    const target = document.getElementById(id);
-    if (!target || !target.closest('#projectsExtra')) return;
-    const wasExpanded = projects.isExpanded();
-    projects.set(true);
-    setTimeout(() => {
-      target.scrollIntoView({ block: 'start', behavior: prefersReducedMotion ? 'auto' : 'smooth' });
-    }, wasExpanded || prefersReducedMotion ? 0 : 480);
-  }
-  window.addEventListener('hashchange', revealHashTarget);
-  revealHashTarget();
-})();
-
-// ─── Status dot: tap-to-toggle on touch devices ───────────────────────────────
-(() => {
-  const statusDot = document.querySelector('.avatar-status');
-  if (!statusDot) return;
-  const tooltip = statusDot.querySelector('.avatar-status__tooltip');
-
-  statusDot.addEventListener('click', e => {
-    e.stopPropagation();
-    tooltip.classList.toggle('is-open');
-  });
-
-  document.addEventListener('click', () => {
-    tooltip.classList.remove('is-open');
+  const btn = document.getElementById('copyEmail');
+  if (!btn) return;
+  let timer = null;
+  btn.addEventListener('click', async () => {
+    try {
+      await navigator.clipboard.writeText(btn.dataset.copy);
+    } catch (e) {
+      return; // no clipboard here (insecure context, denied): the address is right next to the button
+    }
+    btn.classList.add('is-done');
+    clearTimeout(timer);
+    timer = setTimeout(() => btn.classList.remove('is-done'), 1600);
   });
 })();
 
@@ -590,31 +687,38 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     status.textContent = msg;
     dismissTimer = setTimeout(() => {
       status.classList.add('is-fading');
-      setTimeout(() => {
+      dismissTimer = setTimeout(() => {
         status.className = 'contact-form__status';
         status.textContent = '';
       }, 600);
     }, 10000);
   }
 
+  // A field in error is flagged for screen readers too, the first one takes
+  // the focus and the status line says what is expected
+  function setInvalid(el, bad) {
+    el.classList.toggle('is-invalid', bad);
+    if (bad) el.setAttribute('aria-invalid', 'true');
+    else el.removeAttribute('aria-invalid');
+  }
+
   function validateForm() {
-    let valid = true;
+    let first = null;
     form.querySelectorAll('[required]').forEach(el => {
       const empty = !el.value.trim();
       const badEmail = el.type === 'email' && el.value && !/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(el.value);
-      if (empty || badEmail) {
-        el.classList.add('is-invalid');
-        valid = false;
-      } else {
-        el.classList.remove('is-invalid');
-      }
+      setInvalid(el, empty || badEmail);
+      if ((empty || badEmail) && !first) first = el;
     });
-    return valid;
+    if (first) {
+      first.focus();
+      setStatus(t()['contact.invalid'], 'is-error');
+    }
+    return !first;
   }
 
-  // Clear invalid state on input
   form.querySelectorAll('[required]').forEach(el => {
-    el.addEventListener('input', () => el.classList.remove('is-invalid'));
+    el.addEventListener('input', () => setInvalid(el, false));
   });
 
   form.addEventListener('submit', async e => {
@@ -649,7 +753,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
 })();
 
 // ─── Terminal easter egg + keyboard shortcuts ─────────────────────────────────
-// ` (or the >_ footer button) opens a fake zsh; t / l / 1-6 are page shortcuts.
+// ` (or the >_ footer button) opens a fake zsh; t / l / 1-5 are page shortcuts.
 (() => {
   const overlay  = document.getElementById('terminalOverlay');
   const term     = document.getElementById('terminal');
@@ -666,8 +770,8 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
   triggers.forEach(b => { b.hidden = false; }); // need JS, so revealed here
 
   const SECTIONS = ['about', 'experience', 'skills', 'education', 'projects', 'misc', 'contact'];
-  // Number-key targets = the same sections minus 'misc' (no nav entry of its own)
-  const SHORTCUT_SECTIONS = SECTIONS.filter(id => id !== 'misc');
+  // Number keys follow the nav, so 1–5 land on the sections numbered 01–05
+  const SHORTCUT_SECTIONS = [...document.querySelectorAll('#siteNav a')].map(a => a.hash.slice(1));
 
   // Terminal copy — kept local: easter-egg text, not page content.
   // Everything that IS page content (roles, dates, projects, skills) is pulled
@@ -706,7 +810,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       noSection: 'section inconnue :',
       opening:   'Ouverture de',
       noNet:     'réseau inconnu :',
-      netHint:   'réseaux : github · linkedin · instagram · threads · x',
+      netHint:   'réseaux : github · linkedin',
       langSet:   'Langue',
       themeSet:  'Thème',
       lastLogin: 'Dernière connexion :',
@@ -768,7 +872,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       noSection: 'unknown section:',
       opening:   'Opening',
       noNet:     'unknown network:',
-      netHint:   'networks: github · linkedin · instagram · threads · x',
+      netHint:   'networks: github · linkedin',
       langSet:   'Language',
       themeSet:  'Theme',
       lastLogin: 'Last login:',
@@ -821,9 +925,6 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
   const SOCIALS = {
     github:    'https://github.com/alexisdcolin',
     linkedin:  'https://www.linkedin.com/in/alexisdcolin',
-    instagram: 'https://www.instagram.com/alexisdcolin',
-    threads:   'https://www.threads.com/@alexisdcolin',
-    x:         'https://x.com/alexisdcolin',
   };
 
   // Terminal-local copy; page content comes from the shared t() above
@@ -868,17 +969,16 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     body.scrollTop = body.scrollHeight;
   }
 
-  // Read the previous visit timestamp from localStorage, then stamp the current
-  // one for next time. Falls back gracefully when storage is unavailable.
-  let prevVisit = null;
-  try {
-    const raw = localStorage.getItem('lastVisit');
-    if (raw) prevVisit = new Date(Number(raw));
-    localStorage.setItem('lastVisit', Date.now());
-  } catch(e) {}
-
+  // The previous terminal login, stamped at each new one: only the terminal
+  // reads it, so a visitor who never opens it gets nothing stored
   function lastLoginLine() {
-    const d = prevVisit || new Date();
+    let prev = null;
+    try {
+      const raw = localStorage.getItem('lastVisit');
+      if (raw) prev = new Date(Number(raw));
+      localStorage.setItem('lastVisit', Date.now());
+    } catch (e) {}
+    const d = prev || new Date();
     const datePart = new Intl.DateTimeFormat(currentLang, { weekday: 'short', day: '2-digit', month: 'short' }).format(d);
     const time = new Intl.DateTimeFormat(currentLang, { hour: '2-digit', minute: '2-digit', second: '2-digit', hour12: false }).format(d);
     return `${tt().lastLogin} ${datePart} ${time}`;
@@ -913,7 +1013,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
   // Fetched on first use only. Keep ?v= in step with the tag in cv.html.
   const loadRefsLib = () => refsLib || (refsLib = new Promise((resolve, reject) => {
     const s = document.createElement('script');
-    s.src = '/refs-crypto.js?v=1';
+    s.src = 'refs-crypto.js?v=3';
     s.onload = resolve;
     s.onerror = () => { refsLib = null; reject(new Error('load')); };
     document.head.appendChild(s);
@@ -951,7 +1051,10 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       print(r.loading, 'terminal__line--muted');
       try {
         await loadRefsLib();
-        refsSession = { refs: await decryptRefs(pass), pass };
+        const refs = await decryptRefs(pass);
+        // Closed while the key was derived: the list must not outlive the close
+        if (terminalClosed()) return;
+        refsSession = { refs, pass };
       } catch (e) {
         const msg = e.message === 'missing' ? r.missing : e.message === 'load' ? r.failed : r.wrong;
         print(msg, 'terminal__line--error');
@@ -1004,6 +1107,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       if (!refsSession) return;
       try {
         const file = await encryptRefs(refs, pass);
+        if (terminalClosed()) return;
         const a = document.createElement('a');
         a.href = URL.createObjectURL(new Blob([file], { type: 'application/octet-stream' }));
         a.download = 'cv-refs.enc';
@@ -1096,7 +1200,6 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       print([
         `Alexis Colin — ${t()['hero.role']}`,
         `📍 ${t()['hero.location']} 🇨🇦`,
-        t()['status.open'],
         '',
         tt().bio,
       ]);
@@ -1161,7 +1264,7 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     cv(args) {
       const lang = args[0] === 'en' || args[0] === 'fr' ? args[0] : currentLang;
       print(`${tt().cvOpen} (${lang})…`);
-      window.open(`/cv?lang=${lang}`, '_blank', 'noopener');
+      window.open(`${pageUrl('/cv')}?lang=${lang}`, '_blank', 'noopener');
     },
 
     ls() {
@@ -1180,8 +1283,8 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     lang(args) {
       const next = args[0] === 'fr' || args[0] === 'en' ? args[0] : (currentLang === 'fr' ? 'en' : 'fr');
       if (next !== currentLang) document.getElementById('langToggle').click();
-      // Label in the target language: langToggle defers currentLang by ~70ms,
-      // so tt() would still resolve to the previous language here.
+      // Label in the target language: langToggle defers currentLang by the
+      // page fade (FADE_MS), so tt() would still resolve to the previous one.
       print(`${(termText[next] || termText.fr).langSet} → ${next}`);
     },
 
@@ -1259,9 +1362,9 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
     // should not outlive the click on close
     settle(null);
     refsSession = null;
-    // No close animation under reduced motion → animationend never fires, so
-    // hide immediately rather than waiting for an event that won't come.
-    if (prefersReducedMotion) { finishClose(focus); return; }
+    // No close animation under reduced motion, nor for the docked window (its
+    // own animation wins) → animationend never fires, so hide immediately.
+    if (prefersReducedMotion || isMinimized()) { finishClose(focus); return; }
     overlay.classList.add('terminal-overlay--closing');
     onCloseEnd = function () { onCloseEnd = null; finishClose(focus); };
     term.addEventListener('animationend', onCloseEnd, { once: true });
@@ -1419,18 +1522,20 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
   // ── Global keyboard shortcuts ──
   document.addEventListener('keydown', e => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
+    // The CV dialog handles its own keys; the page behind it takes none
+    if (document.documentElement.classList.contains('cv-open')) return;
     if (e.key === 'Escape') { if (!overlay.hidden) closeTerminal(); return; }
     const el = e.target;
     if (el.closest && (el.closest('input, textarea, select, [contenteditable]'))) return;
     // Modal is up (open, not minimized): swallow page shortcuts so a stray
-    // 1-6 / t / l can't scroll or toggle the page behind the backdrop.
+    // 1-5 / t / l can't scroll or toggle the page behind the backdrop.
     if (!overlay.hidden && !isMinimized()) return;
 
     // e.code 'Backquote' = the physical key left of 1, whatever the layout
     // (on CA-FR / FR keyboards the ` character itself is a dead key);
     // '$' as a fallback — a dedicated key on CA-FR, and shell-themed
     if (e.code === 'Backquote' || e.key === '`' || e.key === '~' || e.key === '$') {
-      overlay.hidden || isMinimized() ? openTerminal() : closeTerminal();
+      openTerminal();
     } else if (e.key === 't') {
       document.getElementById('themeToggle').click();
     } else if (e.key === 'l') {
@@ -1441,5 +1546,190 @@ document.querySelectorAll('.project-readmore').forEach(btn => {
       return;
     }
     e.preventDefault();
+  });
+})();
+
+// ─── CV in a dialog ───────────────────────────────────────────────────────────
+// Every CV button opens the print view in front of the page instead of leaving
+// it: cv.html loads into a frame on first intent, the page blurs behind, and
+// the buttons beside the sheet drive the frame — print, references, language.
+// They talk to it through postMessage rather than reaching into its document:
+// opened from a file:// copy the frame counts as another origin, and only
+// messages get through. The links keep their href, so a new tab (middle or
+// ⌘-click) and a browser without JavaScript still get /cv on its own.
+(function () {
+  const dialog = document.getElementById('cvDialog');
+  const frame = document.getElementById('cvFrame');
+  if (!dialog || !frame || typeof dialog.showModal !== 'function') return;
+
+  const root = document.documentElement;
+  const stage = dialog.querySelector('.cv-stage');
+  const refsBtn = document.getElementById('cvRefs');
+  const pass = document.getElementById('cvPass');
+  const passInput = document.getElementById('cvPassInput');
+  const passErr = document.getElementById('cvPassErr');
+  // iOS prints the page around a frame, not the frame: there the button opens
+  // the CV on its own, which prints itself (cv.js reads ?print=1)
+  const IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+    (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  const cvUrl = () => `${pageUrl('/cv')}?lang=${currentLang}`;
+  let ready = false;          // cv.js answered from inside the frame
+  let refsState = 'locked';   // as the frame last reported it
+
+  const send = msg => { if (ready) frame.contentWindow.postMessage({ cv: true, ...msg }, MSG_ORIGIN); };
+
+  // Loaded on the first hover, focus or click, then kept for an instant reopen
+  const warm = () => { if (!frame.getAttribute('src')) frame.src = cvUrl(); };
+
+  window.addEventListener('message', e => {
+    if (e.source !== frame.contentWindow || !e.data || e.data.cv !== true) return;
+    const m = e.data;
+    if (m.type === 'ready') {
+      ready = true;
+      // The site may have switched language while the frame was loading
+      send({ type: 'lang', lang: currentLang });
+    } else if (m.type === 'refs') {
+      // The frame's own references button, mirrored on ours: it holds the
+      // decrypted list and says what the button does next
+      refsState = m.state;
+      const label = refsBtn.querySelector('span');
+      label.textContent = m.label;
+      label.setAttribute('data-i18n', m.key);
+      refsBtn.querySelector('use').setAttribute('href', m.icon);
+    } else if (m.type === 'unlock') {
+      if (m.ok) { showPass(false); refsBtn.focus(); return; }
+      // Keyed, so a language switch translates the message too
+      const key = m.error === 'missing' ? 'cv.refs.absent' : 'cv.refs.wrong';
+      passErr.setAttribute('data-i18n', key);
+      passErr.textContent = t()[key];
+      passInput.select();
+    } else if (m.type === 'key' && m.key === 'Escape') {
+      escape();
+    }
+  });
+
+  // The frame follows the site's language: applyLang() rewrites <html lang>
+  new MutationObserver(() => send({ type: 'lang', lang: currentLang }))
+    .observe(root, { attributes: true, attributeFilter: ['lang'] });
+
+  // The close animation under way, if any
+  let closing = null;
+
+  function cancelClose() {
+    if (!closing) return;
+    clearTimeout(closing.timer);
+    stage.removeEventListener('animationend', closing.onEnd);
+    closing = null;
+    dialog.classList.remove('cv-dialog--closing');
+  }
+
+  function open() {
+    warm();
+    cancelClose();
+    if (!dialog.open) {
+      root.classList.add('cv-open');
+      dialog.showModal();
+    }
+    // An entry of its own, so the back button closes the CV instead of leaving the site
+    if (!(history.state && history.state.cv)) history.pushState({ cv: true }, '');
+  }
+
+  // Tidied up here rather than on the close event, which a hidden page may
+  // only dispatch much later: the page behind must not stay locked
+  function finish() {
+    cancelClose();
+    showPass(false);
+    root.classList.remove('cv-open');
+    dialog.close();
+  }
+
+  function hide() {
+    if (!dialog.open || closing) return;
+    // No animation under reduced motion: animationend would never come
+    if (prefersReducedMotion) { finish(); return; }
+    // The timer covers an animation that never runs, in a background tab say
+    closing = { onEnd: e => { if (e.animationName === 'terminalOut') finish(); }, timer: setTimeout(finish, 400) };
+    stage.addEventListener('animationend', closing.onEnd);
+    dialog.classList.add('cv-dialog--closing');
+  }
+
+  // Through history while the CV's entry is current, so the close button and
+  // the back button leave the same history behind
+  const close = () => (history.state && history.state.cv ? history.back() : hide());
+  addEventListener('popstate', () => { if (!(history.state && history.state.cv)) hide(); });
+  // A reload keeps the entry's state: dropped, or closing would leave the page
+  if (history.state && history.state.cv) history.replaceState(null, '');
+
+  // Closed by the browser itself (a repeated Escape, say): tidy up and drop
+  // the history entry too
+  dialog.addEventListener('close', () => {
+    if (!root.classList.contains('cv-open')) return;
+    cancelClose();
+    showPass(false);
+    root.classList.remove('cv-open');
+    if (history.state && history.state.cv) history.back();
+  });
+  dialog.addEventListener('cancel', e => { e.preventDefault(); escape(); });
+  // A click on the blur around the sheet
+  dialog.addEventListener('click', e => { if (e.target === dialog) close(); });
+  document.getElementById('cvClose').addEventListener('click', close);
+
+  // Escape: the passphrase field first, then the dialog
+  function escape() {
+    if (!pass.hidden) { showPass(false); refsBtn.focus(); } else close();
+  }
+
+  function print() {
+    if (IOS) { window.open(`${cvUrl()}&print=1`, '_blank', 'noopener'); return; }
+    if (!ready) return;   // a blank frame would print a blank page
+    // Same origin: the frame's own print(). A file:// copy refuses that, and
+    // gets the request as a message instead.
+    try { frame.contentWindow.focus(); frame.contentWindow.print(); }
+    catch (e) { send({ type: 'print' }); }
+  }
+  document.getElementById('cvPrint').addEventListener('click', print);
+
+  // Escape, and ⌘P / Ctrl+P printing the CV rather than the page. Inside the
+  // sheet, cv.js prints the frame itself and sends Escape here.
+  document.addEventListener('keydown', e => {
+    if (!dialog.open) return;
+    if (e.key === 'Escape') { e.preventDefault(); escape(); }
+    else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'p') { e.preventDefault(); print(); }
+  });
+
+  document.getElementById('cvLang').addEventListener('click', () => document.getElementById('langToggle').click());
+
+  // References: the passphrase in a field of ours (a prompt() is blocked in
+  // some embedded browsers), the frame decrypts and shows them; once
+  // decrypted, the button only shows or hides the list
+  function showPass(on) {
+    pass.hidden = !on;
+    refsBtn.setAttribute('aria-expanded', String(on));
+    passErr.textContent = '';
+    passErr.removeAttribute('data-i18n');
+    if (on) passInput.focus();
+    else passInput.value = '';
+  }
+
+  refsBtn.addEventListener('click', () => {
+    if (!ready) return;
+    if (refsState === 'locked') showPass(pass.hidden);
+    else send({ type: 'refs' });
+  });
+
+  pass.addEventListener('submit', e => {
+    e.preventDefault();
+    if (passInput.value) send({ type: 'unlock', passphrase: passInput.value });
+  });
+
+  document.querySelectorAll('[data-cv-link]:not([data-cv-tab])').forEach(a => {
+    a.addEventListener('pointerenter', warm);
+    a.addEventListener('focus', warm);
+    a.addEventListener('click', e => {
+      // A new tab or window stays one
+      if (e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      e.preventDefault();
+      open();
+    });
   });
 })();

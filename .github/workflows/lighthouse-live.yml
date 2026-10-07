@@ -99,6 +99,9 @@ jobs:
           check "$B/assets/fonts/space-mono-400-latin.woff2" cache-control           "immutable"
           check "$B/assets/site.webmanifest"               cache-control             "max-age=86400"
           check "$B/cv-refs.enc"                           cache-control             "no-store"
+          # The CV dialog frames /cv: back to DENY / 'none' and it shows blank
+          check "$B/cv"                                    x-frame-options           "SAMEORIGIN"
+          check "$B/cv"                                    content-security-policy   "frame-ancestors 'self'"
           exit $fail
 
       - uses: treosh/lighthouse-ci-action@v12

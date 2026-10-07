@@ -2,17 +2,19 @@
 // Loaded before scroll.js, which consumes `skillsData` and `categoryDefs`.
 // `cv: false` keeps a skill on the site but out of the printed CV, and
 // `site: false` the reverse: the CV carries keywords an ATS matches on that
-// would only clutter the skill cards. `i18n` names a translation key for a
-// skill whose name differs between languages.
+// would only clutter the skill tiles. `i18n` names a translation key for a
+// skill whose name differs between languages, `short` a shorter one for the
+// site's tiles (the CV keeps the full name, which an ATS matches on).
 const skillsData = [
   // Data engineering
-  { id: 'etl',        name: 'ETL/ELT',    level: 3, category: 'dataeng', icon: null, site: false },
-  { id: 'dwh',        name: 'Modélisation de données', level: 3, category: 'dataeng', icon: null, site: false, i18n: 'skill.dwh' },
-  { id: 'governance', name: 'Gouvernance des données', level: 3, category: 'dataeng', icon: null, site: false, i18n: 'skill.governance' },
+  { id: 'etl',        name: 'ETL/ELT',    level: 3, category: 'dataeng', icon: null },
+  { id: 'dwh',        name: 'Modélisation de données', level: 3, category: 'dataeng', icon: null, i18n: 'skill.dwh', short: 'skill.dwh.short' },
+  { id: 'governance', name: 'Gouvernance des données', level: 3, category: 'dataeng', icon: null, i18n: 'skill.governance', short: 'skill.governance.short' },
   { id: 'llm',        name: 'LLM',        level: 2, category: 'dataeng', icon: null },
   { id: 'mcp',        name: 'MCP',        level: 2, category: 'dataeng', icon: 'fastmcp' },
   { id: 'pentaho',    name: 'Pentaho',    level: 2, category: 'dataeng', icon: 'hitachi', cv: false },
   { id: 'prefect',    name: 'Prefect',    level: 1, category: 'dataeng', icon: 'prefect' },
+  { id: 'dagster',    name: 'Dagster',    level: 1, category: 'dataeng', icon: null },
   { id: 'dbt',        name: 'dbt',        level: 1, category: 'dataeng', icon: null },
   // Languages
   { id: 'python',     name: 'Python',     level: 3, category: 'lang',  icon: 'python' },
@@ -55,6 +57,5 @@ const categoryDefs = ['dataeng', 'lang', 'cloud', 'db', 'bi', 'devops', 'pm'];
 
 // Name in the current language, for the skills that carry an `i18n` key
 function skillLabel(s) {
-  var t = translations[currentLang] || translations.fr;
-  return (s.i18n && t[s.i18n]) || s.name;
+  return (s.i18n && t()[s.i18n]) || s.name;
 }

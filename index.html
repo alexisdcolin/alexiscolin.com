@@ -4,16 +4,16 @@
   <meta charset="UTF-8" />
   <!-- Cloudflare Web Analytics — cookieless, no consent banner needed -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1e7d4c7d044344bfbb5808d2bf1a1fc0"}'></script>
-  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
   <title>Alexis Colin — Data &amp; AI Engineer</title>
 
   <!-- SEO -->
   <meta name="description" content="Alexis Colin — Data & AI Engineer à Montréal. De leur source jusqu'aux agents IA : des données fiables, gouvernées, dignes de confiance." />
   <meta name="author" content="Alexis Colin" />
-  <meta name="keywords" content="Data Engineer, Montréal, Python, AWS, ETL, Grafana, Analytics, Data, IA" />
+  <meta name="keywords" content="Data &amp; AI Engineer, agents IA, MCP, Montréal, Python, AWS, dbt, ETL, Grafana" />
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" content="#f0e6dc" media="(prefers-color-scheme: light)" />
-  <meta name="theme-color" content="#272018" media="(prefers-color-scheme: dark)" />
+  <meta name="theme-color" content="#332c24" media="(prefers-color-scheme: dark)" />
   <link rel="canonical" href="https://alexiscolin.com/" />
 
   <!-- Open Graph -->
@@ -53,15 +53,16 @@
     ]
   }
   </script>
-  <!-- Self-hosted fonts (declared in style.css) — no Google Fonts requests anymore -->
+  <!-- Self-hosted fonts (declared in style.css) — no Google Fonts requests -->
   <link rel="preload" href="assets/fonts/space-mono-400-latin.woff2" as="font" type="font/woff2" crossorigin />
   <link rel="preload" href="assets/fonts/space-mono-700-latin.woff2" as="font" type="font/woff2" crossorigin />
-  <link rel="icon" href="assets/favicon.ico" sizes="any" />
+  <link rel="preload" href="assets/fonts/space-grotesk-latin.woff2" as="font" type="font/woff2" crossorigin />
+  <link rel="icon" href="assets/favicon.ico" sizes="32x32" />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <link rel="icon" type="image/png" sizes="192x192" href="assets/web-app-manifest-192x192.png" />
-  <link rel="apple-touch-icon" sizes="180x180" href="assets/apple-touch-icon.png" />
+  <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
+  <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png" />
   <link rel="manifest" href="assets/site.webmanifest" />
-  <link rel="stylesheet" href="style.css?v=35" />
+  <link rel="stylesheet" href="style.css?v=62" />
   <script>
     (function(){
       document.documentElement.classList.add('js');
@@ -76,10 +77,7 @@
 
   <a href="#main" class="skip-link" data-i18n="a11y.skip">Aller au contenu</a>
 
-  <div id="scrollProgress" class="scroll-progress" aria-hidden="true"></div>
-
-  <!-- SVG Sprite — every icon used more than once (hero socials, footer socials,
-       project cards) is defined here and referenced with <use> -->
+  <!-- SVG sprite — every icon used on the page, referenced with <use> -->
   <svg style="display:none" aria-hidden="true">
     <symbol id="icon-github" viewBox="0 0 24 24" fill="currentColor">
       <path d="M12 .297c-6.63 0-12 5.373-12 12 0 5.303 3.438 9.8 8.205 11.385.6.113.82-.258.82-.577 0-.285-.01-1.04-.015-2.04-3.338.724-4.042-1.61-4.042-1.61C4.422 18.07 3.633 17.7 3.633 17.7c-1.087-.744.084-.729.084-.729 1.205.084 1.838 1.236 1.838 1.236 1.07 1.835 2.809 1.305 3.495.998.108-.776.417-1.305.76-1.605-2.665-.3-5.466-1.332-5.466-5.93 0-1.31.465-2.38 1.235-3.22-.135-.303-.54-1.523.105-3.176 0 0 1.005-.322 3.3 1.23.96-.267 1.98-.399 3-.405 1.02.006 2.04.138 3 .405 2.28-1.552 3.285-1.23 3.285-1.23.645 1.653.24 2.873.12 3.176.765.84 1.23 1.91 1.23 3.22 0 4.61-2.805 5.625-5.475 5.92.42.36.81 1.096.81 2.22 0 1.606-.015 2.896-.015 3.286 0 .315.21.69.825.57C20.565 22.092 24 17.592 24 12.297c0-6.627-5.373-12-12-12"/>
@@ -87,641 +85,474 @@
     <symbol id="icon-linkedin" viewBox="0 0 24 24" fill="currentColor">
       <path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 0 1-2.063-2.065 2.064 2.064 0 1 1 2.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/>
     </symbol>
-    <symbol id="icon-x" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M18.244 2.25h3.308l-7.227 8.26 8.502 11.24H16.17l-5.214-6.817L4.99 21.75H1.68l7.73-8.835L1.254 2.25H8.08l4.713 6.231zm-1.161 17.52h1.833L7.084 4.126H5.117z"/>
-    </symbol>
-    <symbol id="icon-threads" viewBox="0 0 24 24" fill="currentColor">
-      <path d="M12.186 24h-.007c-3.581-.024-6.334-1.205-8.184-3.509C2.35 18.44 1.5 15.586 1.474 12.01v-.017c.03-3.579.886-6.43 2.548-8.482C5.845 1.205 8.6.024 12.18 0h.014c2.746.02 5.043.725 6.826 2.098 1.677 1.29 2.858 3.13 3.012 5.021l.006.088H19.74l-.006-.062c-.15-1.308-.95-2.656-2.168-3.664-1.27-.944-2.944-1.5-5.39-1.518h-.01c-2.961.02-5.141.932-6.482 2.71-1.142 1.528-1.753 3.795-1.781 6.74v.015c.027 2.95.64 5.22 1.782 6.746 1.344 1.782 3.524 2.696 6.485 2.718h.01c2.197-.018 3.772-.553 4.892-1.641.79-.77 1.254-1.757 1.38-2.96l.008-.09H21v.09c-.16 1.787-.98 3.294-2.379 4.502-1.58 1.365-3.7 2.04-6.435 2.04zm4.006-9.063c0-1.028-.327-1.793-.973-2.28-.647-.489-1.592-.737-2.813-.737-.566 0-1.102.059-1.59.174l-.215.054v5.574l.176.052c.465.14.967.211 1.49.211 1.386 0 2.402-.33 3.019-.977.618-.65.906-1.474.906-2.07zm-2.04-7.208c-.88-.66-2.01-.993-3.365-.993-.638 0-1.229.083-1.759.246l-.195.06v3.896l.23-.077c.47-.158.988-.238 1.544-.238 1.01 0 1.787.232 2.314.69.524.455.79 1.108.79 1.94v.014c-.004.53-.107 1.006-.303 1.42l-.083.177.178.082c.87.4 1.89.6 3.04.6l.189-.003.025-.189c.024-.184.035-.373.035-.568 0-1.75-.592-3.128-1.64-4.057z"/>
-    </symbol>
-    <symbol id="icon-instagram" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8">
-      <rect x="2" y="2" width="20" height="20" rx="5" ry="5"/>
-      <path d="M16 11.37A4 4 0 1 1 12.63 8 4 4 0 0 1 16 11.37z"/>
-      <line x1="17.5" y1="6.5" x2="17.51" y2="6.5"/>
-    </symbol>
+    <symbol id="i-user" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><circle cx="12" cy="8" r="4"/><path d="M4 21a8 8 0 0 1 16 0" stroke-linecap="round"/></g></symbol>
+    <symbol id="i-case" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="7" width="18" height="13" rx="2.5"/><path d="M8.5 7V5.5a2 2 0 0 1 2-2h3a2 2 0 0 1 2 2V7M3 12.5h18"/></g></symbol>
+    <symbol id="i-bolt" viewBox="0 0 24 24"><path d="M13 2.5 4.5 13.5H11l-1 8 8.5-11H12Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-rocket" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M4.5 16.5c-1.5 1.26-2 5-2 5s3.74-.5 5-2c.71-.84.7-2.13-.09-2.91a2.18 2.18 0 0 0-2.91-.09z"/><path d="m12 15-3-3a22 22 0 0 1 2-3.95A12.88 12.88 0 0 1 22 2c0 2.72-.78 7.5-6 11a22.35 22.35 0 0 1-4 2z"/><path d="M9 12H4s.55-3.03 2-4c1.62-1.08 5 0 5 0M12 15v5s3.03-.55 4-2c1.08-1.62 0-5 0-5"/></g></symbol>
+    <symbol id="i-mail" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="3" y="5" width="18" height="14" rx="2.5"/><path d="m4 7.5 8 5.5 8-5.5" stroke-linecap="round"/></g></symbol>
+    <symbol id="i-phone" viewBox="0 0 24 24"><path d="M5.5 4h3l1.5 4-2 1.5a11 11 0 0 0 6.5 6.5l1.5-2 4 1.5v3a2 2 0 0 1-2 2A16 16 0 0 1 3.5 6a2 2 0 0 1 2-2Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-doc" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M14 2.5H6.5a2 2 0 0 0-2 2v15a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2V8Z"/><path d="M14 2.5V8h5.5M8.5 13h7M8.5 17h7" stroke-linecap="round"/></g></symbol>
+    <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.5"/></g></symbol>
+    <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g></symbol>
+    <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></g></symbol>
+    <symbol id="i-ext" viewBox="0 0 24 24"><path d="M8 16 16 8m0 0H9.5M16 8v6.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5.5-5.5L19 12l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-lock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 8 0v3"/></g></symbol>
+    <symbol id="i-unlock" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round" stroke-linecap="round"><rect x="5" y="11" width="14" height="9" rx="2"/><path d="M8 11V8a4 4 0 0 1 7.75-1.4"/></g></symbol>
+    <symbol id="i-x" viewBox="0 0 24 24"><path d="M6.5 6.5l11 11M17.5 6.5l-11 11" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round"/></symbol>
+    <symbol id="i-send" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"><path d="M22 2 11 13"/><path d="M22 2 15 22l-4-9-9-4Z"/></g></symbol>
+    <symbol id="i-shield" viewBox="0 0 24 24"><path d="M12 3 5 6v5.5c0 4.3 3 8 7 9.5 4-1.5 7-5.2 7-9.5V6Z" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"/></symbol>
+    <symbol id="i-flow" viewBox="0 0 24 24"><path d="M4 7.5h12m0 0-3.5-3.5M16 7.5 12.5 11M20 16.5H8m0 0 3.5-3.5M8 16.5l3.5 3.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
+    <symbol id="i-spark" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M11 3.5 12.8 8 17.5 9.8 12.8 11.6 11 16.3 9.2 11.6 4.5 9.8 9.2 8Z"/><path d="M18.5 14.5l.9 2.1 2.1.9-2.1.9-.9 2.1-.9-2.1-2.1-.9 2.1-.9Z"/></g></symbol>
+    <symbol id="i-team" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M15.5 4.8a3.5 3.5 0 0 1 0 6.4M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/></g></symbol>
+    <symbol id="i-chat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4.5h11A1.5 1.5 0 0 1 16.5 6v6.5A1.5 1.5 0 0 1 15 14H9l-4 3v-3H4a1.5 1.5 0 0 1-1.5-1.5V6A1.5 1.5 0 0 1 4 4.5Z"/><path d="M16.5 8.5H20A1.5 1.5 0 0 1 21.5 10v6.5A1.5 1.5 0 0 1 20 18h-1v3l-4-3h-3.5a1.5 1.5 0 0 1-1.5-1.5V14" stroke-linecap="round"/></g></symbol>
+    <symbol id="i-route" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="4.5" r="2.5"/><path d="M8 18.5h7.5a3.5 3.5 0 0 0 0-7h-7a3.5 3.5 0 0 1 0-7H16"/></g></symbol>
   </svg>
 
-  <!-- ═══════════ NAV STICKY (fixed — kept OUTSIDE #pageWrap so the nav & toggles don't fade with the content on language switch) ═══════════ -->
-  <nav class="site-nav" id="siteNav" aria-label="Navigation">
-    <div class="nav-links">
-      <a href="#about"><span aria-hidden="true">👤</span> <span data-i18n="nav.about">À propos</span></a>
-      <a href="#experience"><span aria-hidden="true">💼</span> <span data-i18n="nav.exp">Expérience</span></a>
-      <a href="#skills"><span aria-hidden="true">⚡</span> <span data-i18n="nav.skills">Compétences</span></a>
-      <a href="#education"><span aria-hidden="true">🎓</span> <span data-i18n="nav.edu">Formation</span></a>
-      <a href="#projects"><span aria-hidden="true">🚀</span> <span data-i18n="nav.projects">Projets</span></a>
-      <a href="#contact"><span aria-hidden="true">✉️</span> <span data-i18n="nav.contact">Contact</span></a>
+  <!-- ═══════════ TOP BAR — outside #pageWrap so it doesn't fade on language switch ═══════════ -->
+  <header class="topbar" id="topbar">
+    <div class="topbar__in">
+      <a class="brand" href="#top" aria-label="Accueil" data-i18n-aria="nav.home"><svg class="brand__logo" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false"><circle class="off" cx="3.7" cy="3.7" r=".9"/><circle class="off" cx="9.85" cy="3.7" r=".9"/><circle class="r4" cx="16" cy="3.7" r="2.7"/><circle class="off" cx="22.15" cy="3.7" r=".9"/><circle class="off" cx="28.3" cy="3.7" r=".9"/><circle class="off" cx="3.7" cy="9.85" r=".9"/><circle class="r3" cx="9.85" cy="9.85" r="2.7"/><circle class="off" cx="16" cy="9.85" r=".9"/><circle class="r3" cx="22.15" cy="9.85" r="2.7"/><circle class="off" cx="28.3" cy="9.85" r=".9"/><circle class="r2" cx="3.7" cy="16" r="2.7"/><circle class="off" cx="9.85" cy="16" r=".9"/><circle class="off" cx="16" cy="16" r=".9"/><circle class="off" cx="22.15" cy="16" r=".9"/><circle class="r2" cx="28.3" cy="16" r="2.7"/><circle class="r1" cx="3.7" cy="22.15" r="2.7"/><circle class="r1" cx="9.85" cy="22.15" r="2.7"/><circle class="r1" cx="16" cy="22.15" r="2.7"/><circle class="r1" cx="22.15" cy="22.15" r="2.7"/><circle class="r1" cx="28.3" cy="22.15" r="2.7"/><circle class="r0" cx="3.7" cy="28.3" r="2.7"/><circle class="off" cx="9.85" cy="28.3" r=".9"/><circle class="off" cx="16" cy="28.3" r=".9"/><circle class="off" cx="22.15" cy="28.3" r=".9"/><circle class="r0" cx="28.3" cy="28.3" r="2.7"/></svg></a>
+
+      <!-- A pill under the active link on desktop, a bottom tab bar on mobile -->
+      <nav class="site-nav" id="siteNav" aria-label="Navigation">
+        <span class="site-nav__ind" aria-hidden="true"></span>
+        <a href="#about"><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg><span class="lbl" data-i18n="nav.about">À propos</span><span class="lbl-short" data-i18n="nav.about.short">Profil</span></a>
+        <a href="#experience"><svg class="ico" aria-hidden="true"><use href="#i-case"/></svg><span class="lbl" data-i18n="nav.exp">Expérience</span><span class="lbl-short" data-i18n="nav.exp.short">Parcours</span></a>
+        <a href="#skills"><svg class="ico" aria-hidden="true"><use href="#i-bolt"/></svg><span class="lbl" data-i18n="nav.skills">Compétences</span><span class="lbl-short" data-i18n="nav.skills.short">Stack</span></a>
+        <a href="#projects"><svg class="ico" aria-hidden="true"><use href="#i-rocket"/></svg><span class="lbl" data-i18n="nav.projects">Projets</span><span class="lbl-short" data-i18n="nav.projects.short">Projets</span></a>
+        <a href="#contact"><svg class="ico" aria-hidden="true"><use href="#i-mail"/></svg><span class="lbl" data-i18n="nav.contact">Contact</span><span class="lbl-short" data-i18n="nav.contact">Contact</span></a>
+      </nav>
+
+      <div class="topbar__ctrls">
+        <button type="button" class="pill lang-toggle" id="langToggle" aria-label="FR | EN — changer de langue" data-i18n-aria="aria.lang">
+          <span data-lang="fr">FR</span>
+          <span class="lang-sep">|</span>
+          <span data-lang="en">EN</span>
+        </button>
+        <button type="button" class="pill theme-toggle" id="themeToggle" aria-label="Basculer le thème clair / sombre" data-i18n-aria="aria.theme">
+          <svg class="icon-sun" aria-hidden="true"><use href="#i-sun"/></svg>
+          <svg class="icon-moon" aria-hidden="true"><use href="#i-moon"/></svg>
+        </button>
+        <a class="btn btn--accent btn--sm topbar__cv" href="/cv" data-cv-link><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg>CV</a>
+      </div>
     </div>
-    <!-- Language toggle & theme toggle -->
-    <div class="lang-toggle-wrap">
-      <button type="button" class="header-btn theme-toggle" id="themeToggle" aria-label="Toggle dark mode">
-        <svg class="icon-sun" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><circle cx="12" cy="12" r="5"/><line x1="12" y1="1" x2="12" y2="3"/><line x1="12" y1="21" x2="12" y2="23"/><line x1="4.22" y1="4.22" x2="5.64" y2="5.64"/><line x1="18.36" y1="18.36" x2="19.78" y2="19.78"/><line x1="1" y1="12" x2="3" y2="12"/><line x1="21" y1="12" x2="23" y2="12"/><line x1="4.22" y1="19.78" x2="5.64" y2="18.36"/><line x1="18.36" y1="5.64" x2="19.78" y2="4.22"/></svg>
-        <svg class="icon-moon" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="14" height="14"><path d="M21 12.79A9 9 0 1 1 11.21 3 7 7 0 0 0 21 12.79z"/></svg>
-      </button>
-      <button type="button" class="header-btn lang-toggle" id="langToggle" aria-label="Switch language">
-        <span data-lang="fr">FR</span>
-        <span class="lang-sep">|</span>
-        <span data-lang="en">EN</span>
-      </button>
-    </div>
-  </nav>
+  </header>
 
   <!-- Page content — fades as one block during a language switch -->
   <div id="pageWrap">
 
   <!-- ═══════════ HERO ═══════════ -->
-  <header id="top">
-    <div class="hero-inner">
-      <div class="avatar-wrap" data-anim style="--i:0">
-        <img src="assets/photo-128.webp" srcset="assets/photo-128.webp 1x, assets/photo-256.webp 2x" alt="Alexis Colin" class="avatar" width="128" height="128" decoding="async" onerror="this.style.display='none';document.querySelector('.avatar-fallback').style.display='flex'" />
-        <div class="avatar-fallback">AC</div>
-        <button type="button" class="avatar-status" data-status="open" aria-label="En poste · À l'écoute du marché" data-i18n-aria="status.open">
-          <span class="avatar-status__tooltip">
-            <span class="avatar-status__dot"></span>
-            <span class="avatar-status__label" data-for="available" data-i18n="status.available">Disponible immédiatement</span>
-            <span class="avatar-status__label" data-for="open" data-i18n="status.open">En poste · À l'écoute du marché</span>
-            <span class="avatar-status__label" data-for="unavailable" data-i18n="status.unavailable">Non disponible pour le moment</span>
-          </span>
-        </button>
-      </div>
-      <div class="hero-name-wrap" data-anim style="--i:1">
-        <svg class="hero-spark" viewBox="0 0 332 60" preserveAspectRatio="none" fill="none" aria-hidden="true">
-          <defs>
-            <linearGradient id="sparkAreaGrad" x1="0" y1="0" x2="0" y2="1">
-              <stop offset="0%" stop-color="var(--accent)" stop-opacity="0.13"/>
-              <stop offset="100%" stop-color="var(--accent)" stop-opacity="0"/>
-            </linearGradient>
-          </defs>
-          <!-- Axes -->
-          <line class="hero-spark__axis" x1="6" y1="5"  x2="6"   y2="53"/>
-          <line class="hero-spark__axis" x1="6" y1="53" x2="329" y2="53"/>
-          <!-- Axis arrowheads -->
-          <polygon class="hero-spark__axis-tip" points="3,10 6,4 9,10"/>
-          <polygon class="hero-spark__axis-tip" points="323,50 329,53 323,56"/>
-          <!-- Tick marks -->
-          <line class="hero-spark__tick" x1="88"  y1="51" x2="88"  y2="55"/>
-          <line class="hero-spark__tick" x1="170" y1="51" x2="170" y2="55"/>
-          <line class="hero-spark__tick" x1="252" y1="51" x2="252" y2="55"/>
-          <line class="hero-spark__tick" x1="4"   y1="20" x2="8"   y2="20"/>
-          <line class="hero-spark__tick" x1="4"   y1="36" x2="8"   y2="36"/>
-          <!-- Area fill -->
-          <path class="hero-spark__fill" d="M6,53 L6,49 L42,43 L78,47 L114,33 L150,37 L186,23 L222,27 L258,16 L294,19 L326,11 L326,53 Z"/>
-          <!-- Sparkline -->
-          <polyline class="hero-spark__line" points="6,49 42,43 78,47 114,33 150,37 186,23 222,27 258,16 294,19 326,11"/>
-        </svg>
-        <h1>Alexis Colin</h1>
-      </div>
-<p class="hero-subtitle" data-anim style="--i:2">
-        <span class="hero-role" data-i18n="hero.role">Développeur Data &amp; IA</span>
-        <span class="hero-loc">
-          <svg width="11" height="11" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M21 10c0 7-9 13-9 13s-9-6-9-13a9 9 0 0 1 18 0z"/><circle cx="12" cy="10" r="3"/></svg>
-          <span data-i18n="hero.location">Montréal, Canada</span>&nbsp;🇨🇦
-        </span>
-      </p>
-
-      <div class="hero-actions" data-anim style="--i:3">
-        <div class="btn-split">
-          <a href="tel:+14385436098" class="btn-split__part">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M22 16.92v3a2 2 0 0 1-2.18 2 19.79 19.79 0 0 1-8.63-3.07A19.5 19.5 0 0 1 4.69 12a19.79 19.79 0 0 1-3.07-8.67A2 2 0 0 1 3.6 1.2h3a2 2 0 0 1 2 1.72c.127.96.361 1.903.7 2.81a2 2 0 0 1-.45 2.11L7.91 8.96a16 16 0 0 0 6 6l1.27-1.27a2 2 0 0 1 2.11-.45c.907.339 1.85.573 2.81.7A2 2 0 0 1 22 16.92z"/></svg>
-            <span class="btn-split__text">(438)&nbsp;543&#8209;6098</span>
-          </a>
-          <span class="btn-split__div"></span>
-          <a href="mailto:contact@alexiscolin.com" class="btn-split__part">
-            <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M4 4h16c1.1 0 2 .9 2 2v12c0 1.1-.9 2-2 2H4c-1.1 0-2-.9-2-2V6c0-1.1.9-2 2-2z"/><polyline points="22,6 12,13 2,6"/></svg>
-            <span class="btn-split__text">contact@alexiscolin.com</span>
-          </a>
-        </div>
-        <a id="cvDownload" href="/cv" class="btn btn--accent">
-          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/><line x1="16" y1="13" x2="8" y2="13"/><line x1="16" y1="17" x2="8" y2="17"/></svg>
-          <span data-i18n="links.cv">CV imprimable</span>
-        </a>
-      </div>
-
-      <!-- --i:4 intentionally absent: hero element removed, delay kept to space out the social links -->
-      <nav class="socials" data-anim style="--i:5" aria-label="Réseaux sociaux" data-i18n-aria="aria.socials">
-        <a href="https://www.instagram.com/alexisdcolin" target="_blank" rel="noopener" aria-label="Instagram">
-          <svg aria-hidden="true"><use href="#icon-instagram"/></svg>
-        </a>
-        <a href="https://www.threads.com/@alexisdcolin" target="_blank" rel="noopener" aria-label="Threads">
-          <svg aria-hidden="true"><use href="#icon-threads"/></svg>
-        </a>
-        <a href="https://x.com/alexisdcolin" target="_blank" rel="noopener" aria-label="X / Twitter">
-          <svg aria-hidden="true"><use href="#icon-x"/></svg>
-        </a>
-        <a href="https://www.linkedin.com/in/alexisdcolin" target="_blank" rel="noopener" aria-label="LinkedIn">
-          <svg aria-hidden="true"><use href="#icon-linkedin"/></svg>
-        </a>
-        <a href="https://github.com/alexisdcolin" target="_blank" rel="noopener" aria-label="GitHub">
-          <svg aria-hidden="true"><use href="#icon-github"/></svg>
-        </a>
-      </nav>
+  <section class="hero" id="top" aria-labelledby="heroName">
+    <div class="hero__statement" data-anim style="--i:0">
+      <h1 id="heroName"><span class="hero__line"><span class="hero__name">Alexis Colin</span>,</span> <span class="hero__line" data-i18n="hero.title">développeur data &amp; IA</span> <span class="hero__line"><span data-i18n="hero.city.prep">à</span> <span class="hero__city" data-i18n="hero.city">Montréal</span>.</span></h1>
+      <p data-i18n-rich="hero.pitch">Je conçois des infrastructures de données <strong>fiables</strong>&nbsp;et&nbsp;<strong>gouvernées</strong>, de leur source jusqu'aux agents IA.</p>
     </div>
-  </header>
+
+    <!-- The stack beside the statement, as tall as it and the buttons; governance runs along all of it -->
+    <div class="stack-wrap" data-anim style="--i:1">
+      <p class="gov" title="accès, masquage, audit — à chaque étape" data-i18n="hero.gov" data-i18n-title="hero.gov.desc">Gouvernance</p>
+      <span id="stackLabel" hidden data-i18n="hero.stack.aria">Ma stack, de la source à l'IA</span>
+      <ol class="stack" aria-labelledby="stackLabel">
+        <li class="step" style="--n:0"><span class="step__n">01</span><span class="step__t">Ingestion</span><span class="step__d" data-i18n="hero.stack.d1">Collecter chaque source</span><span class="step__tip">Python</span></li>
+        <li class="step" style="--n:1"><span class="step__n">02</span><span class="step__t" data-i18n="hero.stack.store">Stockage</span><span class="step__d" data-i18n="hero.stack.d2">Un entrepôt fiable</span><span class="step__tip">S3 · Parquet · MySQL · PostgreSQL</span></li>
+        <li class="step" style="--n:2"><span class="step__n">03</span><span class="step__t">Transformation</span><span class="step__d" data-i18n="hero.stack.d3">Nettoyer et modéliser</span><span class="step__tip">SQL · dbt</span></li>
+        <li class="step" style="--n:3"><span class="step__n">04</span><span class="step__t">Orchestration</span><span class="step__d" data-i18n="hero.stack.d4">Automatiser les flux</span><span class="step__tip">Dagster · Prefect</span></li>
+        <li class="step" style="--n:4"><span class="step__n">05</span><span class="step__t" data-i18n="hero.stack.viz">Visualisation</span><span class="step__d" data-i18n="hero.stack.d5">Piloter l'activité</span><span class="step__tip">Power BI · Tableau · Grafana</span></li>
+        <li class="step is-hl" style="--n:5"><span class="step__n">06</span><span class="step__t" data-i18n="hero.stack.ai">IA</span><span class="step__d" data-i18n="hero.stack.d6">Des agents branchés aux données</span><span class="step__tip">MCP · Agents</span></li>
+      </ol>
+    </div>
+
+    <div class="hero__actions" data-anim style="--i:2">
+      <a href="/cv" class="btn btn--accent" data-cv-link>
+        <svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg>
+        <span data-i18n="links.cv">CV imprimable</span>
+      </a>
+      <a href="mailto:contact@alexiscolin.com" class="btn hero__mail"><svg class="ico" aria-hidden="true"><use href="#i-mail"/></svg>contact@alexiscolin.com</a>
+      <a href="https://www.linkedin.com/in/alexisdcolin" target="_blank" rel="noopener" class="btn btn--icon" aria-label="LinkedIn"><svg class="ico" aria-hidden="true"><use href="#icon-linkedin"/></svg></a>
+      <a href="https://github.com/alexisdcolin" target="_blank" rel="noopener" class="btn btn--icon" aria-label="GitHub"><svg class="ico" aria-hidden="true"><use href="#icon-github"/></svg></a>
+    </div>
+  </section>
 
   <main id="main" tabindex="-1">
 
-    <!-- ═══════════ ABOUT ═══════════ -->
-    <section class="section reveal" id="about">
-      <h2 class="section-title"><span aria-hidden="true">👤</span> <span data-i18n="about.title">À propos</span></h2>
-      <div class="about-stats">
-        <div class="about-stat" data-stat="exp">
-          <span class="about-stat__num" data-count="6" data-suffix="+">0</span>
-          <span class="about-stat__label" data-i18n="stat.exp">ans d'expérience</span>
+    <!-- ═══════════ 01 ABOUT ═══════════ -->
+    <section class="sec" id="about" aria-labelledby="aboutTitle">
+      <header class="sec-head">
+        <div>
+          <p class="sec-num">01</p>
+          <h2 id="aboutTitle" data-i18n="about.title">À propos</h2>
         </div>
-        <div class="about-stat" data-stat="sectors">
-          <span class="about-stat__num" data-count="4" data-suffix="">0</span>
-          <span class="about-stat__label" data-i18n="stat.sectors">secteurs d'activité</span>
-        </div>
-        <div class="about-stat" data-stat="pipelines">
-          <span class="about-stat__num" data-count="500" data-suffix="+">0</span>
-          <span class="about-stat__label" data-i18n="stat.pipelines">pipelines déployés</span>
-        </div>
-      </div>
+      </header>
+      <div class="bento bento--about">
+        <figure class="tile about-photo reveal">
+          <img src="assets/photo-640.webp" srcset="assets/photo-256.webp 256w, assets/photo-640.webp 640w" sizes="(max-width: 599.98px) 100vw, 340px" alt="Alexis Colin" width="640" height="640" loading="lazy" decoding="async" />
+        </figure>
 
-      <div class="about-body" id="aboutBody">
-        <p class="about-text" data-i18n="about.p1">Développeur Data &amp; IA, j'ai conçu et mis en place l'infrastructure de données complète d'un réseau e-commerce — de l'ingestion des données jusqu'à leur exposition aux assistants IA via un serveur MCP gouverné et sécurisé. Chez Laps, je construis des systèmes décisionnels qui aident l'entreprise à prendre des décisions stratégiques éclairées.</p>
-        <p class="about-text" data-i18n="about.p2">Mon parcours couvre l'ensemble de la chaîne de traitement des données, dans des secteurs variés : pipelines automatisés, data warehouses modélisés selon les besoins métiers, et rapports stratégiques et opérationnels construits avec différents outils de visualisation — en collaboration étroite avec les équipes métiers pour transformer les données brutes en leviers de décision.</p>
-        <div class="about-fade"></div>
-      </div>
-      <button type="button" class="about-toggle" id="aboutToggle" aria-expanded="false" aria-controls="aboutBody">
-        <span data-i18n="about.readmore">Lire la suite</span>
-        <svg class="about-toggle__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="13" height="13"><polyline points="6 9 12 15 18 9"/></svg>
-      </button>
-    </section>
+        <article class="tile about-text reveal">
+          <p class="label" data-i18n="about.label">Mon métier</p>
+          <p class="about-text__lead" data-i18n="about.p1">Je conçois et mets en place des infrastructures de données de bout en bout&nbsp;: pipelines automatisés, entrepôts modélisés avec les équipes métier, tableaux de bord de pilotage, jusqu'à l'ouverture des données aux agents IA, sans jamais exposer d'information sensible.</p>
+          <p data-i18n="about.p2">Du conseil à l'entreprise, dans la santé, le transport, le logement social et l'e-commerce. Ce qui ne change pas&nbsp;: travailler au plus près des métiers pour transformer des données brutes en décisions.</p>
+        </article>
 
-    <!-- ═══════════ EXPERIENCE ═══════════ -->
-    <section class="section reveal" id="experience">
-      <h2 class="section-title"><span aria-hidden="true">💼</span> <span data-i18n="exp.title">Expérience</span></h2>
-      <div class="timeline">
+        <article class="tile drives reveal">
+          <p class="label" data-i18n="about.drives.title">Ce qui m'anime</p>
+          <ul class="drives__list">
+            <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-flow"/></svg></span><span data-i18n="about.drives.1">Des plateformes de données pensées de bout en bout</span></li>
+            <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-shield"/></svg></span><span data-i18n="about.drives.2">Des données fiables, gouvernées et documentées</span></li>
+            <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-spark"/></svg></span><span data-i18n="about.drives.3">Des agents IA connectés aux données, pour les exploiter à leur plein potentiel</span></li>
+          </ul>
+          <a class="drives__cta" href="#contact"><span data-i18n="about.drives.cta">Ces sujets vous parlent&nbsp;? Échangeons</span><svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
+        </article>
 
-        <!-- ── Laps Group ── -->
-        <div class="timeline-group">
-          <div class="timeline-item timeline-group__header">
-            <div class="timeline-period">
-              <span class="tl-start" data-i18n="exp.laps.start">Févr. 2024</span>
-              <span class="tl-end" data-i18n="exp.laps.end">Aujourd'hui</span>
-            </div>
-            <div class="timeline-track">
-              <div class="timeline-marker timeline-marker--current"></div>
-            </div>
-            <div class="timeline-content">
-              <div class="timeline-header">
-                <a class="company company--group" href="https://www.laps.com/" target="_blank" rel="noopener">Laps</a>
-                <span class="timeline-group__duration" data-i18n="exp.laps.total">2 ans 7 mois · Montréal, Canada&nbsp;🇨🇦</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-group__items">
-            <div class="timeline-subitem" data-role="laps">
-              <div class="timeline-content">
-                <div class="timeline-header">
-                  <h3 data-i18n="exp.laps.role">Développeur Data &amp; IA</h3>
-                  <span class="contract-badge contract-badge--permanent" data-i18n="contract.permanent">CDI</span>
-                </div>
-                <div class="tags"></div>
-                <p class="timeline-desc" data-i18n="exp.laps.desc">Conception et mise en place de l'ensemble de l'infrastructure de données de Laps, réseau e-commerce spécialisé dans le matériel de golf, depuis l'ingestion et le traitement jusqu'à la valorisation des données via des rapports stratégiques et opérationnels et leur exposition aux assistants IA (serveur MCP). Participation au développement d'un système automatisé de gestion des prix d'achat et de vente, renforçant les marges et la compétitivité de l'entreprise.</p>
-                <button type="button" class="tasks-toggle" aria-expanded="false" aria-controls="tasksLaps">
-                  <span data-i18n="exp.tasks.show">Voir les missions</span>
-                  <svg class="tasks-toggle__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
-                </button>
-                <ul id="tasksLaps">
-                  <li data-i18n="exp.laps.li1">Conception, déploiement et automatisation de flux de données en Python sur AWS</li>
-                  <li data-i18n="exp.laps.li2">Modélisation et implémentation d'un entrepôt de données centralisé</li>
-                  <li data-i18n="exp.laps.li3">Développement de rapports et tableaux de bord opérationnels avec Grafana</li>
-                  <li data-i18n="exp.laps.li4">Développement d'un serveur MCP en Python connectant l'entrepôt de données aux assistants IA, avec gouvernance SQL et masquage des données sensibles</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
-        <!-- ── BIAL-R Group ── -->
-        <div class="timeline-group timeline-group--multi">
-          <div class="timeline-item timeline-group__header">
-            <div class="timeline-period">
-              <span class="tl-start" data-i18n="exp.bialr.start">Sept. 2020</span>
-              <span class="tl-end" data-i18n="exp.bialr.end">Déc. 2023</span>
-            </div>
-            <div class="timeline-track">
-              <div class="timeline-marker"></div>
-            </div>
-            <div class="timeline-content">
-              <div class="timeline-header">
-                <a class="company company--group" href="https://www.bial-x.com/" target="_blank" rel="noopener">BIAL-R</a>
-                <span class="timeline-group__duration" data-i18n="exp.bialr.total">3 ans 4 mois · Lyon, France&nbsp;🇫🇷</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-group__items">
-
-            <div class="timeline-subitem" data-role="bialr1">
-              <div class="timeline-content">
-                <div class="timeline-header">
-                  <h3 data-i18n="exp.bialr1.role">Développeur Data</h3>
-                  <span class="contract-badge contract-badge--permanent" data-i18n="contract.permanent">CDI</span>
-                </div>
-                <a class="client-link" href="https://www.bial-s.com/" target="_blank" rel="noopener"><span data-i18n="exp.client.prep">chez</span> <span data-i18n="exp.bialr1.client">Bial-S</span></a>
-                <p class="timeline-meta"><span data-i18n="exp.bialr1.start">Janv. 2023</span> – <span data-i18n="exp.bialr1.end">Déc. 2023</span> · <span data-i18n="exp.bialr1.meta">1 an</span></p>
-                <div class="tags"></div>
-                <p class="timeline-desc" data-i18n="exp.bialr1.desc">Participation à l'industrialisation d'une plateforme décisionnelle Cloud automatisée sur AWS, permettant l'ingestion, la visualisation et l'analyse prédictive de données pour des Offices Publics de l'Habitat. Parallèlement, pilotage d'un centre de services MCO pour Clariane.</p>
-                <button type="button" class="tasks-toggle" aria-expanded="false" aria-controls="tasksBialr1">
-                  <span data-i18n="exp.tasks.show">Voir les missions</span>
-                  <svg class="tasks-toggle__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
-                </button>
-                <ul id="tasksBialr1">
-                  <li data-i18n="exp.bialr1.li1">Conception, déploiement et automatisation de flux de données ETL avec Pentaho</li>
-                  <li data-i18n="exp.bialr1.li2">Support transversal de la plateforme décisionnelle et intégration de nouveaux clients</li>
-                  <li data-i18n="exp.bialr1.li3">Pilotage du CDS : gestion d'équipe, coordination des activités et amélioration continue</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="timeline-subitem" data-role="bialr2">
-              <div class="timeline-content">
-                <div class="timeline-header">
-                  <h3 data-i18n="exp.bialr2.role">Consultant ETL</h3>
-                  <span class="contract-badge contract-badge--permanent" data-i18n="contract.permanent">CDI</span>
-                </div>
-                <a class="client-link" href="https://www.clariane.com" target="_blank" rel="noopener"><span data-i18n="exp.client.prep">chez</span> <span data-i18n="exp.bialr2.client">Clariane</span></a>
-                <p class="timeline-meta"><span data-i18n="exp.bialr2.start">Sept. 2021</span> – <span data-i18n="exp.bialr2.end">Déc. 2022</span> · <span data-i18n="exp.bialr2.meta">1 an 4 mois</span></p>
-                <div class="tags"></div>
-                <p class="timeline-desc" data-i18n="exp.bialr2.desc">Référent MCO de l'ensemble des flux inter-applicatifs de Clariane, couvrant les domaines finance, RH, santé et relation client.</p>
-                <button type="button" class="tasks-toggle" aria-expanded="false" aria-controls="tasksBialr2">
-                  <span data-i18n="exp.tasks.show">Voir les missions</span>
-                  <svg class="tasks-toggle__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
-                </button>
-                <ul id="tasksBialr2">
-                  <li data-i18n="exp.bialr2.li1">Développement et maintenance des flux inter-applicatifs avec Pentaho</li>
-                  <li data-i18n="exp.bialr2.li2">Gestion des incidents de production : analyse, correction et reprise de données</li>
-                  <li data-i18n="exp.bialr2.li3">Contribution à la migration des flux inter-applicatifs de Pentaho vers un ESB</li>
-                </ul>
-              </div>
-            </div>
-
-            <div class="timeline-subitem" data-role="bialr3">
-              <div class="timeline-content">
-                <div class="timeline-header">
-                  <h3 data-i18n="exp.bialr3.role">Consultant Data</h3>
-                  <span class="contract-badge contract-badge--alternance" data-i18n="contract.alternance">Alternance</span>
-                </div>
-                <a class="client-link" href="https://www.aprr.com" target="_blank" rel="noopener"><span data-i18n="exp.client.prep">chez</span> <span data-i18n="exp.bialr3.client">APRR</span></a>
-                <p class="timeline-meta"><span data-i18n="exp.bialr3.start">Sept. 2020</span> – <span data-i18n="exp.bialr3.end">Août 2021</span> · <span data-i18n="exp.bialr3.meta">1 an</span></p>
-                <div class="tags"></div>
-                <p class="timeline-desc" data-i18n="exp.bialr3.desc">Alternance en dernière année de Master MIAGE, principalement réalisée sur des missions pour le client Autoroutes Paris-Rhin-Rhône (APRR) dans les domaines finance, péage, autoroute et relation clientèle. Cette expérience m'a permis de monter en compétences sur l'ensemble de la chaîne décisionnelle.</p>
-                <button type="button" class="tasks-toggle" aria-expanded="false" aria-controls="tasksBialr3">
-                  <span data-i18n="exp.tasks.show">Voir les missions</span>
-                  <svg class="tasks-toggle__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
-                </button>
-                <ul id="tasksBialr3">
-                  <li data-i18n="exp.bialr3.li1">Cartographie et mise en place d'une gouvernance des données</li>
-                  <li data-i18n="exp.bialr3.li2">Développement et déploiement de rapports opérationnels</li>
-                  <li data-i18n="exp.bialr3.li3">Conception et maintenance de flux ETL avec Pentaho</li>
-                </ul>
-              </div>
-            </div>
-
-          </div>
-        </div>
-
-        <!-- ── Park Hyatt Group ── -->
-        <div class="timeline-group">
-          <div class="timeline-item timeline-group__header">
-            <div class="timeline-period">
-              <span class="tl-start" data-i18n="exp.hyatt.start">Avr. 2018</span>
-              <span class="tl-end" data-i18n="exp.hyatt.end">Juill. 2018</span>
-            </div>
-            <div class="timeline-track">
-              <div class="timeline-marker"></div>
-            </div>
-            <div class="timeline-content">
-              <div class="timeline-header">
-                <a class="company company--group" href="https://www.hyatt.com/park-hyatt/en-US/parph-park-hyatt-paris-vendome" target="_blank" rel="noopener">Park Hyatt Paris-Vendôme</a>
-                <span class="timeline-group__duration" data-i18n="exp.hyatt.total">3 mois · Paris, France&nbsp;🇫🇷</span>
-              </div>
-            </div>
-          </div>
-
-          <div class="timeline-group__items">
-            <div class="timeline-subitem">
-              <div class="timeline-content">
-                <div class="timeline-header">
-                  <h3 data-i18n="exp.hyatt.role">Technicien Support IT</h3>
-                  <span class="contract-badge contract-badge--stage" data-i18n="contract.stage">Stage</span>
-                </div>
-                <p class="timeline-desc" data-i18n="exp.hyatt.desc">Stage de fin de DUT au sein du service informatique d'un palace parisien.</p>
-                <button type="button" class="tasks-toggle" aria-expanded="false" aria-controls="tasksHyatt">
-                  <span data-i18n="exp.tasks.show">Voir les missions</span>
-                  <svg class="tasks-toggle__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
-                </button>
-                <ul id="tasksHyatt">
-                  <li data-i18n="exp.hyatt.li1">Maintenance et support du parc informatique (poste de travail, réseaux, serveurs)</li>
-                  <li data-i18n="exp.hyatt.li2">Participation au déploiement de nouveaux projets IT</li>
-                  <li data-i18n="exp.hyatt.li3">Contribution à la mise en place et au suivi des mesures de cybersécurité</li>
-                </ul>
-              </div>
-            </div>
-          </div>
-        </div>
-
+        <!-- id="misc" keeps the terminal's `cd misc` working -->
+        <article class="tile interests reveal" id="misc">
+          <p class="label" data-i18n="misc.title">Centres d'intérêt</p>
+          <ul class="interests__list">
+            <li><span class="interests__emoji" aria-hidden="true">🏓</span><div><strong data-i18n="misc.tt.title">Tennis de Table</strong><span data-i18n="misc.tt.desc">Activité pratiquée pendant plus de 10 ans en club.</span></div></li>
+            <li><span class="interests__emoji" aria-hidden="true">✈️</span><div><strong data-i18n="misc.travel.title">Voyages</strong><span data-i18n="misc.travel.desc">Déjà 17 pays explorés, et bien d'autres à venir.</span></div></li>
+            <li><span class="interests__emoji" aria-hidden="true">🏔️</span><div><strong data-i18n="misc.nature.title">Nature</strong><span data-i18n="misc.nature.desc">Ski, randonnée, trek, camping&nbsp;: tout ce qui se passe dehors.</span></div></li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <!-- ═══════════ SKILLS ═══════════ -->
-    <section class="section reveal" id="skills">
-      <h2 class="section-title"><span aria-hidden="true">⚡</span> <span data-i18n="skills.title">Compétences</span></h2>
-      <div class="skills-legend">
-        <span class="legend-item" data-level="3"><i></i><span data-i18n="skills.level.expert">Expertise</span></span>
-        <span class="legend-item" data-level="2"><i></i><span data-i18n="skills.level.mid">Maîtrise</span></span>
-        <span class="legend-item" data-level="1"><i></i><span data-i18n="skills.level.basic">Notions</span></span>
+    <!-- ═══════════ 02 EXPERIENCE ═══════════ -->
+    <section class="sec" id="experience" aria-labelledby="expTitle">
+      <header class="sec-head">
+        <div>
+          <p class="sec-num">02</p>
+          <h2 id="expTitle" data-i18n="exp.title">Expérience</h2>
+          <p class="sec-sub" data-i18n="exp.sub">Trois employeurs, cinq rôles, de Paris à Montréal.</p>
+        </div>
+        <a class="btn" href="/cv" data-cv-link><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><span data-i18n="links.cv">CV imprimable</span></a>
+      </header>
+
+      <!-- Work and studies on one axis; scroll.js draws the bars (Laps runs to today) -->
+      <div class="tile chrono reveal">
+        <div class="chrono__head">
+          <p class="label" data-i18n="chrono.title">Chronologie</p>
+          <ul class="chrono__legend" aria-hidden="true">
+            <li><i class="c-laps"></i>Laps</li>
+            <li><i class="c-bialr"></i>BIAL-R</li>
+            <li><i class="c-hyatt"></i>Park Hyatt</li>
+          </ul>
+        </div>
+        <!-- Phones: wider than the screen, it scrolls and opens on today -->
+        <div class="chrono__scroll">
+        <div class="chrono__tl" aria-hidden="true">
+          <span class="chrono__k" data-i18n="chrono.work">Travail</span>
+          <div class="chrono__track" data-track="work"></div>
+          <span class="chrono__k" data-i18n="chrono.study">Études</span>
+          <div class="chrono__track" data-track="study"></div>
+          <div class="chrono__axis"></div>
+        </div>
+        </div>
+        <div class="chrono__bar" aria-hidden="true"><span></span></div>
+        <p class="sr-only" data-i18n="chrono.sr">Études de 2016 à 2021&nbsp;; stage au Park Hyatt en 2018&nbsp;; BIAL-R de 2020 à 2023, chez APRR, Clariane puis Bial-S&nbsp;; Laps depuis 2024.</p>
       </div>
 
-      <div class="skills-cards"></div>
-
-      <div class="lang-cards">
-        <div class="lang-card-item">
-          <div class="lang-card-meta">
-            <span class="lang-flag">🇫🇷</span>
-            <span class="lang-name" data-i18n="lang.french">Français</span>
-            <span class="lang-level" data-i18n="lang.french.level">Natif</span>
+      <!-- One position at a time; the role skills come from roleSkills in scroll.js -->
+      <div class="tile xp reveal">
+        <div class="xp-tabs" role="tablist" aria-label="Postes" data-i18n-aria="exp.tabs.aria">
+          <button type="button" class="xp-tab" role="tab" id="xpt-laps" aria-controls="xpp-laps" aria-selected="true" data-role="laps"><b>Laps</b><span class="xp-tab__role" data-i18n="exp.laps.role">Développeur Data &amp; IA</span><span class="xp-tab__when"><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span></span></button>
+          <!-- BIAL-R: one consulting firm, three clients -->
+          <div class="xp-group" role="none">
+            <p class="xp-group__head" aria-hidden="true"><span><b>BIAL-R</b><i data-i18n="exp.bialr.group">Conseil en data · 2020 — 2023</i></span></p>
+            <button type="button" class="xp-tab" role="tab" id="xpt-bialr1" aria-controls="xpp-bialr1" aria-selected="false" data-role="bialr1"><b><span class="sr-only">BIAL-R, client </span>Bial-S</b><span class="xp-tab__line"><span data-i18n="exp.bialr1.role">Développeur Data</span> · <i>2023</i></span></button>
+            <button type="button" class="xp-tab" role="tab" id="xpt-bialr2" aria-controls="xpp-bialr2" aria-selected="false" data-role="bialr2"><b><span class="sr-only">BIAL-R, client </span>Clariane</b><span class="xp-tab__line"><span data-i18n="exp.bialr2.role">Consultant ETL</span> · <i>2021 — 22</i></span></button>
+            <button type="button" class="xp-tab" role="tab" id="xpt-bialr3" aria-controls="xpp-bialr3" aria-selected="false" data-role="bialr3"><b><span class="sr-only">BIAL-R, client </span>APRR</b><span class="xp-tab__line"><span data-i18n="exp.bialr3.role">Consultant Data</span> · <i>2020 — 21</i></span></button>
           </div>
-          <div class="lang-bar"><div class="lang-bar-fill" style="width:100%"></div></div>
+          <button type="button" class="xp-tab" role="tab" id="xpt-hyatt" aria-controls="xpp-hyatt" aria-selected="false" data-role="hyatt"><b>Park Hyatt</b><span class="xp-tab__role" data-i18n="exp.hyatt.role">Technicien Support IT</span><span class="xp-tab__when"><span data-i18n="exp.hyatt.start">Avr. 2018</span> – <span data-i18n="exp.hyatt.end">Juill. 2018</span></span></button>
         </div>
-        <div class="lang-card-item">
-          <div class="lang-card-meta">
-            <span class="lang-flag">🇬🇧</span>
-            <span class="lang-name" data-i18n="lang.english">Anglais</span>
-            <span class="lang-level" data-i18n="lang.english.level">Courant</span>
-          </div>
-          <div class="lang-bar"><div class="lang-bar-fill" style="width:90%"></div></div>
+
+        <div class="xp-panels">
+        <section class="xp-panel" role="tabpanel" id="xpp-laps" aria-labelledby="xpt-laps" data-role="laps">
+          <header class="xp-head">
+            <h3 data-i18n="exp.laps.role">Développeur Data &amp; IA</h3>
+            <span class="contract-badge contract-badge--permanent" data-i18n="contract.permanent">CDI</span>
+          </header>
+          <p class="xp-meta"><a href="https://www.laps.com/" target="_blank" rel="noopener">Laps</a><span data-i18n="exp.laps.sector">e-commerce</span><span data-i18n="hero.location">Montréal, Canada</span></p>
+          <p class="xp-meta xp-meta--when"><span><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span></span><span data-i18n="cv.laps.duration">2 ans 8 mois</span></p>
+          <p class="xp-ctx" data-i18n="exp.laps.about">Réseau e-commerce de matériel de golf&nbsp;: conception et mise en place de toute l'infrastructure de données, jusqu'à son ouverture aux agents IA.</p>
+          <p class="label" data-i18n="exp.did">Ce que j'ai fait</p>
+          <ul class="xp-list">
+            <li data-i18n="exp.laps.li1">Conception, déploiement et automatisation de flux de données en Python sur AWS</li>
+            <li data-i18n="exp.laps.li2">Modélisation et implémentation d'un entrepôt de données centralisé</li>
+            <li data-i18n="exp.laps.li3">Développement de rapports et tableaux de bord opérationnels avec Grafana</li>
+            <li data-i18n="exp.laps.li4">Développement d'un serveur MCP en Python connectant l'entrepôt aux agents IA, gouverné et sécurisé</li>
+          </ul>
+          <p class="label" data-i18n="exp.skills.key">Compétences clés</p>
+          <ul class="key-skills"></ul>
+        </section>
+        <section class="xp-panel" role="tabpanel" id="xpp-bialr1" aria-labelledby="xpt-bialr1" data-role="bialr1">
+          <header class="xp-head">
+            <h3 data-i18n="exp.bialr1.role">Développeur Data</h3>
+            <span class="contract-badge contract-badge--permanent" data-i18n="contract.permanent">CDI</span>
+          </header>
+          <p class="xp-meta"><span class="xp-via"><a href="https://www.bial-s.com/" target="_blank" rel="noopener" data-i18n="exp.bialr1.client">Bial-S</a> <span class="xp-via__firm">via <a href="https://www.bial-x.com/" target="_blank" rel="noopener">BIAL-R</a></span></span><span data-i18n="exp.bialr1.sector">logement social</span><span>Lyon, France</span></p>
+          <p class="xp-meta xp-meta--when"><span><span data-i18n="exp.bialr1.start">Janv. 2023</span> – <span data-i18n="exp.bialr1.end">Déc. 2023</span></span><span data-i18n="exp.bialr1.meta">1 an</span></p>
+          <p class="xp-ctx" data-i18n="exp.bialr1.about">Mission de conseil&nbsp;: industrialisation d'une plateforme décisionnelle cloud pour des Offices Publics de l'Habitat, et pilotage du centre de services de Clariane.</p>
+          <p class="label" data-i18n="exp.did">Ce que j'ai fait</p>
+          <ul class="xp-list">
+            <li data-i18n="exp.bialr1.li1">Conception, déploiement et automatisation de flux de données ETL avec Pentaho</li>
+            <li data-i18n="exp.bialr1.li2">Support transversal de la plateforme décisionnelle et intégration de nouveaux clients</li>
+            <li data-i18n="exp.bialr1.li3">Pilotage du CDS : gestion d'équipe, coordination des activités et amélioration continue</li>
+          </ul>
+          <p class="label" data-i18n="exp.skills.key">Compétences clés</p>
+          <ul class="key-skills"></ul>
+        </section>
+        <section class="xp-panel" role="tabpanel" id="xpp-bialr2" aria-labelledby="xpt-bialr2" data-role="bialr2">
+          <header class="xp-head">
+            <h3 data-i18n="exp.bialr2.role">Consultant ETL</h3>
+            <span class="contract-badge contract-badge--permanent" data-i18n="contract.permanent">CDI</span>
+          </header>
+          <p class="xp-meta"><span class="xp-via"><a href="https://www.clariane.com" target="_blank" rel="noopener" data-i18n="exp.bialr2.client">Clariane</a> <span class="xp-via__firm">via <a href="https://www.bial-x.com/" target="_blank" rel="noopener">BIAL-R</a></span></span><span data-i18n="exp.bialr2.sector">santé</span><span>Lyon, France</span></p>
+          <p class="xp-meta xp-meta--when"><span><span data-i18n="exp.bialr2.start">Sept. 2021</span> – <span data-i18n="exp.bialr2.end">Déc. 2022</span></span><span data-i18n="exp.bialr2.meta">1 an 4 mois</span></p>
+          <p class="xp-ctx" data-i18n="exp.bialr2.about">Mission de conseil chez un grand groupe de santé&nbsp;: référent de l'ensemble de ses flux inter-applicatifs.</p>
+          <p class="label" data-i18n="exp.did">Ce que j'ai fait</p>
+          <ul class="xp-list">
+            <li data-i18n="exp.bialr2.li1">Développement et maintenance des flux inter-applicatifs avec Pentaho</li>
+            <li data-i18n="exp.bialr2.li2">Gestion des incidents de production : analyse, correction et reprise de données</li>
+            <li data-i18n="exp.bialr2.li3">Contribution à la migration des flux inter-applicatifs de Pentaho vers un ESB</li>
+          </ul>
+          <p class="label" data-i18n="exp.skills.key">Compétences clés</p>
+          <ul class="key-skills"></ul>
+        </section>
+        <section class="xp-panel" role="tabpanel" id="xpp-bialr3" aria-labelledby="xpt-bialr3" data-role="bialr3">
+          <header class="xp-head">
+            <h3 data-i18n="exp.bialr3.role">Consultant Data</h3>
+            <span class="contract-badge contract-badge--alternance" data-i18n="contract.alternance">Alternance</span>
+          </header>
+          <p class="xp-meta"><span class="xp-via"><a href="https://www.aprr.com" target="_blank" rel="noopener" data-i18n="exp.bialr3.client">APRR</a> <span class="xp-via__firm">via <a href="https://www.bial-x.com/" target="_blank" rel="noopener">BIAL-R</a></span></span><span data-i18n="exp.bialr3.sector">autoroutes</span><span>Lyon, France</span></p>
+          <p class="xp-meta xp-meta--when"><span><span data-i18n="exp.bialr3.start">Sept. 2020</span> – <span data-i18n="exp.bialr3.end">Août 2021</span></span><span data-i18n="exp.bialr3.meta">1 an</span></p>
+          <p class="xp-ctx" data-i18n="exp.bialr3.about">Alternance de dernière année de master chez un opérateur autoroutier&nbsp;: toute la chaîne décisionnelle.</p>
+          <p class="label" data-i18n="exp.did">Ce que j'ai fait</p>
+          <ul class="xp-list">
+            <li data-i18n="exp.bialr3.li1">Cartographie et mise en place d'une gouvernance des données</li>
+            <li data-i18n="exp.bialr3.li2">Développement et déploiement de rapports opérationnels</li>
+            <li data-i18n="exp.bialr3.li3">Conception et maintenance de flux ETL avec Pentaho</li>
+          </ul>
+          <p class="label" data-i18n="exp.skills.key">Compétences clés</p>
+          <ul class="key-skills"></ul>
+        </section>
+        <section class="xp-panel" role="tabpanel" id="xpp-hyatt" aria-labelledby="xpt-hyatt" data-role="hyatt">
+          <header class="xp-head">
+            <h3 data-i18n="exp.hyatt.role">Technicien Support IT</h3>
+            <span class="contract-badge contract-badge--stage" data-i18n="contract.stage">Stage</span>
+          </header>
+          <p class="xp-meta"><a href="https://www.hyatt.com/park-hyatt/en-US/parph-park-hyatt-paris-vendome" target="_blank" rel="noopener">Park Hyatt Paris-Vendôme</a><span data-i18n="exp.hyatt.sector">hôtellerie</span><span>Paris, France</span></p>
+          <p class="xp-meta xp-meta--when"><span><span data-i18n="exp.hyatt.start">Avr. 2018</span> – <span data-i18n="exp.hyatt.end">Juill. 2018</span></span><span data-i18n="exp.hyatt.meta">3 mois</span></p>
+          <p class="xp-ctx" data-i18n="exp.hyatt.about">Stage de fin de DUT au service informatique d'un palace parisien.</p>
+          <p class="label" data-i18n="exp.did">Ce que j'ai fait</p>
+          <ul class="xp-list">
+            <li data-i18n="exp.hyatt.li1">Maintenance et support du parc informatique (poste de travail, réseaux, serveurs)</li>
+            <li data-i18n="exp.hyatt.li2">Participation au déploiement de nouveaux projets IT</li>
+            <li data-i18n="exp.hyatt.li3">Contribution à la mise en place et au suivi des mesures de cybersécurité</li>
+          </ul>
+        </section>
+        </div>
+      </div>
+
+      <!-- id="education" keeps the terminal's `cd education` working -->
+      <div class="xp-edu reveal" id="education">
+        <p class="label" data-i18n="edu.title">Formation</p>
+        <div class="edu-cards">
+          <article class="tile edu-card">
+            <span class="edu-card__badge" aria-hidden="true">UVSQ</span>
+            <span class="edu-card__y">2016 — 2018</span>
+            <strong data-i18n="edu.dut.short">DUT Informatique</strong>
+            <span class="edu-card__s">Université de Versailles Saint-Quentin</span>
+            <span class="edu-card__w"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="edu.dut.city">Vélizy, France</span></span>
+          </article>
+          <article class="tile edu-card">
+            <span class="edu-card__badge" aria-hidden="true">UQAC</span>
+            <span class="edu-card__y">2018 — 2019</span>
+            <strong data-i18n="edu.uqac.short">Baccalauréat en informatique</strong>
+            <span class="edu-card__s">Université du Québec à Chicoutimi</span>
+            <span class="edu-card__w"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="edu.uqac.city">Chicoutimi, Québec</span></span>
+            <span class="edu-card__tag" data-i18n="edu.uqac.note">Double diplôme avec l'UVSQ</span>
+          </article>
+          <article class="tile edu-card">
+            <span class="edu-card__badge" aria-hidden="true">UCBL</span>
+            <span class="edu-card__y">2019 — 2021</span>
+            <strong data-i18n="edu.miage.short">Master MIAGE</strong>
+            <span class="edu-card__s">Université Claude Bernard Lyon 1</span>
+            <span class="edu-card__w"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="edu.miage.city">Lyon, France</span></span>
+            <span class="edu-card__tag" data-i18n="edu.miage.note">Systèmes d'information de santé</span>
+          </article>
         </div>
       </div>
     </section>
 
-    <!-- ═══════════ EDUCATION ═══════════ -->
-    <section class="section reveal" id="education">
-      <h2 class="section-title"><span aria-hidden="true">🎓</span> <span data-i18n="edu.title">Formation</span></h2>
-      <div class="timeline">
-
-        <div class="timeline-item">
-          <div class="timeline-period">
-            <span class="tl-start">2021</span>
-          </div>
-          <div class="timeline-track">
-            <div class="timeline-marker"></div>
-          </div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <h3 data-i18n="edu.miage.degree">Master Méthodes Informatiques Appliquées à la Gestion des Entreprises — MIAGE</h3>
-            </div>
-            <span class="company"><span class="edu-abbr">UCBL — </span>Université Claude Bernard Lyon 1</span>
-            <p class="timeline-meta"><span class="date-long" data-i18n="edu.miage.dates">Sept. 2019 – Juin 2021</span><span class="date-short">2019 – 2021</span> · Lyon, France&nbsp;🇫🇷</p>
-            <p data-i18n="edu.miage.desc">Parcours Systèmes d'Information de Gestion de Santé.</p>
-          </div>
+    <!-- ═══════════ 03 SKILLS ═══════════ -->
+    <section class="sec" id="skills" aria-labelledby="skillsTitle">
+      <header class="sec-head">
+        <div>
+          <p class="sec-num">03</p>
+          <h2 id="skillsTitle" data-i18n="skills.title">Compétences</h2>
+          <p class="sec-sub" data-i18n="skills.hint">Cliquez une compétence pour voir où je l'ai utilisée.</p>
         </div>
+        <p class="skills-legend" aria-hidden="true">
+          <span><i class="lvl" data-level="3"></i><span data-i18n="skills.level.expert">Expertise</span></span>
+          <span><i class="lvl" data-level="2"></i><span data-i18n="skills.level.mid">Maîtrise</span></span>
+          <span><i class="lvl" data-level="1"></i><span data-i18n="skills.level.basic">Notions</span></span>
+        </p>
+      </header>
 
-        <div class="timeline-item">
-          <div class="timeline-period">
-            <span class="tl-start">2019</span>
-          </div>
-          <div class="timeline-track">
-            <div class="timeline-marker"></div>
-          </div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <h3 data-i18n="edu.uqac.degree">Baccalauréat en Informatique</h3>
+      <!-- Category tiles are rendered by scroll.js from skills-data.js, before the static tiles -->
+      <div class="skills-grid">
+        <article class="tile langs-tile reveal" data-static>
+          <p class="label" data-i18n="skills.languages">Langues</p>
+          <div class="langs">
+            <div>
+              <p class="langs__row"><strong data-i18n="lang.french">Français</strong><span class="langs__lvl" data-i18n="lang.french.level">Natif</span></p>
+              <p class="langs__bar"><i style="width:100%"></i></p>
             </div>
-            <span class="company"><span class="edu-abbr">UQAC — </span>Université du Québec à Chicoutimi</span>
-            <p class="timeline-meta"><span class="date-long" data-i18n="edu.uqac.dates">Sept. 2018 – Juin 2019</span><span class="date-short">2018 – 2019</span> · Chicoutimi, Canada&nbsp;🇨🇦</p>
-            <p data-i18n="edu.uqac.desc">Double diplômation DUETI avec l'Université de Versailles Saint-Quentin-en-Yvelines.</p>
-          </div>
-        </div>
-
-        <div class="timeline-item">
-          <div class="timeline-period">
-            <span class="tl-start">2018</span>
-          </div>
-          <div class="timeline-track">
-            <div class="timeline-marker"></div>
-          </div>
-          <div class="timeline-content">
-            <div class="timeline-header">
-              <h3 data-i18n="edu.dut.degree">Diplôme Universitaire de Technologie en Informatique</h3>
+            <div>
+              <p class="langs__row"><strong data-i18n="lang.english">Anglais</strong><span class="langs__lvl" data-i18n="lang.english.level">Courant</span></p>
+              <p class="langs__bar"><i style="width:90%"></i></p>
             </div>
-            <span class="company"><span class="edu-abbr">UVSQ — </span>Université de Versailles Saint-Quentin-en-Yvelines</span>
-            <p class="timeline-meta"><span class="date-long" data-i18n="edu.dut.dates">Sept. 2016 – Juin 2018</span><span class="date-short">2016 – 2018</span> · Vélizy-Villacoublay, France&nbsp;🇫🇷</p>
           </div>
-        </div>
-
+        </article>
+        <article class="tile soft-tile reveal" data-static>
+          <p class="label" data-i18n="soft.title">Savoir-être</p>
+          <ul class="soft">
+            <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-team"/></svg></span><strong data-i18n="soft.lead.t">Pilotage d'équipe</strong><span class="soft__d" data-i18n="soft.lead.d">Conduite du centre de services de Clariane&nbsp;: gestion d'équipe, coordination des activités, amélioration continue.</span></li>
+            <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-chat"/></svg></span><strong data-i18n="soft.business.t">Dialogue avec les métiers</strong><span class="soft__d" data-i18n="soft.business.d">Un entrepôt modélisé avec les équipes métier, des rapports pensés pour la finance, le péage ou la relation client.</span></li>
+            <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-route"/></svg></span><strong data-i18n="soft.e2e.t">Vision de bout en bout</strong><span class="soft__d" data-i18n="soft.e2e.d">De l'ingestion jusqu'aux agents IA&nbsp;: une infrastructure de données conçue comme un tout.</span></li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <!-- ═══════════ PROJECTS ═══════════ -->
-    <section class="section reveal" id="projects">
-      <h2 class="section-title"><span aria-hidden="true">🚀</span> <span data-i18n="projects.title">Projets</span></h2>
-      <div class="projects-grid">
-
-        <!-- Built for Laps — proprietary code: GitHub overlay is shown but disabled (lock icon) -->
-        <div class="project-card" id="project-mcp" data-type="pro" data-pinned>
-          <div class="project-overlay project-overlay--private" aria-hidden="true">
-            <svg class="overlay-github" width="22" height="22"><use href="#icon-github"/></svg>
-            <svg class="overlay-arrow overlay-lock" width="16" height="16" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round" stroke-linejoin="round"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></svg>
-          </div>
-          <div class="project-header">
-            <h3><span data-i18n="projects.mcp.title.main">MCP Server</span><span class="contract-badge contract-badge--pro" data-i18n="projects.badge.pro">Professionnel</span><span class="project-title-sub" data-i18n="projects.mcp.title.sub">Accès IA gouverné à l'entrepôt de données</span></h3>
-          </div>
-          <p class="project-meta" data-i18n="projects.mcp.meta">Laps · Avr. – Juin 2026 · 3 mois</p>
-          <p data-i18n="projects.mcp.desc">Développement d'un serveur MCP en Python (FastMCP) donnant aux assistants IA un accès gouverné à l'entrepôt de données de Laps : requêtes en lecture seule validées (liste blanche de tables, limites et délais imposés), masquage automatique des données personnelles et journal d'audit complet.</p>
-          <div class="tags"><span class="tag">Python</span><span class="tag">FastMCP</span><span class="tag">MySQL</span><span class="tag">Docker</span></div>
+    <!-- ═══════════ 04 PROJECTS ═══════════ -->
+    <section class="sec" id="projects" aria-labelledby="projectsTitle">
+      <header class="sec-head">
+        <div>
+          <p class="sec-num">04</p>
+          <h2 id="projectsTitle" data-i18n="projects.title">Projets</h2>
         </div>
+        <a class="btn" href="https://github.com/alexisdcolin" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#icon-github"/></svg>GitHub</a>
+      </header>
 
-        <div class="project-card" id="project-etl" data-type="pro" data-pinned>
-          <a href="https://github.com/alexisdcolin/AWS-Lambda-ETL" target="_blank" rel="noopener" class="project-overlay" aria-label="Voir sur GitHub" data-i18n-aria="projects.github">
-            <svg class="overlay-github" width="22" height="22"><use href="#icon-github"/></svg>
-            <svg class="overlay-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </a>
-          <div class="project-header">
-            <h3><span data-i18n="projects.etl.title.main">AWS Lambda ETL</span><span class="contract-badge contract-badge--pro" data-i18n="projects.badge.pro">Professionnel</span><span class="project-title-sub" data-i18n="projects.etl.title.sub">Framework de pipelines serverless</span></h3>
-          </div>
-          <p class="project-meta" data-i18n="projects.etl.meta">Laps · Juin – Sept. 2025 · 4 mois</p>
-          <p data-i18n="projects.etl.desc">Développement d'un framework ETL serverless sur AWS Lambda, permettant la création de pipelines modulaires, évolutifs et économiques pour l'automatisation des flux de données.</p>
-          <div class="project-desc-actions">
-            <a href="https://github.com/alexisdcolin/AWS-Lambda-ETL" target="_blank" rel="noopener" class="project-github-link" data-i18n-aria="projects.github">
-              <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><use href="#icon-github"/></svg>
-              <span data-i18n="projects.github.label">Voir sur GitHub</span>
-            </a>
-          </div>
-          <div class="tags"><span class="tag">AWS Lambda</span><span class="tag">Python</span><span class="tag">ETL</span></div>
-        </div>
+      <div class="bento bento--projects">
+        <!-- Built for Laps — proprietary code. Same layout as the other cards, in the page's one dark tile -->
+        <article class="tile project-card project-card--feature reveal" id="project-mcp">
+          <p class="project-card__top"><span class="label" data-i18n="projects.featured">Projet phare</span><span class="contract-badge contract-badge--pro" data-i18n="projects.badge.pro">Professionnel</span></p>
+          <h3 data-i18n="projects.mcp.title.main">MCP Server</h3>
+          <p class="project-card__sub" data-i18n="projects.mcp.title.sub">Accès IA gouverné à l'entrepôt de données</p>
+          <p class="project-card__meta" data-i18n="projects.mcp.meta">Laps · Avr. – Juin 2026 · 3 mois</p>
+          <p class="project-card__desc" data-i18n="projects.mcp.desc">Développement d'un serveur MCP en Python (FastMCP) donnant aux agents IA un accès gouverné à l'entrepôt de données de Laps&nbsp;: requêtes en lecture seule validées (liste blanche de tables, limites et délais imposés), masquage automatique des données personnelles et journal d'audit complet.</p>
+          <p class="project-card__desc" data-i18n="projects.mcp.pitch">Les équipes posent leurs questions en langage naturel à leur agent IA, qui interroge l'entrepôt sans jamais voir de donnée sensible ni pouvoir y écrire.</p>
+          <ul class="tags"><li class="tag">Python</li><li class="tag">FastMCP</li><li class="tag">MySQL</li><li class="tag">Docker</li></ul>
+          <p class="project-private"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span data-i18n="projects.private">Code privé</span></p>
+        </article>
 
-      </div>
+        <article class="tile project-card reveal" id="project-etl">
+          <span class="contract-badge contract-badge--pro" data-i18n="projects.badge.pro">Professionnel</span>
+          <h3 data-i18n="projects.etl.title.main">AWS Lambda ETL</h3>
+          <p class="project-card__sub" data-i18n="projects.etl.title.sub">Framework de pipelines serverless</p>
+          <p class="project-card__meta" data-i18n="projects.etl.meta">Laps · Juin – Sept. 2025 · 4 mois</p>
+          <p class="project-card__desc" data-i18n="projects.etl.desc">Développement d'un framework ETL serverless sur AWS Lambda, permettant la création de pipelines modulaires, évolutifs et économiques pour l'automatisation des flux de données.</p>
+          <ul class="tags"><li class="tag">AWS Lambda</li><li class="tag">Python</li><li class="tag">ETL</li></ul>
+          <a class="gh-link" href="https://github.com/alexisdcolin/AWS-Lambda-ETL" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#icon-github"/></svg><span data-i18n="projects.github.label">Voir sur GitHub</span><svg class="ico" aria-hidden="true"><use href="#i-ext"/></svg></a>
+        </article>
 
-      <!-- Academic projects — collapsed by default, revealed by the toggle -->
-      <div class="projects-extra" id="projectsExtra">
-        <div class="projects-extra__inner">
-        <div class="projects-extra__list">
-
-        <div class="project-card" id="project-copill" data-type="academic">
-          <a href="https://github.com/alexisdcolin/CoPill-App" target="_blank" rel="noopener" class="project-overlay" aria-label="Voir sur GitHub" data-i18n-aria="projects.github">
-            <svg class="overlay-github" width="22" height="22"><use href="#icon-github"/></svg>
-            <svg class="overlay-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </a>
-          <div class="project-header">
-            <h3><span data-i18n="projects.copill.title.main">CoPill</span><span class="contract-badge contract-badge--academic" data-i18n="projects.badge.academic">Académique</span><span class="project-title-sub" data-i18n="projects.copill.title.sub">Pilulier connecté</span></h3>
-          </div>
-          <p class="project-meta">UCBL · Févr. – Avr. 2020 · 3 mois</p>
-          <div class="project-desc">
-            <div class="project-desc-body" id="descCopill">
-              <p data-i18n="projects.copill.desc1">Projet de fin d'études réalisé en équipe pour transformer un pilulier traditionnel en une solution connectée visant à améliorer l'adhésion aux traitements (personnes âgées, patients, sportifs). Le projet couvrait l'ensemble du cycle produit (discovery, spécifications, prototypage, tests utilisateurs et validation) ainsi que la gestion de projet (planification et suivi des itérations).</p>
-              <p data-i18n="projects.copill.desc2">Sur le plan technique, le prototype embarqué a été développé en Python sur une Raspberry Pi avec modules (LED, capteurs, écran, buzzer) et accompagné d'une application Android en Java pour le pilotage et le suivi.</p>
-              <div class="project-desc-fade"></div>
-            </div>
-            <div class="project-desc-actions">
-              <button type="button" class="project-readmore" data-desc="descCopill" aria-expanded="false" aria-controls="descCopill">
-                <span data-i18n="projects.readmore">Lire la suite</span>
-                <svg class="project-readmore__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-              <a href="https://github.com/alexisdcolin/CoPill-App" target="_blank" rel="noopener" class="project-github-link" data-i18n-aria="projects.github">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><use href="#icon-github"/></svg>
-                <span data-i18n="projects.github.label">Voir sur GitHub</span>
-              </a>
-            </div>
-          </div>
-          <div class="tags"><span class="tag">Python</span><span class="tag">Raspberry Pi</span><span class="tag">Java</span><span class="tag">Android</span></div>
-        </div>
-
-        <div class="project-card" id="project-swarm" data-type="academic">
-          <a href="https://github.com/SwarmDebugging/SwarmGraphQl" target="_blank" rel="noopener" class="project-overlay" aria-label="Voir sur GitHub" data-i18n-aria="projects.github">
-            <svg class="overlay-github" width="22" height="22"><use href="#icon-github"/></svg>
-            <svg class="overlay-arrow" width="18" height="18" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" stroke-linecap="round" stroke-linejoin="round"><line x1="5" y1="12" x2="19" y2="12"/><polyline points="12 5 19 12 12 19"/></svg>
-          </a>
-          <div class="project-header">
-            <h3><span data-i18n="projects.swarm.title.main">Swarm Debugging</span><span class="contract-badge contract-badge--academic" data-i18n="projects.badge.academic">Académique</span><span class="project-title-sub" data-i18n="projects.swarm.title.sub">Migration d'API vers GraphQL</span></h3>
-          </div>
-          <p class="project-meta">UQAC · Janv. – Avr. 2019 · 4 mois</p>
-          <div class="project-desc">
-            <div class="project-desc-body" id="descSwarm">
-              <p><span data-i18n="projects.swarm.desc1">Le projet Swarm Debugging consiste à développer un plug-in sur l'IDE Eclipse qui facilite le débogage collaboratif des développeurs via le crowdsourcing.</span> <span data-i18n="projects.swarm.desc2">Dans ce cadre, nous avons migré l'API d'un modèle REST vers un modèle GraphQL implémenté en Java avec Spring Boot. La migration a apporté une plus grande flexibilité dans les requêtes, réduit la sur-récupération des données, et a facilité la maintenance et l'évolution de l'API grâce à un schéma typé et auto-documenté.</span></p>
-              <div class="project-desc-fade"></div>
-            </div>
-            <div class="project-desc-actions">
-              <button type="button" class="project-readmore" data-desc="descSwarm" aria-expanded="false" aria-controls="descSwarm">
-                <span data-i18n="projects.readmore">Lire la suite</span>
-                <svg class="project-readmore__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="11" height="11"><polyline points="6 9 12 15 18 9"/></svg>
-              </button>
-              <a href="https://github.com/SwarmDebugging/SwarmGraphQl" target="_blank" rel="noopener" class="project-github-link" data-i18n-aria="projects.github">
-                <svg width="13" height="13" viewBox="0 0 24 24" fill="currentColor"><use href="#icon-github"/></svg>
-                <span data-i18n="projects.github.label">Voir sur GitHub</span>
-              </a>
-            </div>
-          </div>
-          <div class="tags"><span class="tag">Java</span><span class="tag">GraphQL</span><span class="tag">Spring Boot</span></div>
-        </div>
-
-        </div>
-        </div>
-      </div>
-      <div class="projects-more">
-        <button type="button" class="projects-more__btn" id="projectsToggle" aria-expanded="false" aria-controls="projectsExtra">
-          <span data-i18n="projects.showmore">Voir plus de projets</span>
-          <svg class="projects-more__chevron" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2.5" width="12" height="12"><polyline points="6 9 12 15 18 9"/></svg>
-        </button>
+        <article class="tile project-academic reveal">
+          <p class="label" data-i18n="projects.academic.title">Projets académiques</p>
+          <ul class="academic">
+            <li id="project-copill">
+              <p class="academic__head"><strong data-i18n="projects.copill.title.main">CoPill</strong><span class="contract-badge contract-badge--academic" data-i18n="projects.badge.academic">Académique</span></p>
+              <p data-i18n="projects.copill.short">Pilulier connecté&nbsp;: Raspberry Pi et application Android. UCBL, 2020.</p>
+              <a class="gh-link" href="https://github.com/alexisdcolin/CoPill-App" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#icon-github"/></svg>GitHub<svg class="ico" aria-hidden="true"><use href="#i-ext"/></svg></a>
+            </li>
+            <li id="project-swarm">
+              <p class="academic__head"><strong data-i18n="projects.swarm.title.main">Swarm Debugging</strong><span class="contract-badge contract-badge--academic" data-i18n="projects.badge.academic">Académique</span></p>
+              <p data-i18n="projects.swarm.short">Migration d'une API REST vers GraphQL. UQAC, 2019.</p>
+              <a class="gh-link" href="https://github.com/SwarmDebugging/SwarmGraphQl" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#icon-github"/></svg>GitHub<svg class="ico" aria-hidden="true"><use href="#i-ext"/></svg></a>
+            </li>
+          </ul>
+        </article>
       </div>
     </section>
 
-    <!-- ═══════════ MISC ═══════════ -->
-    <section class="section reveal" id="misc">
-      <h2 class="section-title"><span aria-hidden="true">🎯</span> <span data-i18n="misc.title">Centres d'intérêt</span></h2>
-      <div class="misc-grid">
-        <div class="misc-card">
-          <span class="misc-emoji" aria-hidden="true">🏓</span>
-          <div>
-            <strong data-i18n="misc.tt.title">Tennis de Table</strong>
-            <p data-i18n="misc.tt.desc">Activité pratiquée pendant plus de 10 ans en club.</p>
-          </div>
+    <!-- ═══════════ 05 CONTACT ═══════════ -->
+    <section class="sec" id="contact" aria-labelledby="contactTitle">
+      <header class="sec-head">
+        <div>
+          <p class="sec-num">05</p>
+          <h2 id="contactTitle" data-i18n="contact.title">Contact</h2>
+          <p class="sec-sub" data-i18n="contact.sub">Une question, un projet, une idée&nbsp;?</p>
         </div>
-        <div class="misc-card">
-          <span class="misc-emoji" aria-hidden="true">✈️</span>
-          <div>
-            <strong data-i18n="misc.travel.title">Voyages</strong>
-            <p data-i18n="misc.travel.desc">Déjà 17 pays explorés, et bien d'autres à venir.</p>
-          </div>
-        </div>
-      </div>
-    </section>
+      </header>
 
-    <!-- ═══════════ CONTACT ═══════════ -->
-    <section class="section reveal" id="contact">
-      <h2 class="section-title"><span aria-hidden="true">✉️</span> <span data-i18n="contact.title">Contact</span></h2>
-      <form class="contact-form" id="contactForm" action="https://formspree.io/f/xkopnznd" method="POST" novalidate>
-        <div class="contact-form__row">
-          <div class="contact-form__field">
-            <label for="contactName" data-i18n="contact.name.label">Nom</label>
-            <input type="text" id="contactName" name="name" autocomplete="name" required data-i18n-placeholder="contact.name.placeholder" placeholder="Votre nom" />
+      <div class="bento bento--contact">
+        <article class="tile contact-direct reveal">
+          <p class="label" data-i18n="contact.direct">Écrire directement</p>
+          <div class="contact-direct__mail">
+            <a class="contact-direct__address" href="mailto:contact@alexiscolin.com">contact@alexiscolin.com</a>
+            <button type="button" class="btn btn--sm copy-btn" id="copyEmail" data-copy="contact@alexiscolin.com">
+              <svg class="ico" aria-hidden="true"><use href="#i-copy"/></svg>
+              <span aria-live="polite"><span class="copy-btn__idle" data-i18n="contact.copy">Copier</span><span class="copy-btn__done" data-i18n="contact.copied">Copié</span></span>
+            </button>
+          </div>
+          <p class="contact-direct__note" data-i18n="contact.pref">Mon moyen de contact préféré · réponse sous 24&nbsp;h</p>
+          <div class="channels">
+            <a href="tel:+14385436098"><span class="channels__k" data-i18n="contact.phone">Téléphone</span><span class="channels__v">(438)&nbsp;543&#8209;6098</span><svg class="ico" aria-hidden="true"><use href="#i-phone"/></svg></a>
+            <a href="https://www.linkedin.com/in/alexisdcolin" target="_blank" rel="noopener"><span class="channels__k">LinkedIn</span><span class="channels__v">in/alexisdcolin</span><svg class="ico" aria-hidden="true"><use href="#i-ext"/></svg></a>
+          </div>
+        </article>
+
+        <form class="tile contact-form reveal" id="contactForm" action="https://formspree.io/f/xkopnznd" method="POST" novalidate>
+          <p class="label" data-i18n="contact.form.title">Laisser un message</p>
+          <div class="contact-form__row">
+            <div class="contact-form__field">
+              <label for="contactName" data-i18n="contact.name.label">Nom</label>
+              <input type="text" id="contactName" name="name" autocomplete="name" required data-i18n-placeholder="contact.name.placeholder" placeholder="Votre nom" />
+            </div>
+            <div class="contact-form__field">
+              <label for="contactEmail" data-i18n="contact.email.label">Email</label>
+              <input type="email" id="contactEmail" name="_replyto" autocomplete="email" required data-i18n-placeholder="contact.email.placeholder" placeholder="votre@email.com" />
+            </div>
           </div>
           <div class="contact-form__field">
-            <label for="contactEmail" data-i18n="contact.email.label">Email</label>
-            <input type="email" id="contactEmail" name="_replyto" autocomplete="email" required data-i18n-placeholder="contact.email.placeholder" placeholder="votre@email.com" />
+            <label for="contactMessage" data-i18n="contact.message.label">Message</label>
+            <textarea id="contactMessage" name="message" rows="5" required data-i18n-placeholder="contact.message.placeholder" placeholder="Votre message…"></textarea>
           </div>
-        </div>
-        <div class="contact-form__field">
-          <label for="contactMessage" data-i18n="contact.message.label">Message</label>
-          <textarea id="contactMessage" name="message" rows="5" required data-i18n-placeholder="contact.message.placeholder" placeholder="Votre message…"></textarea>
-        </div>
-        <!-- Anti-spam honeypot -->
-        <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
-        <div class="contact-form__footer">
-          <p class="contact-form__status" id="contactStatus" aria-live="polite"></p>
-          <button type="submit" class="btn btn--accent" id="contactSubmit">
-            <svg class="contact-form__submit-text" viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2" width="13" height="13"><line x1="22" y1="2" x2="11" y2="13"/><polygon points="22 2 15 22 11 13 2 9 22 2"/></svg>
-            <span class="contact-form__submit-text" data-i18n="contact.submit">Envoyer</span>
-            <span class="contact-form__spinner" aria-hidden="true"></span>
-          </button>
-        </div>
-      </form>
+          <!-- Anti-spam honeypot -->
+          <input type="text" name="_gotcha" style="display:none" tabindex="-1" autocomplete="off" />
+          <div class="contact-form__footer">
+            <p class="contact-form__status" id="contactStatus" aria-live="polite"></p>
+            <button type="submit" class="btn btn--accent" id="contactSubmit">
+              <svg class="ico contact-form__submit-text" aria-hidden="true"><use href="#i-send"/></svg>
+              <span class="contact-form__submit-text" data-i18n="contact.submit">Envoyer</span>
+              <span class="contact-form__spinner" aria-hidden="true"></span>
+            </button>
+          </div>
+        </form>
+      </div>
     </section>
 
   </main>
 
   <!-- ═══════════ FOOTER ═══════════ -->
-  <footer>
-    <div class="footer-inner">
-      <div class="footer-top">
-        <div class="footer-left">
-          <p class="footer-tagline"><span data-i18n="hero.role">Développeur Data &amp; IA</span> · <span data-i18n="hero.location">Montréal, Canada</span></p>
-        </div>
-        <div class="footer-right">
-          <nav class="footer-socials" aria-label="Réseaux sociaux — pied de page" data-i18n-aria="aria.socials.footer">
-            <a href="tel:+14385436098" aria-label="Téléphone">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M6.62 10.79a15.05 15.05 0 0 0 6.59 6.59l2.2-2.2a1 1 0 0 1 1.02-.24c1.12.37 2.33.57 3.57.57a1 1 0 0 1 1 1V20a1 1 0 0 1-1 1C10.61 21 3 13.39 3 4a1 1 0 0 1 1-1h3.5a1 1 0 0 1 1 1c0 1.25.2 2.45.57 3.57a1 1 0 0 1-.25 1.02l-2.2 2.2z"/></svg>
-            </a>
-            <a href="mailto:contact@alexiscolin.com" aria-label="Email">
-              <svg width="18" height="18" viewBox="0 0 24 24" fill="currentColor"><path d="M20 4H4c-1.1 0-2 .9-2 2v12c0 1.1.9 2 2 2h16c1.1 0 2-.9 2-2V6c0-1.1-.9-2-2-2zm0 4-8 5-8-5V6l8 5 8-5v2z"/></svg>
-            </a>
-            <a href="https://github.com/alexisdcolin" target="_blank" rel="noopener me" aria-label="GitHub">
-              <svg width="18" height="18" aria-hidden="true"><use href="#icon-github"/></svg>
-            </a>
-            <a href="https://www.linkedin.com/in/alexisdcolin" target="_blank" rel="noopener me" aria-label="LinkedIn">
-              <svg width="18" height="18" aria-hidden="true"><use href="#icon-linkedin"/></svg>
-            </a>
-            <a href="https://x.com/alexisdcolin" target="_blank" rel="noopener me" aria-label="X / Twitter">
-              <svg width="18" height="18" aria-hidden="true"><use href="#icon-x"/></svg>
-            </a>
-            <a href="https://www.threads.com/@alexisdcolin" target="_blank" rel="noopener me" aria-label="Threads">
-              <svg width="18" height="18" aria-hidden="true"><use href="#icon-threads"/></svg>
-            </a>
-            <a href="https://www.instagram.com/alexisdcolin" target="_blank" rel="noopener me" aria-label="Instagram">
-              <svg width="18" height="18" aria-hidden="true"><use href="#icon-instagram"/></svg>
-            </a>
-          </nav>
-        </div>
-      </div>
-      <div class="footer-bottom">
-        <span>© <span id="footerYear"></span> Alexis Colin · <a href="/privacy" data-i18n="footer.privacy">Confidentialité</a></span>
-        <span class="footer-bottom__actions">
-          <button type="button" class="terminal-cue" data-terminal-open aria-label="Ouvrir le terminal" title="Ouvrir le terminal" data-i18n-aria="aria.terminal" data-i18n-title="aria.terminal.hint" hidden><span class="terminal-cue__prompt" aria-hidden="true">&gt;</span><span class="terminal-cue__cursor" aria-hidden="true"></span></button>
-          <a href="#top" class="back-to-top" aria-label="Retour en haut" data-i18n-aria="footer.backtotop">↑</a>
-        </span>
-      </div>
+  <footer class="footer">
+    <div class="footer__top">
+      <p class="footer__tagline"><span data-i18n="hero.role">Développeur Data &amp; IA</span> · <span data-i18n="hero.location">Montréal, Canada</span></p>
+      <nav class="footer-socials" aria-label="Réseaux sociaux — pied de page" data-i18n-aria="aria.socials.footer">
+        <a href="mailto:contact@alexiscolin.com" aria-label="Email"><svg class="ico" aria-hidden="true"><use href="#i-mail"/></svg></a>
+        <a href="https://github.com/alexisdcolin" target="_blank" rel="noopener me" aria-label="GitHub"><svg class="ico" aria-hidden="true"><use href="#icon-github"/></svg></a>
+        <a href="https://www.linkedin.com/in/alexisdcolin" target="_blank" rel="noopener me" aria-label="LinkedIn"><svg class="ico" aria-hidden="true"><use href="#icon-linkedin"/></svg></a>
+      </nav>
+    </div>
+    <div class="footer__bottom">
+      <span>© <span id="footerYear"></span> Alexis Colin · <a href="/privacy" data-i18n="footer.privacy">Confidentialité</a></span>
+      <span class="footer__actions">
+        <button type="button" class="terminal-cue" data-terminal-open aria-label="Ouvrir le terminal" title="Ouvrir le terminal" data-i18n-aria="aria.terminal" data-i18n-title="aria.terminal.hint" hidden><span class="terminal-cue__prompt" aria-hidden="true">&gt;</span><span class="terminal-cue__cursor" aria-hidden="true"></span></button>
+        <a href="#top" class="back-to-top" aria-label="Retour en haut" data-i18n-aria="footer.backtotop">↑</a>
+      </span>
     </div>
   </footer>
 
@@ -751,11 +582,34 @@
     </div>
   </div>
 
+  <!-- ═══════════ CV (every CV button) — the print view in front, the page blurred behind ═══════════ -->
+  <!-- scroll.js loads cv.html into the frame on first intent; the buttons drive it.
+       The CV links keep their href: a new tab, or no JavaScript, still gets /cv. -->
+  <dialog class="cv-dialog" id="cvDialog" aria-label="CV d'Alexis Colin" data-i18n-aria="cv.dialog">
+    <div class="cv-stage">
+      <iframe class="cv-frame" id="cvFrame" title="CV d'Alexis Colin" data-i18n-title="cv.dialog"></iframe>
+      <div class="cv-side">
+        <button type="button" class="cv-close" id="cvClose" aria-label="Fermer le CV" data-i18n-aria="cv.close" title="Fermer le CV" data-i18n-title="cv.close" autofocus><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>
+        <div class="cv-tools" role="group" aria-label="Actions du CV" data-i18n-aria="cv.tools">
+          <button type="button" class="cv-tool cv-tool--accent" id="cvPrint"><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><span data-i18n="cv.print">Imprimer / PDF</span></button>
+          <button type="button" class="cv-tool" id="cvRefs" aria-expanded="false" aria-controls="cvPass"><svg class="ico" aria-hidden="true"><use href="#i-unlock"/></svg><span data-i18n="cv.refs.unlock">Références</span></button>
+          <form class="cv-pass" id="cvPass" hidden>
+            <input type="password" class="cv-pass__input" id="cvPassInput" autocomplete="off" placeholder="Phrase de passe" data-i18n-placeholder="cv.refs.placeholder" aria-label="Phrase de passe des références" data-i18n-aria="cv.refs.prompt" />
+            <button type="submit" class="cv-pass__go" aria-label="Déverrouiller" data-i18n-aria="cv.refs.go"><svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></button>
+            <p class="cv-pass__err" id="cvPassErr" role="alert"></p>
+          </form>
+          <a class="cv-tool" id="cvTab" href="/cv" target="_blank" rel="noopener" data-cv-link data-cv-tab><svg class="ico" aria-hidden="true"><use href="#i-ext"/></svg><span data-i18n="cv.newtab">Nouvel onglet</span></a>
+          <button type="button" class="cv-tool lang-toggle" id="cvLang" aria-label="FR | EN — changer de langue" data-i18n-aria="aria.lang"><span data-lang="fr">FR</span><span class="lang-sep">|</span><span data-lang="en">EN</span></button>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <!-- Intentional load order: i18n.js must come before scroll.js
        (scroll.js depends on `translations` and `currentLang` defined in i18n.js)
        Do not add async/defer to these two scripts. -->
-  <script src="i18n.js?v=33"></script>
-  <script src="skills-data.js?v=4"></script>
-  <script src="scroll.js?v=37"></script>
+  <script src="i18n.js?v=53"></script>
+  <script src="skills-data.js?v=8"></script>
+  <script src="scroll.js?v=59"></script>
 </body>
 </html>

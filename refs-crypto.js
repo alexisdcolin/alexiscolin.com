@@ -10,7 +10,7 @@
 // offline attack by the same factor, which is what buys a shorter passphrase.
 // The plaintext is a JSON array of { name, role, email, phone }, where role is
 // a string or { fr, en }.
-var REFS_URL = '/cv-refs.enc';
+var REFS_URL = 'cv-refs.enc'; // relative: resolves to /cv-refs.enc from / and /cv
 var REFS_ITERATIONS = 600000;
 
 function b64ToBytes(b64) {
@@ -45,7 +45,8 @@ async function deriveRefsKey(passphrase, salt, usages) {
 // Throws on a wrong passphrase: AES-GCM authenticates, so a bad key fails the
 // tag check rather than returning plausible-looking garbage.
 async function decryptRefs(passphrase) {
-  var res = await fetch(REFS_URL, { cache: 'no-store' });
+  // Unreachable (offline, or fetch() refusing file://) counts as missing too
+  var res = await fetch(REFS_URL, { cache: 'no-store' }).catch(function () { throw new Error('missing'); });
   if (!res.ok) throw new Error('missing');
   var blob = b64ToBytes(await res.text());
   var key = await deriveRefsKey(passphrase, blob.slice(0, 16));

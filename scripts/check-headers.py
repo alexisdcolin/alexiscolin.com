@@ -16,7 +16,7 @@ from collections import defaultdict
 from pathlib import Path
 
 ROOT = Path(__file__).resolve().parent.parent
-SKIP_DIRS = {".git", ".github", ".claude", "scripts", "node_modules"}
+SKIP_DIRS = {".git", ".github", ".claude", "scripts", "node_modules", "maquettes"}
 SKIP_NAMES = {"_headers", "_redirects", ".DS_Store"}
 
 
