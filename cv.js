@@ -14,46 +14,74 @@
   }
 })();
 
+// ?print=1: iOS prints the page around a frame, so the dialog's print button
+// sends it here instead, and the page prints itself
+if (new URLSearchParams(location.search).get('print') === '1') {
+  window.addEventListener('load', function () { window.print(); });
+}
+
 // ─── Skills, grouped by category ─────────────────────────────────────────────
-// The name is deliberate: scroll.js already defines a renderSkills(), and both
-// files are classic scripts sharing one global scope.
 // Most proficient first. Every skill is listed unless flagged `cv: false`:
-// the extra keywords are what an ATS matches on. The separator and
-// the names share one text node so the PDF carries real spaces and commas —
-// Chrome paints no glyph for a space that sits alone between two elements.
-// The CV pairs up the site's smaller categories: two rows more and the
-// version with the references runs onto a third page. A row is named after
-// its first category, under the cv.skills.* key when the pair needs one.
+// the extra keywords are what an ATS matches on. A family names its tools in
+// brackets after it, "AWS (Lambda, S3…)", and shows as soon as one of them
+// does. Names and separators share text nodes so the PDF carries real spaces
+// and commas — Chrome paints no glyph for a space that sits alone between two
+// elements; only a family's own name is an element, set apart from the row's
+// category. The CV pairs up the site's smaller categories: two rows more and
+// the version with the references runs onto a third page. A row is named
+// after its first category, under the cv.skills.* key when the pair needs one.
 var CV_SKILL_ROWS = [['dataeng'], ['lang', 'db'], ['cloud'], ['bi'], ['devops', 'pm']];
 
 function renderCvSkills() {
   var host = document.getElementById('cvSkills');
   if (!host) return;
 
-  var t = translations[currentLang] || translations.fr;
+  var tr = t();
   // French sets a space before the colon, English does not
   var sep = currentLang === 'en' ? ': ' : ' : ';
+  var byLevel = function (a, b) { return b.level - a.level; };
+  var onCv = function (s) { return s.cv !== false; };
+  var toolsOf = function (s) {
+    return skillsData.filter(function (x) { return x.parent === s.id && onCv(x); }).sort(byLevel);
+  };
   host.textContent = '';
 
   CV_SKILL_ROWS.forEach(function (cats) {
-    var names = [];
+    // Text runs and family names, in reading order
+    var parts = [];
     cats.forEach(function (cat) {
       skillsData
-        .filter(function (s) { return s.category === cat && s.cv !== false; })
-        .sort(function (a, b) { return b.level - a.level; })
-        .forEach(function (s) { names.push(skillLabel(s)); });
+        .filter(function (s) { return s.category === cat && !s.parent && (onCv(s) || toolsOf(s).length); })
+        .sort(byLevel)
+        .forEach(function (s) {
+          var tools = toolsOf(s);
+          parts.push(parts.length ? ', ' : sep);
+          if (!tools.length) return parts.push(skillLabel(s));
+          var fam = document.createElement('span');
+          fam.className = 'cv-skills__fam';
+          fam.textContent = skillLabel(s);
+          parts.push(fam, ' (' + tools.map(skillLabel).join(', ') + ')');
+        });
     });
-    if (!names.length) return;
+    if (!parts.length) return;
 
     var row = document.createElement('p');
     row.className = 'cv-skills__row';
 
     var label = document.createElement('span');
     label.className = 'cv-skills__cat';
-    label.textContent = t['cv.skills.' + cats[0]] || t['skills.' + cats[0]] || cats[0];
-
+    label.textContent = tr['cv.skills.' + cats[0]] || tr['skills.' + cats[0]] || cats[0];
     row.appendChild(label);
-    row.appendChild(document.createTextNode(sep + names.join(', ')));
+
+    // Neighbouring strings join into one text node
+    var text = '';
+    parts.forEach(function (part) {
+      if (typeof part === 'string') { text += part; return; }
+      row.appendChild(document.createTextNode(text));
+      row.appendChild(part);
+      text = '';
+    });
+    if (text) row.appendChild(document.createTextNode(text));
     host.appendChild(row);
   });
 }
@@ -156,30 +184,37 @@ function renderRefs(refs) {
 function lockRefs() {
   var host = document.getElementById('cvRefs');
   if (!host) return;
-  var t = translations[currentLang] || translations.fr;
   host.textContent = '';
   var p = document.createElement('p');
   p.className = 'cv-refs';
   p.setAttribute('data-i18n', 'cv.refs.body');
-  p.textContent = t['cv.refs.body'];
+  p.textContent = t()['cv.refs.body'];
   host.appendChild(p);
 }
 
 // The button always shows the action it performs, not the current state.
 function setRefsButton(btn, unlocked) {
-  var t = translations[currentLang] || translations.fr;
   btn.querySelector('use').setAttribute('href', unlocked ? '#i-lock' : '#i-unlock');
-  btn.querySelector('span').textContent = unlocked ? t['cv.refs.lock'] : t['cv.refs.unlock'];
+  btn.querySelector('span').textContent = t()[unlocked ? 'cv.refs.lock' : 'cv.refs.unlock'];
   btn.querySelector('span').setAttribute('data-i18n', unlocked ? 'cv.refs.lock' : 'cv.refs.unlock');
 }
 
 var refsBtn = document.getElementById('refsUnlock');
-if (refsBtn) {
-  // Held for the tab's lifetime so locking and unlocking again — to print both
-  // versions in one sitting — does not mean retyping the passphrase. Closing
-  // the tab drops it; nothing is ever persisted.
-  var refsPlain = null;
+// Held for the tab's lifetime so locking and unlocking again — to print both
+// versions in one sitting — does not mean retyping the passphrase. Closing
+// the tab drops it; nothing is ever persisted.
+var refsPlain = null;
 
+// Decrypts, shows and keeps the list; rejects with decryptRefs()'s error
+function unlockRefs(passphrase) {
+  return decryptRefs(passphrase).then(function (refs) {
+    refsPlain = refs;
+    renderRefs(refs);
+    if (refsBtn) setRefsButton(refsBtn, true);
+  });
+}
+
+if (refsBtn) {
   // The roles are data, not data-i18n keys: shown refs are rebuilt on a
   // language change, the same way the skills are.
   new MutationObserver(function () {
@@ -187,8 +222,6 @@ if (refsBtn) {
   }).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
 
   refsBtn.addEventListener('click', async function () {
-    var t = translations[currentLang] || translations.fr;
-
     if (refsPlain && document.querySelector('#cvRefs .cv-ref')) {
       lockRefs();
       setRefsButton(refsBtn, false);
@@ -201,14 +234,82 @@ if (refsBtn) {
       return;
     }
 
-    var passphrase = prompt(t['cv.refs.prompt']);
+    var passphrase = prompt(t()['cv.refs.prompt']);
     if (!passphrase) return;
     try {
-      refsPlain = await decryptRefs(passphrase);
-      renderRefs(refsPlain);
-      setRefsButton(refsBtn, true);
+      await unlockRefs(passphrase);
     } catch (e) {
-      alert(e.message === 'missing' ? t['cv.refs.absent'] : t['cv.refs.wrong']);
+      alert(t()[e.message === 'missing' ? 'cv.refs.absent' : 'cv.refs.wrong']);
     }
   });
 }
+
+// ─── Inside the site's CV dialog ─────────────────────────────────────────────
+// The dialog drives this page through messages: opened from a file:// copy,
+// the frame counts as another origin and messages are the only way in. Its
+// buttons replace the toolbar, which cv.css hides here; the references
+// passphrase comes from its own field, not a prompt().
+if (window.self !== window.top) (function () {
+  function post(msg) {
+    msg.cv = true;
+    window.parent.postMessage(msg, MSG_ORIGIN);
+  }
+
+  // The references button — state, label, icon — for the dialog's own
+  function sendRefs() {
+    if (!refsBtn) return;
+    var span = refsBtn.querySelector('span');
+    post({
+      type: 'refs',
+      state: !refsPlain ? 'locked' : document.querySelector('#cvRefs .cv-ref') ? 'shown' : 'hidden',
+      label: span.textContent,
+      key: span.getAttribute('data-i18n'),
+      icon: refsBtn.querySelector('use').getAttribute('href')
+    });
+  }
+
+  window.addEventListener('message', function (e) {
+    if (e.source !== window.parent || !e.data || e.data.cv !== true) return;
+    var m = e.data;
+    if (m.type === 'lang') {
+      if (translations[m.lang] && m.lang !== currentLang) {
+        currentLang = m.lang;
+        applyLang(m.lang);
+      }
+    } else if (m.type === 'print') {
+      window.print();
+    } else if (m.type === 'refs') {
+      // Shows or hides the list once decrypted
+      if (refsPlain && refsBtn) refsBtn.click();
+    } else if (m.type === 'unlock') {
+      unlockRefs(m.passphrase).then(function () {
+        post({ type: 'unlock', ok: true });
+      }, function (err) {
+        post({ type: 'unlock', ok: false, error: err && err.message === 'missing' ? 'missing' : 'wrong' });
+      });
+    }
+  });
+
+  // Escape closes the dialog; ⌘P / Ctrl+P prints this frame, not the page
+  document.addEventListener('keydown', function (e) {
+    if (e.key === 'Escape') {
+      e.preventDefault();
+      post({ type: 'key', key: 'Escape' });
+    } else if ((e.metaKey || e.ctrlKey) && e.key.toLowerCase() === 'p') {
+      e.preventDefault();
+      window.print();
+    }
+  });
+
+  // A link would otherwise open inside the sheet
+  document.querySelectorAll('a[href^="http"]').forEach(function (a) {
+    a.target = '_blank';
+    a.rel = 'noopener';
+  });
+
+  if (refsBtn) {
+    new MutationObserver(sendRefs).observe(refsBtn, { subtree: true, childList: true, characterData: true, attributes: true });
+  }
+  post({ type: 'ready' });
+  sendRefs();
+})();
