@@ -478,8 +478,8 @@ main[tabindex="-1"]:focus { outline: none; }
 .hero__roll { visibility: hidden; }
 .hero__roll i { position: relative; display: inline-block; font-style: normal; }
 .hero__roll--paris i,
-.hero__roll--lyon i { top: -100%; } /* gone by, above the line */
-@supports (content: "" / "") {
+.hero__roll--lyon i { top: -1lh; } /* gone by, above the line */
+@supports (content: "" / "") and (top: 1lh) {
   .hero__roll i::before { content: attr(data-c) / ""; }
   :lang(en) .hero__roll i[data-en]::before { content: attr(data-en) / ""; }
   /* Each letter sets off --i × 26ms after the first */
@@ -499,11 +499,13 @@ main[tabindex="-1"]:focus { outline: none; }
   .hero__dot { animation: dotIn .16s ease-out 1.44s backwards; }
 }
 /* Moved by top, not transform: the hover gradient follows the text where it
-   is laid out, and would stay behind as a ghost of a transformed letter */
-@keyframes letterIn  { from { top: 100%; } to { top: 0; } }
-@keyframes letterOut { from { top: 0; } to { top: -100%; } }
+   is laid out, and would stay behind as a ghost of a transformed letter.
+   A line is 1lh, not 100 %: Safari leaves a percentage top unapplied on the
+   real city (a grid item), which then shows through the roll */
+@keyframes letterIn  { from { top: 1lh; } to { top: 0; } }
+@keyframes letterOut { from { top: 0; } to { top: -1lh; } }
 @keyframes cityShown { from, to { visibility: visible; } }
-@keyframes cityAway  { from, to { top: 100%; } }
+@keyframes cityAway  { from, to { top: 1lh; } }
 @keyframes dotIn     { from { opacity: 0; } }
 
 @media (prefers-reduced-motion: reduce) {
