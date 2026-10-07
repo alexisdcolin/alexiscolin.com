@@ -22,12 +22,14 @@ if (new URLSearchParams(location.search).get('print') === '1') {
 
 // ─── Skills, grouped by category ─────────────────────────────────────────────
 // Most proficient first. Every skill is listed unless flagged `cv: false`:
-// the extra keywords are what an ATS matches on. The separator and
-// the names share one text node so the PDF carries real spaces and commas —
-// Chrome paints no glyph for a space that sits alone between two elements.
-// The CV pairs up the site's smaller categories: two rows more and the
-// version with the references runs onto a third page. A row is named after
-// its first category, under the cv.skills.* key when the pair needs one.
+// the extra keywords are what an ATS matches on. A family names its tools in
+// brackets after it, "AWS (Lambda, S3…)", and shows as soon as one of them
+// does. Names and separators share text nodes so the PDF carries real spaces
+// and commas — Chrome paints no glyph for a space that sits alone between two
+// elements; only a family's own name is an element, set apart from the row's
+// category. The CV pairs up the site's smaller categories: two rows more and
+// the version with the references runs onto a third page. A row is named
+// after its first category, under the cv.skills.* key when the pair needs one.
 var CV_SKILL_ROWS = [['dataeng'], ['lang', 'db'], ['cloud'], ['bi'], ['devops', 'pm']];
 
 function renderCvSkills() {
@@ -37,17 +39,31 @@ function renderCvSkills() {
   var tr = t();
   // French sets a space before the colon, English does not
   var sep = currentLang === 'en' ? ': ' : ' : ';
+  var byLevel = function (a, b) { return b.level - a.level; };
+  var onCv = function (s) { return s.cv !== false; };
+  var toolsOf = function (s) {
+    return skillsData.filter(function (x) { return x.parent === s.id && onCv(x); }).sort(byLevel);
+  };
   host.textContent = '';
 
   CV_SKILL_ROWS.forEach(function (cats) {
-    var names = [];
+    // Text runs and family names, in reading order
+    var parts = [];
     cats.forEach(function (cat) {
       skillsData
-        .filter(function (s) { return s.category === cat && s.cv !== false; })
-        .sort(function (a, b) { return b.level - a.level; })
-        .forEach(function (s) { names.push(skillLabel(s)); });
+        .filter(function (s) { return s.category === cat && !s.parent && (onCv(s) || toolsOf(s).length); })
+        .sort(byLevel)
+        .forEach(function (s) {
+          var tools = toolsOf(s);
+          parts.push(parts.length ? ', ' : sep);
+          if (!tools.length) return parts.push(skillLabel(s));
+          var fam = document.createElement('span');
+          fam.className = 'cv-skills__fam';
+          fam.textContent = skillLabel(s);
+          parts.push(fam, ' (' + tools.map(skillLabel).join(', ') + ')');
+        });
     });
-    if (!names.length) return;
+    if (!parts.length) return;
 
     var row = document.createElement('p');
     row.className = 'cv-skills__row';
@@ -55,9 +71,17 @@ function renderCvSkills() {
     var label = document.createElement('span');
     label.className = 'cv-skills__cat';
     label.textContent = tr['cv.skills.' + cats[0]] || tr['skills.' + cats[0]] || cats[0];
-
     row.appendChild(label);
-    row.appendChild(document.createTextNode(sep + names.join(', ')));
+
+    // Neighbouring strings join into one text node
+    var text = '';
+    parts.forEach(function (part) {
+      if (typeof part === 'string') { text += part; return; }
+      row.appendChild(document.createTextNode(text));
+      row.appendChild(part);
+      text = '';
+    });
+    if (text) row.appendChild(document.createTextNode(text));
     host.appendChild(row);
   });
 }

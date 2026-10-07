@@ -272,6 +272,8 @@ a { color: inherit; text-decoration: none; }
 .cv-skills__row { margin: 0 0 0.12rem; }
 
 .cv-skills__cat { font-weight: 700; }
+/* A family's name: set apart from the row's bold category, in the accent */
+.cv-skills__fam { font-weight: 500; color: var(--cv-accent); }
 /* Drawn with a border, not a background: browsers drop backgrounds when
    printing unless "background graphics" is ticked, and the dot vanished. */
 .cv-skills__cat::before {

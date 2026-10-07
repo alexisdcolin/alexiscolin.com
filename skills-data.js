@@ -1,41 +1,47 @@
 // Skills catalogue — shared by index.html (cards + terminal) and cv.html.
 // Loaded before scroll.js, which consumes `skillsData` and `categoryDefs`.
+// `parent` files a tool under its family (AWS, SQL…): the site lists it when
+// the family unfolds, the CV in brackets after it, and the family's tenure
+// covers every position where it or one of its tools served.
 // `cv: false` keeps a skill on the site but out of the printed CV, and
-// `site: false` the reverse: the CV carries keywords an ATS matches on that
-// would only clutter the skill tiles. `i18n` names a translation key for a
-// skill whose name differs between languages, `short` a shorter one for the
-// site's tiles (the CV keeps the full name, which an ATS matches on).
+// `site: false` the reverse. `i18n` names a translation key for a skill whose
+// name differs between languages, `short` a shorter one for the site's tiles
+// (the CV keeps the full name, which an ATS matches on).
 const skillsData = [
   // Data engineering
   { id: 'etl',        name: 'ETL/ELT',    level: 3, category: 'dataeng', icon: null },
+  { id: 'pentaho',    name: 'Pentaho',    level: 3, category: 'dataeng', icon: 'hitachi', parent: 'etl', cv: false },
+  { id: 'dbt',        name: 'dbt',        level: 2, category: 'dataeng', icon: null, parent: 'etl' },
   { id: 'dwh',        name: 'Modélisation de données', level: 3, category: 'dataeng', icon: null, i18n: 'skill.dwh', short: 'skill.dwh.short' },
   { id: 'governance', name: 'Gouvernance des données', level: 3, category: 'dataeng', icon: null, i18n: 'skill.governance', short: 'skill.governance.short' },
-  { id: 'llm',        name: 'LLM',        level: 2, category: 'dataeng', icon: null },
-  { id: 'mcp',        name: 'MCP',        level: 2, category: 'dataeng', icon: 'fastmcp' },
-  { id: 'pentaho',    name: 'Pentaho',    level: 2, category: 'dataeng', icon: 'hitachi', cv: false },
-  { id: 'prefect',    name: 'Prefect',    level: 1, category: 'dataeng', icon: 'prefect' },
-  { id: 'dagster',    name: 'Dagster',    level: 1, category: 'dataeng', icon: null },
-  { id: 'dbt',        name: 'dbt',        level: 1, category: 'dataeng', icon: null },
-  // Languages
+  { id: 'orchestration', name: 'Orchestration', level: 2, category: 'dataeng', icon: null },
+  { id: 'dagster',    name: 'Dagster',    level: 2, category: 'dataeng', icon: null, parent: 'orchestration' },
+  { id: 'prefect',    name: 'Prefect',    level: 1, category: 'dataeng', icon: 'prefect', parent: 'orchestration' },
+  { id: 'ai',         name: 'IA',         level: 2, category: 'dataeng', icon: null, i18n: 'skill.ai' },
+  { id: 'llm',        name: 'LLM',        level: 2, category: 'dataeng', icon: null, parent: 'ai', cv: false },
+  { id: 'mcp',        name: 'MCP',        level: 2, category: 'dataeng', icon: 'fastmcp', parent: 'ai' },
+  { id: 'agents',     name: 'Agents',     level: 2, category: 'dataeng', icon: null, parent: 'ai' },
+  // Languages, SQL with the databases
   { id: 'python',     name: 'Python',     level: 3, category: 'lang',  icon: 'python' },
   { id: 'sql',        name: 'SQL',        level: 3, category: 'lang',  icon: null },
-  // AWS — the CV lists the services, the site the platform
-  { id: 'aws',        name: 'AWS',        level: 3, category: 'cloud', icon: 'amazonwebservices', cv: false },
-  { id: 'lambda',     name: 'Lambda',     level: 3, category: 'cloud', icon: null, site: false },
-  { id: 's3',         name: 'S3',         level: 3, category: 'cloud', icon: null, site: false },
-  { id: 'stepfunctions', name: 'Step Functions', level: 3, category: 'cloud', icon: null, site: false },
-  { id: 'glue',       name: 'Glue',       level: 2, category: 'cloud', icon: null, site: false },
-  { id: 'athena',     name: 'Athena',     level: 2, category: 'cloud', icon: null, site: false },
-  { id: 'rds',        name: 'RDS',        level: 2, category: 'cloud', icon: null, site: false },
-  { id: 'cloudwatch', name: 'CloudWatch', level: 2, category: 'cloud', icon: null, site: false },
+  { id: 'mysql',      name: 'MySQL',      level: 3, category: 'db',    icon: 'mysql', parent: 'sql' },
+  { id: 'postgresql', name: 'PostgreSQL', level: 3, category: 'db',    icon: 'postgresql', parent: 'sql' },
+  { id: 'mssql',      name: 'SQL Server', level: 2, category: 'db',    icon: 'microsoftsqlserver', parent: 'sql' },
+  { id: 'oracle',     name: 'Oracle',     level: 2, category: 'db',    icon: 'oracle', parent: 'sql' },
+  { id: 'duckdb',     name: 'DuckDB',     level: 1, category: 'db',    icon: 'duckdb', parent: 'sql' },
+  // Cloud, AWS with its services
+  { id: 'aws',        name: 'AWS',        level: 3, category: 'cloud', icon: 'amazonwebservices' },
+  { id: 'lambda',     name: 'Lambda',     level: 3, category: 'cloud', icon: null, parent: 'aws' },
+  { id: 's3',         name: 'S3',         level: 3, category: 'cloud', icon: null, parent: 'aws' },
+  { id: 'stepfunctions', name: 'Step Functions', level: 3, category: 'cloud', icon: null, parent: 'aws' },
+  { id: 'glue',       name: 'Glue',       level: 2, category: 'cloud', icon: null, parent: 'aws' },
+  { id: 'athena',     name: 'Athena',     level: 2, category: 'cloud', icon: null, parent: 'aws' },
+  { id: 'rds',        name: 'RDS',        level: 2, category: 'cloud', icon: null, parent: 'aws' },
+  { id: 'cloudwatch', name: 'CloudWatch', level: 2, category: 'cloud', icon: null, parent: 'aws' },
+  { id: 'cloudformation', name: 'CloudFormation', level: 2, category: 'cloud', icon: null, parent: 'aws' },
+  { id: 'codepipeline',   name: 'CodePipeline',   level: 2, category: 'cloud', icon: null, parent: 'aws' },
   { id: 'snowflake',  name: 'Snowflake',  level: 1, category: 'cloud', icon: 'snowflake',  cv: false },
   { id: 'databricks', name: 'Databricks', level: 1, category: 'cloud', icon: 'databricks', cv: false },
-  // Databases
-  { id: 'mysql',      name: 'MySQL',      level: 3, category: 'db',    icon: 'mysql' },
-  { id: 'postgresql', name: 'PostgreSQL', level: 3, category: 'db',    icon: 'postgresql' },
-  { id: 'mssql',      name: 'SQL Server', level: 2, category: 'db',    icon: 'microsoftsqlserver' },
-  { id: 'oracle',     name: 'Oracle',     level: 2, category: 'db',    icon: 'oracle' },
-  { id: 'duckdb',     name: 'DuckDB',     level: 1, category: 'db',    icon: 'duckdb' },
   // BI & data visualization
   { id: 'grafana',    name: 'Grafana',    level: 3, category: 'bi',    icon: 'grafana' },
   { id: 'tableau',    name: 'Tableau',    level: 1, category: 'bi',    icon: 'tableau' },
@@ -43,14 +49,12 @@ const skillsData = [
   { id: 'sapbo',      name: 'SAP BO',     level: 1, category: 'bi',    icon: 'sap' },
   // DevOps & IaC
   { id: 'git',        name: 'Git',        level: 3, category: 'devops', icon: 'git' },
-  { id: 'bitbucket',  name: 'Bitbucket',  level: 3, category: 'devops', icon: 'bitbucket' },
+  { id: 'bitbucket',  name: 'Bitbucket',  level: 3, category: 'devops', icon: 'bitbucket', parent: 'git' },
   { id: 'docker',     name: 'Docker',     level: 2, category: 'devops', icon: 'docker' },
-  { id: 'cloudformation', name: 'CloudFormation', level: 2, category: 'devops', icon: null, site: false },
-  { id: 'codepipeline',   name: 'CodePipeline',   level: 2, category: 'devops', icon: null, site: false },
   { id: 'pulumi',     name: 'Pulumi',     level: 1, category: 'devops', icon: 'pulumi' },
   // Project management
   { id: 'agile',      name: 'Agile',      level: 3, category: 'pm',    icon: null },
-  { id: 'jira',       name: 'Jira',       level: 2, category: 'pm',    icon: 'jira' },
+  { id: 'jira',       name: 'Jira',       level: 2, category: 'pm',    icon: 'jira', parent: 'agile' },
 ];
 
 const categoryDefs = ['dataeng', 'lang', 'cloud', 'db', 'bi', 'devops', 'pm'];

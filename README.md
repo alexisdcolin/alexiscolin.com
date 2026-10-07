@@ -18,8 +18,9 @@ Vanilla HTML / CSS / JavaScript — no framework, no build step.
 | `refs-crypto.js` | `cv-refs.enc` format — decrypted by the CV, re-encrypted by the terminal's `refs` command |
 | `_headers` | Security + cache HTTP headers served by Cloudflare Pages |
 | `privacy.html` `404.html` `403.html` | Privacy policy and error pages — French markup, switched to English by an inline script |
-| `assets/` | Logo (`favicon.svg`, `favicon.ico`, `icon-180/192/512.png`), `site.webmanifest`, self-hosted fonts, skill logos, photos |
+| `assets/` | Logo (`favicon.svg`, `favicon.ico`, `icon-180/192/512.png`), `site.webmanifest`, self-hosted fonts, skill logos, photos, `world-dots.js` (the travel globe's dots, a script so it also loads from `file://`) |
 | `scripts/check-headers.py` | Asserts no file matches two `_headers` blocks setting the same header |
+| `scripts/world-dots.py` | Builds `assets/world-dots.js` from Natural Earth (public domain): one dot per degree, one path per country |
 | `.github/workflows/` | `ci.yml`: html-validate, lychee, the `_headers` check and Lighthouse on pull requests; `lighthouse-live.yml`: see Deployment |
 
 ## Features
@@ -37,7 +38,8 @@ Vanilla HTML / CSS / JavaScript — no framework, no build step.
 - **Privacy** — no cookies at all; traffic measured with Cloudflare Web Analytics, so no consent banner. `localStorage` only keeps the language, the theme and, once the terminal is opened, its last session
 - **CV** — one source: `cv.html` reuses the site's own wording and skills, and prints straight to PDF from the browser. The CV buttons open it in a dialog over the blurred page — `cv.html` in a frame, driven by the buttons beside it through `postMessage`, which also works from a `file://` copy — so `_headers` lets the site frame itself (`frame-ancestors 'self'`, `X-Frame-Options: SAMEORIGIN`) and nobody else; `/cv` still works on its own
 - **References** — shipped as AES-GCM ciphertext and decrypted in the page with a passphrase (a field of the CV dialog, or a prompt on `/cv`), so a static host never exposes the referees' contact details
-- **Terminal easter egg** — fake zsh shell (`` ` `` / `$` or the `>_` footer button) with 18 commands to browse the CV, open socials, switch lang/theme, navigate sections and ping the Cloudflare edge; `refs` lets the owner edit the encrypted referees. Outside it, `t` toggles the theme, `l` the language, and `1`–`5` jump to the sections numbered 01–05
+- **Terminal easter egg** — fake zsh shell (`` ` `` / `$` or the `>_` footer button) with 19 commands to browse the CV, open socials, list the countries visited, switch lang/theme, navigate sections and ping the Cloudflare edge; `refs` lets the owner edit the encrypted referees. Outside it, `t` toggles the theme, `l` the language, and `1`–`5` jump to the sections numbered 01–05
+- **Travel easter egg** — the count of countries in About opens a dot globe (canvas) with them lit, beside their list by continent; the dots load on first opening; adding a country, or a trip to come, is one line in `TRAVEL` (`scroll.js`)
 
 ## Development
 

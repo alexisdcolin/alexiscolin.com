@@ -71,6 +71,10 @@ const customIcons = {
   etl:        'M7.5 21 3 16.5 7.5 12l1.05 1.05-2.7 2.7H21v1.5H5.85l2.7 2.7Zm9-9-1.05-1.05 2.7-2.7H3v-1.5h15.15l-2.7-2.7L16.5 3 21 7.5Z',
   dwh:        'M14 9v2h-3V9H8.5V7H11V1H4v6h2.5v2H4v6h2.5v2H4v6h7v-6H8.5v-2H11v-2h3v2h7V9h-7zM6 3h3v2H6V3zm3 18H6v-2h3v2zm0-8H6v-2h3v2zm10 0h-3v-2h3v2z',
   governance: 'M12 1 3 5v6c0 5.55 3.84 10.74 9 12 5.16-1.26 9-6.45 9-12V5l-9-4zm-2 16-4-4 1.41-1.41L10 14.17l6.59-6.59L18 9l-8 8z',
+  // Material device_hub, memory and smart_toy for the families and the agents
+  orchestration: 'M17 16l-4-4V8.82C14.16 8.4 15 7.3 15 6c0-1.66-1.34-3-3-3S9 4.34 9 6c0 1.3.84 2.4 2 2.82V12l-4 4H3v5h5v-3.05l4-4.2 4 4.2V21h5v-5h-4z',
+  ai:         'M15 9H9v6h6V9zm-2 4h-2v-2h2v2zm8-2V9h-2V7c0-1.1-.9-2-2-2h-2V3h-2v2h-2V3H9v2H7c-1.1 0-2 .9-2 2v2H3v2h2v2H3v2h2v2c0 1.1.9 2 2 2h2v2h2v-2h2v2h2v-2h2c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2zm-4 6H7V7h10v10z',
+  agents:     'M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zM7.5 11.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5S9.83 13 9 13s-1.5-.67-1.5-1.5zM16 17H8v-2h8v2zm-1-4c-.83 0-1.5-.67-1.5-1.5S14.17 10 15 10s1.5.67 1.5 1.5S15.83 13 15 13z',
 };
 
 function makeCustomSvg(pathData) {
@@ -99,14 +103,78 @@ function skillIcon(s) {
 
 // Skills of a category, ordered by level then tenure — shared by the cards UI
 // and the terminal `skills` command so both always show the same ordering.
+// A family's tools aren't listed on their own: toolsOf() brings them with it.
+const byLevelThenTenure = (a, b) => b.level - a.level || (skillMonths[b.id] || 0) - (skillMonths[a.id] || 0);
 function skillsByCategory(cat) {
-  return skillsData
-    .filter(s => s.category === cat && s.site !== false)
-    .sort((a, b) => b.level - a.level || (skillMonths[b.id] || 0) - (skillMonths[a.id] || 0));
+  return skillsData.filter(s => s.category === cat && !s.parent && s.site !== false).sort(byLevelThenTenure);
+}
+function toolsOf(id) {
+  return skillsData.filter(s => s.parent === id && s.site !== false).sort(byLevelThenTenure);
 }
 
 // Translation key of each level, read out by screen readers next to the meter
 const LEVEL_KEYS = { 3: 'skills.level.expert', 2: 'skills.level.mid', 1: 'skills.level.basic' };
+
+// One skill's row. <button> so the skill → experience filter is keyboard
+// accessible; a skill no position lists has nothing to filter, so it stays a
+// plain row. A family's row (given its tool count) is a button too, that
+// unfolds its tools instead.
+function skillRow(s, toolCount) {
+  const tr = t();
+  const filterable = !toolCount && Object.values(roleSkills).some(r => r.skills.some(x => x.id === s.id));
+  const row = document.createElement(toolCount || filterable ? 'button' : 'div');
+  row.className = toolCount ? 'skill-row skill-fam__head' : filterable ? 'skill-row' : 'skill-row is-static';
+  row.dataset.level = s.level;
+  row.dataset.skill = s.id;
+  if (toolCount || filterable) row.type = 'button';
+  if (filterable) row.setAttribute('aria-pressed', 'false');
+  if (toolCount) row.setAttribute('aria-expanded', 'false');
+
+  // A tool without a logo keeps its name in line with the others
+  const icon = skillIcon(s) || (s.parent && document.createElement('i'));
+  if (icon) row.appendChild(icon);
+
+  const name = document.createElement('span');
+  name.className = 'skill-row__name';
+  setSkillName(name, s.id);
+  row.appendChild(name);
+
+  if (toolCount) {
+    const count = document.createElement('span');
+    count.className = 'skill-fam__count';
+    count.setAttribute('aria-hidden', 'true');
+    count.textContent = toolCount;
+    row.appendChild(count);
+  }
+
+  // Filled by updateSkillDurations(), which re-runs on a language change
+  const dur = document.createElement('span');
+  dur.className = 'skill-row__dur';
+  row.appendChild(dur);
+
+  const meter = document.createElement('span');
+  meter.className = 'lvl';
+  meter.dataset.level = s.level;
+  meter.setAttribute('aria-hidden', 'true');
+  row.appendChild(meter);
+
+  const level = document.createElement('span');
+  level.className = 'sr-only';
+  level.dataset.i18n = LEVEL_KEYS[s.level];
+  level.textContent = tr[LEVEL_KEYS[s.level]];
+  row.appendChild(level);
+
+  if (toolCount) {
+    const tools = document.createElement('span');
+    tools.className = 'sr-only';
+    const word = document.createElement('span');
+    word.dataset.i18n = 'skills.tools';
+    word.textContent = tr['skills.tools'];
+    tools.append(`, ${toolCount} `, word);
+    row.appendChild(tools);
+  }
+  return row;
+}
 
 function renderSkills() {
   const container = document.querySelector('.skills-grid');
@@ -131,44 +199,21 @@ function renderSkills() {
     rows.className = 'skill-rows';
 
     items.forEach(s => {
-      // <button> so the skill → experience filter is keyboard accessible; a
-      // skill no position lists has nothing to filter, so it stays a plain row
-      const filterable = Object.values(roleSkills).some(r => r.skills.some(x => x.id === s.id));
-      const row = document.createElement(filterable ? 'button' : 'div');
-      row.className = filterable ? 'skill-row' : 'skill-row is-static';
-      row.dataset.level = s.level;
-      row.dataset.skill = s.id;
-      if (filterable) {
-        row.type = 'button';
-        row.setAttribute('aria-pressed', 'false');
-      }
+      const tools = toolsOf(s.id);
+      if (!tools.length) return rows.appendChild(skillRow(s));
 
-      const icon = skillIcon(s);
-      if (icon) row.appendChild(icon);
-
-      const name = document.createElement('span');
-      name.className = 'skill-row__name';
-      setSkillName(name, s.id);
-      row.appendChild(name);
-
-      // Filled by updateSkillDurations(), which re-runs on a language change
-      const dur = document.createElement('span');
-      dur.className = 'skill-row__dur';
-      row.appendChild(dur);
-
-      const meter = document.createElement('span');
-      meter.className = 'lvl';
-      meter.dataset.level = s.level;
-      meter.setAttribute('aria-hidden', 'true');
-      row.appendChild(meter);
-
-      const level = document.createElement('span');
-      level.className = 'sr-only';
-      level.dataset.i18n = LEVEL_KEYS[s.level];
-      level.textContent = tr[LEVEL_KEYS[s.level]];
-      row.appendChild(level);
-
-      rows.appendChild(row);
+      // A family: its row unfolds the tools, each a row of its own
+      const fam = document.createElement('div');
+      fam.className = 'skill-fam';
+      const head = skillRow(s, tools.length);
+      const list = document.createElement('div');
+      list.className = 'skill-fam__tools';
+      list.id = `skill-tools-${s.id}`;
+      list.hidden = true;
+      head.setAttribute('aria-controls', list.id);
+      list.append(...tools.map(tool => skillRow(tool)));
+      fam.append(head, list);
+      rows.appendChild(fam);
     });
 
     tile.appendChild(rows);
@@ -182,69 +227,84 @@ const roleSkills = {
     start: CURRENT_JOB_START,
     end: null,                  // ongoing
     skills: [
-      { id: 'mcp',            key: true,  start: new Date(2026, 3) },  // Apr 2026
-      { id: 'python',         key: true  },
-      { id: 'aws',            key: true  },
-      { id: 'grafana',        key: true  },
-      { id: 'mysql',          key: true  },
-      { id: 'llm',            key: false },
-      { id: 'sql',            key: false },
-      { id: 'snowflake',      key: false, months: 6 },
-      { id: 'docker',         key: false },
-      { id: 'bitbucket',      key: false },
-      { id: 'agile',          key: false },
-      { id: 'databricks',     key: false, months: 6 },
-      { id: 'jira',           key: false },
-      { id: 'pulumi',         key: false },
-      { id: 'git',            key: false },
-      { id: 'dbt',            key: false, start: new Date(2026, 8) },  // Sep 2026
-      { id: 'duckdb',         key: false, start: new Date(2026, 8) },  // Sep 2026
-      { id: 'etl',            key: false },
-      { id: 'dwh',            key: false },
-      { id: 'governance',     key: false },
-      { id: 'dagster',        key: false, start: new Date(2026, 3) },  // Apr 2026
+      { id: 'mcp',             key: true,  start: new Date(2026, 3) },  // Apr 2026
+      { id: 'python',          key: true  },
+      { id: 'aws',             key: true  },
+      { id: 'llm',             key: false },
+      { id: 'agents',          key: false, months: 6 },
+      { id: 'sql',             key: true  },
+      { id: 'snowflake',       key: false, months: 6 },
+      { id: 'docker',          key: false },
+      { id: 'bitbucket',       key: false },
+      { id: 'agile',           key: false },
+      { id: 'databricks',      key: false, months: 6 },
+      { id: 'jira',            key: false },
+      { id: 'pulumi',          key: false },
+      { id: 'dbt',             key: true,  start: new Date(2026, 8) },  // Sep 2026
+      { id: 'duckdb',          key: true,  start: new Date(2026, 8) },  // Sep 2026
+      { id: 'etl',             key: true  },
+      { id: 'governance',      key: false },
+      { id: 'dagster',         key: false, start: new Date(2026, 8) },  // Sep 2026
+      { id: 'prefect',         key: false, months: 3 },
+      { id: 'dwh',             key: false },
+      { id: 'lambda',          key: false },
+      { id: 's3',              key: false },
+      { id: 'stepfunctions',   key: false },
+      { id: 'rds',             key: false },
+      { id: 'cloudwatch',      key: false },
+      { id: 'postgresql',      key: false },
+      { id: 'cloudformation',  key: false },
+      { id: 'codepipeline',    key: false },
+      { id: 'mysql',           key: false },
+      { id: 'git',             key: false },
+      { id: 'grafana',         key: false },
     ]
   },
   bialr1: {
     start: new Date(2023, 0),   // Jan 2023
     end:   new Date(2023, 11),  // Dec 2023
     skills: [
-      { id: 'pentaho',    key: true  },
-      { id: 'aws',        key: true  },
-      { id: 'postgresql', key: true  },
-      { id: 'prefect',    key: true  },
-      { id: 'sql',        key: false },
-      { id: 'agile',      key: false },
-      { id: 'jira',       key: false },
-      { id: 'git',        key: false },
-      { id: 'etl',        key: false },
+      { id: 'pentaho',     key: true  },
+      { id: 'aws',         key: true  },
+      { id: 'postgresql',  key: true  },
+      { id: 'sql',         key: true  },
+      { id: 'agile',       key: false },
+      { id: 'jira',        key: false },
+      { id: 'git',         key: false },
+      { id: 'etl',         key: true  },
+      { id: 'dwh',         key: false },
+      { id: 'prefect',     key: false },
+      { id: 'glue',        key: false },
+      { id: 'athena',      key: false },
+      { id: 'rds',         key: false },
+      { id: 'cloudwatch',  key: false },
+      { id: 's3',          key: false },
+      { id: 'powerbi',     key: false },
+      { id: 'tableau',     key: false },
     ]
   },
   bialr2: {
     start: new Date(2021, 8),   // Sep 2021
     end:   new Date(2022, 11),  // Dec 2022
     skills: [
-      { id: 'pentaho', key: true  },
-      { id: 'oracle',  key: true  },
-      { id: 'git',     key: true  },
-      { id: 'sql',     key: false },
-      { id: 'etl',     key: false },
+      { id: 'pentaho',  key: true  },
+      { id: 'oracle',   key: true  },
+      { id: 'git',      key: true  },
+      { id: 'sql',      key: true  },
+      { id: 'etl',      key: true  },
+      { id: 'grafana',  key: false },
     ]
   },
   bialr3: {
     start: new Date(2020, 8),   // Sep 2020
     end:   new Date(2021, 7),   // Aug 2021
     skills: [
-      { id: 'pentaho', key: true  },
-      { id: 'oracle',  key: true  },
-      { id: 'mssql',   key: true  },
-      { id: 'sapbo',   key: true  },
-      { id: 'sql',     key: false },
-      { id: 'tableau', key: false },
-      { id: 'powerbi', key: false },
-      { id: 'git',     key: false },
-      { id: 'etl',     key: false },
-      { id: 'governance', key: false },
+      { id: 'pentaho',     key: true  },
+      { id: 'mssql',       key: true  },
+      { id: 'sapbo',       key: true  },
+      { id: 'sql',         key: true  },
+      { id: 'etl',         key: true  },
+      { id: 'governance',  key: true  },
     ]
   }
 };
@@ -252,16 +312,24 @@ const roleSkills = {
 // Total hands-on months per skill, summed over the roles that used it. Built in
 // one pass here and reused by both the card ordering and the hover label, so the
 // two can't disagree.
+// A skill picked up mid-role counts from its own start, and one used for a set
+// span only (a proof of concept) gives its months outright
+function monthsInRole(role, s) {
+  const end = role.end || new Date();
+  return s.months || Math.max(1, monthsBetween(s.start || role.start, end));
+}
 const skillMonths = {};
 Object.values(roleSkills).forEach(role => {
-  const end = role.end || new Date();
-  const months = Math.max(1, monthsBetween(role.start, end));
-  role.skills.forEach(s => {
-    // A skill picked up mid-role counts from its own start, and one used for a
-    // set span only (a proof of concept) gives its months outright
-    const m = s.months || (s.start ? Math.max(1, monthsBetween(s.start, end)) : months);
-    skillMonths[s.id] = (skillMonths[s.id] || 0) + m;
-  });
+  role.skills.forEach(s => { skillMonths[s.id] = (skillMonths[s.id] || 0) + monthsInRole(role, s); });
+});
+// A family counts each position where it or one of its tools served, once
+skillsData.forEach(f => {
+  const ids = [f.id, ...skillsData.filter(s => s.parent === f.id).map(s => s.id)];
+  if (ids.length === 1) return;
+  skillMonths[f.id] = Object.values(roleSkills).reduce((sum, role) => {
+    const used = role.skills.filter(s => ids.includes(s.id));
+    return used.length ? sum + Math.max(...used.map(s => monthsInRole(role, s))) : sum;
+  }, 0);
 });
 
 // Writes a skill's name into el — its short form when it has one — keyed for
@@ -333,7 +401,7 @@ const CHRONO = {
   study: [
     { cls: 'c-edu', label: 'UVSQ', from: [2016, 8], to: [2018, 6], tip: 'UVSQ · DUT · 2016 – 2018' },
     { cls: 'c-edu', label: 'UQAC', from: [2018, 8], to: [2019, 6], tip: 'UQAC · 2018 – 2019' },
-    { cls: 'c-edu', label: 'UCBL', from: [2019, 8], to: [2021, 6], tip: 'UCBL · Master MIAGE · 2019 – 2021' },
+    { cls: 'c-edu', label: 'UCBL', from: [2019, 8], to: [2021, 6], tip: 'UCBL · Master · 2019 – 2021' },
   ],
 };
 
@@ -405,6 +473,62 @@ function markChrono(role) {
 renderSkills();
 updateSkillDurations(currentLang);
 renderRoleSkills();
+
+// The projects' tags wear the same logos as the positions' key skills
+document.querySelectorAll('.project-card .key-skills li[data-skill]').forEach(li => {
+  const icon = skillById[li.dataset.skill] && skillIcon(skillById[li.dataset.skill]);
+  if (icon) li.prepend(icon);
+});
+
+// A family's row unfolds its tools
+document.querySelector('.skills-grid')?.addEventListener('click', e => {
+  const head = e.target.closest('.skill-fam__head');
+  if (!head) return;
+  const open = head.getAttribute('aria-expanded') !== 'true';
+  head.setAttribute('aria-expanded', String(open));
+  document.getElementById(head.getAttribute('aria-controls')).hidden = !open;
+});
+
+// CSS columns rebalance whenever a tile grows, so an unfolding family would
+// send tiles hopping between columns, the clicked one included. The tiles are
+// shared out once instead, in reading order and as evenly as CSS would, and
+// stay put: an unfolding family only lengthens its own column. Shared out
+// again when the column count changes, the fonts arrive or the language does.
+(() => {
+  const grid = document.querySelector('.skills-grid');
+  if (!grid) return;
+  const tiles = [...grid.children];
+  const narrow = [matchMedia('(max-width: 599.98px)'), matchMedia('(max-width: 899.98px)')]; // as in style.css
+
+  function layout() {
+    const n = narrow[0].matches ? 1 : narrow[1].matches ? 2 : 3;
+    const cols = Array.from({ length: n }, () => Object.assign(document.createElement('div'), { className: 'skills-col' }));
+    grid.style.setProperty('--cols', n);
+    grid.classList.add('is-laid');
+    grid.replaceChildren(...cols);
+    cols[0].append(...tiles); // measured at a column's width
+    const h = tiles.map(el => el.offsetHeight + parseFloat(getComputedStyle(el).marginBottom));
+    const run = (a, b) => h.slice(a, b).reduce((x, y) => x + y, 0);
+
+    // The cut into n runs whose tallest is the shortest
+    let best = { tallest: Infinity, ends: [] };
+    (function cut(from, left, ends) {
+      if (left === 1) {
+        const all = [...ends, tiles.length];
+        const tallest = Math.max(...all.map((b, i) => run(i ? all[i - 1] : 0, b)));
+        if (tallest < best.tallest) best = { tallest, ends: all };
+        return;
+      }
+      for (let i = from + 1; i <= tiles.length - left + 1; i++) cut(i, left - 1, [...ends, i]);
+    })(0, n, []);
+    best.ends.forEach((b, i) => cols[i].append(...tiles.slice(i ? best.ends[i - 1] : 0, b)));
+  }
+
+  layout();
+  narrow.forEach(q => q.addEventListener('change', layout));
+  document.fonts?.ready.then(layout);
+  new MutationObserver(layout).observe(document.documentElement, { attributes: true, attributeFilter: ['lang'] });
+})();
 renderChrono();
 
 // On a phone the chronology is wider than the screen: it opens on today
@@ -642,7 +766,7 @@ const roleTabs = (() => {
 
   skillsContainer.addEventListener('click', e => {
     const chip = e.target.closest('button.skill-row');
-    if (!chip || !chip.dataset.skill) return;
+    if (!chip || !chip.dataset.skill || chip.hasAttribute('aria-expanded')) return;
     if (activeSkill === chip.dataset.skill) clearFilter();
     else applyFilter(chip.dataset.skill, chip);
   });
@@ -650,9 +774,301 @@ const roleTabs = (() => {
   document.addEventListener('keydown', e => {
     if (e.key !== 'Escape' || !activeSkill) return;
     // Escape then belongs to the CV dialog or the terminal
-    if (document.documentElement.classList.contains('cv-open') || !document.getElementById('terminalOverlay').hidden) return;
+    const html = document.documentElement;
+    if (html.classList.contains('cv-open') || html.classList.contains('travel-open') || !document.getElementById('terminalOverlay').hidden) return;
     clearFilter();
   });
+})();
+
+// ─── Easter egg: the countries behind "18 countries" ──────────────────────────
+// A click on the count opens a dot globe (assets/world-dots.js, built by
+// scripts/world-dots.py) with these countries lit, beside their list by
+// continent; the terminal's `travel` prints the list. A new country is one
+// line here: `iso` is its ISO 3166-1 numeric code (the globe's data-c), and
+// `next` marks a trip to come. The count in i18n.js (misc.travel.count, and
+// misc.travel.desc for the CV) follows the list, Saint-Martin aside: it is France.
+const TRAVEL = [
+  { iso: '250', zone: 'eu', fr: 'France',      en: 'France' },
+  { iso: '826', zone: 'eu', fr: 'Royaume-Uni', en: 'United Kingdom' },
+  { iso: '056', zone: 'eu', fr: 'Belgique',    en: 'Belgium' },
+  { iso: '276', zone: 'eu', fr: 'Allemagne',   en: 'Germany' },
+  { iso: '756', zone: 'eu', fr: 'Suisse',      en: 'Switzerland' },
+  { iso: '724', zone: 'eu', fr: 'Espagne',     en: 'Spain' },
+  { iso: '380', zone: 'eu', fr: 'Italie',      en: 'Italy' },
+  { iso: '233', zone: 'eu', fr: 'Estonie',     en: 'Estonia' },
+  { iso: '440', zone: 'eu', fr: 'Lituanie',    en: 'Lithuania' },
+  { iso: '428', zone: 'eu', fr: 'Lettonie',    en: 'Latvia' },
+  { iso: '616', zone: 'eu', fr: 'Pologne',     en: 'Poland' },
+  { iso: '300', zone: 'eu', fr: 'Grèce',       en: 'Greece' },
+  { iso: '620', zone: 'eu', fr: 'Portugal',    en: 'Portugal' },
+  { iso: '208', zone: 'eu', fr: 'Danemark',    en: 'Denmark' },
+  { iso: '124', zone: 'na', fr: 'Canada',      en: 'Canada' },
+  { iso: '840', zone: 'na', fr: 'États-Unis',  en: 'United States' },
+  { iso: '484', zone: 'na', fr: 'Mexique',     en: 'Mexico' },
+  { iso: '214', zone: 'na', fr: 'République dominicaine', en: 'Dominican Republic' },
+  { iso: '663', zone: 'na', fr: 'Saint-Martin', en: 'Saint Martin', part: true }, // France
+  { iso: '266', zone: 'af', fr: 'Gabon',       en: 'Gabon',   next: true },
+  { iso: '504', zone: 'af', fr: 'Maroc',       en: 'Morocco', next: true },
+];
+// Continents and their UN member states, 195 with the two observer states
+const TRAVEL_ZONES = [
+  { id: 'eu', total: 44 }, { id: 'na', total: 23 }, { id: 'sa', total: 12 },
+  { id: 'af', total: 54 }, { id: 'as', total: 48 }, { id: 'oc', total: 14 },
+];
+const travelName = c => c[currentLang] || c.fr;
+
+// A zone's countries, visited or to come, A to Z in the current language
+function travelIn(zone, next = false) {
+  return TRAVEL.filter(c => c.zone === zone && !!c.next === next)
+    .sort((a, b) => travelName(a).localeCompare(travelName(b), currentLang));
+}
+
+(() => {
+  const dialog = document.getElementById('travelDialog');
+  if (!dialog) return;
+  const html = document.documentElement;
+  const canvas = dialog.querySelector('.travel__globe');
+  const ctx = canvas.getContext('2d');
+  const zones = document.getElementById('travelZones');
+  const sum = document.getElementById('travelSum');
+
+  // ─── The list: continents travelled, then the ones with a trip to come ───
+  function renderList() {
+    const tr = t();
+    const been = TRAVEL.filter(c => !c.next && !c.part);
+    const count = z => been.filter(c => c.zone === z.id).length;
+    const reached = TRAVEL_ZONES.filter(count).length;
+    const soon = TRAVEL.filter(c => c.next).length;
+    const b = n => Object.assign(document.createElement('b'), { textContent: n });
+    sum.replaceChildren(b(been.length), ` ${tr['travel.countries']} · `, b(reached), ` ${tr['travel.continents']}`,
+      ...(soon ? [' · ', b(soon), ` ${tr['travel.next']}`] : []));
+
+    const rank = z => (count(z) ? 0 : travelIn(z.id, true).length ? 1 : 2);
+    const order = [...TRAVEL_ZONES].sort((a, z) => rank(a) - rank(z) || count(z) - count(a));
+    zones.replaceChildren(...order.map(z => {
+      const tile = document.createElement('div');
+      const visited = travelIn(z.id), next = travelIn(z.id, true), locked = !visited.length && !next.length;
+      tile.className = locked ? 'travel__zone is-locked' : 'travel__zone';
+
+      const head = document.createElement('header');
+      if (locked) head.insertAdjacentHTML('beforeend', '<svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg>');
+      const name = document.createElement('span');
+      name.dataset.i18n = `travel.zone.${z.id}`;
+      name.textContent = tr[`travel.zone.${z.id}`];
+      const n = document.createElement('span');
+      n.className = 'travel__n';
+      n.textContent = `${count(z)} / ${z.total}`;
+      head.append(name, n);
+
+      const bar = document.createElement('div');
+      bar.className = 'travel__bar';
+      bar.innerHTML = `<i style="width:${count(z) / z.total * 100}%"></i>`;
+      tile.append(head, bar);
+
+      if (locked) {
+        const p = document.createElement('p');
+        p.className = 'travel__lock';
+        p.dataset.i18n = 'travel.locked';
+        p.textContent = tr['travel.locked'];
+        tile.append(p);
+        return tile;
+      }
+      const list = document.createElement('ul');
+      list.className = 'travel__list';
+      list.append(...[...visited, ...next].map(c => {
+        const li = document.createElement('li');
+        li.dataset.c = c.iso;
+        li.textContent = travelName(c);
+        if (c.part) li.append(Object.assign(document.createElement('small'), { textContent: ' · France' }));
+        if (c.next) {
+          li.className = 'is-next';
+          li.title = tr['travel.next'];
+        }
+        return li;
+      }));
+      tile.append(list);
+      return tile;
+    }));
+  }
+
+  // ─── The globe: the dots of assets/world-dots.js on a sphere ───
+  let xyz = null;              // the dots, x y z on the unit sphere
+  let every = [];              // and all their indices, for the land
+  const dotsOf = {};           // a country's dots
+  const facing = {};           // the turn and tilt that face a country
+  function parse() {
+    if (xyz) return;
+    const all = [];
+    for (const [, iso, d] of window.worldDots.matchAll(/<path data-c="([^"]+)" d="([^"]+)"\/>/g)) {
+      const mine = dotsOf[iso] = [];
+      let col = 0, row = 0, sx = 0, sy = 0, sz = 0;
+      for (const [, m, a, b] of d.matchAll(/([Mm])(-?\d+) (-?\d+)h0/g)) {
+        col = m === 'M' ? +a : col + +a;
+        row = m === 'M' ? +b : row + +b;
+        // One dot per degree from 75°N, as scripts/world-dots.py lays them out
+        const lon = (col - 179.5) * Math.PI / 180, lat = (74.5 - row) * Math.PI / 180;
+        const x = Math.cos(lat) * Math.sin(lon), y = Math.sin(lat), z = Math.cos(lat) * Math.cos(lon);
+        mine.push(all.length / 3);
+        all.push(x, y, z);
+        sx += x; sy += y; sz += z;
+      }
+      facing[iso] = [Math.atan2(sx, sz), Math.asin(sy / (Math.hypot(sx, sy, sz) || 1))];
+    }
+    xyz = new Float32Array(all);
+    every = Array.from({ length: all.length / 3 }, (_, i) => i);
+  }
+
+  // Loaded on first opening only, as a script rather than with fetch(), which
+  // a file:// copy of the site refuses; after a failed load (a network blip),
+  // the next opening tries again
+  let loading = null;
+  const loadDots = () => (loading ||= new Promise((resolve, reject) => {
+    const script = document.createElement('script');
+    script.src = 'assets/world-dots.js?v=3';
+    script.onload = resolve;
+    script.onerror = e => { script.remove(); loading = null; reject(e); };
+    document.head.appendChild(script);
+  }));
+
+  // The theme's colours, read from its tokens
+  let ink = {};
+  function colours() {
+    const probe = document.createElement('i');
+    dialog.append(probe);
+    const read = v => { probe.style.color = `var(${v})`; return getComputedStyle(probe).color; };
+    ink = { edge: read('--border'), land: read('--border-2'), lit: read('--accent'), hot: read('--accent-text') };
+    probe.remove();
+  }
+  new MutationObserver(() => dialog.open && colours()).observe(html, { attributes: true, attributeFilter: ['data-theme'] });
+  matchMedia('(prefers-color-scheme: dark)').addEventListener('change', () => dialog.open && colours());
+
+  // Over the Atlantic, every trip in sight; then a slow turn, eastward
+  const view = { rot: -.6, tilt: .52 };
+  let goal = null, hot = null, drag = null, opened = 0, last = 0, frame = 0;
+  const ease = p => 1 - (1 - p) ** 3;
+  const wrap = a => Math.atan2(Math.sin(a), Math.cos(a));
+  const shown = TRAVEL.filter(c => !c.next);
+
+  function draw(now) {
+    frame = requestAnimationFrame(draw);
+    const dt = last ? Math.min(64, now - last) : 16;
+    last = now;
+    const dpr = window.devicePixelRatio || 1, size = Math.round(canvas.clientWidth * dpr);
+    if (!size) return;
+    if (canvas.width !== size) canvas.width = canvas.height = size;
+
+    const t = now - opened, still = prefersReducedMotion;
+    if (!drag && goal) {
+      const k = still ? 1 : 1 - Math.exp(-dt / 150);
+      view.rot += wrap(goal[0] - view.rot) * k;
+      view.tilt += (goal[1] - view.tilt) * k;
+    } else if (!drag && !still) view.rot -= dt * .00012;
+
+    // Opening: the globe grows in and spins into place, then lights up
+    const p = still ? 1 : ease(Math.min(1, t / 1000));
+    const rot = view.rot + (1 - p) * 2.6, tilt = view.tilt;
+    const R = size / 2 * (.6 + .34 * p), mid = size / 2, unit = R / 160; // dots grow with the globe
+    const cr = Math.cos(rot), sr = Math.sin(rot), ct = Math.cos(tilt), st = Math.sin(tilt);
+    // Round dots, smaller towards the rim, all of one colour in a single path
+    const plot = (ids, px) => {
+      ctx.beginPath();
+      for (const i of ids) {
+        const x = xyz[i * 3], y = xyz[i * 3 + 1], z = xyz[i * 3 + 2];
+        const x1 = x * cr - z * sr, z1 = x * sr + z * cr;
+        const y2 = y * ct - z1 * st, z2 = y * st + z1 * ct;
+        if (z2 <= 0) continue;
+        const r = px * unit * (.5 + .5 * z2) / 2, cx = mid + R * x1, cy = mid - R * y2;
+        ctx.moveTo(cx + r, cy);
+        ctx.arc(cx, cy, r, 0, Math.PI * 2);
+      }
+      ctx.fill();
+    };
+
+    ctx.clearRect(0, 0, size, size);
+    ctx.globalAlpha = p;
+    // A faint rim: the sphere still reads when the Pacific faces us
+    ctx.beginPath();
+    ctx.arc(mid, mid, R, 0, Math.PI * 2);
+    ctx.strokeStyle = ink.edge;
+    ctx.lineWidth = dpr;
+    ctx.stroke();
+    ctx.fillStyle = ink.land;
+    plot(every, 1.6);
+    ctx.fillStyle = ink.lit;
+    shown.forEach((c, i) => {
+      const on = still ? 1 : Math.max(0, Math.min(1, (t - 800 - i * 55) / 260));
+      if (!on || !dotsOf[c.iso]) return;
+      ctx.globalAlpha = on * (hot && hot !== c.iso ? .45 : 1);
+      plot(dotsOf[c.iso], 2.3);
+    });
+    // A trip to come pulses
+    TRAVEL.filter(c => c.next && dotsOf[c.iso]).forEach(c => {
+      ctx.globalAlpha = still ? .6 : Math.max(0, Math.min(1, (t - 1900) / 400)) * (.3 + .35 * (1 + Math.sin(t / 380)));
+      plot(dotsOf[c.iso], 2.3);
+    });
+    if (hot && dotsOf[hot]) {
+      ctx.globalAlpha = 1;
+      ctx.fillStyle = ink.hot;
+      plot(dotsOf[hot], 2.9);
+    }
+    ctx.globalAlpha = 1;
+  }
+
+  // A country picked in the list turns to face us and lights up
+  function focus(iso) {
+    hot = iso || null;
+    goal = iso && facing[iso] ? facing[iso] : null;
+    zones.querySelectorAll('.is-on').forEach(li => li.classList.remove('is-on'));
+    if (iso) zones.querySelector(`[data-c="${iso}"]`)?.classList.add('is-on');
+  }
+  const picked = e => e.target.closest('li[data-c]')?.dataset.c;
+  zones.addEventListener('pointerover', e => { if (e.pointerType === 'mouse' && picked(e)) focus(picked(e)); });
+  zones.addEventListener('pointerleave', e => { if (e.pointerType === 'mouse') focus(null); });
+  zones.addEventListener('click', e => focus(picked(e))); // a tap, on a touch screen
+
+  // Or the globe turns by hand
+  canvas.addEventListener('pointerdown', e => {
+    focus(null);
+    drag = { x: e.clientX, y: e.clientY, rot: view.rot, tilt: view.tilt };
+    canvas.setPointerCapture(e.pointerId);
+  });
+  canvas.addEventListener('pointermove', e => {
+    if (!drag) return;
+    const half = canvas.clientWidth / 2 || 1;
+    view.rot = drag.rot - (e.clientX - drag.x) / half;
+    view.tilt = Math.max(-1.3, Math.min(1.3, drag.tilt + (e.clientY - drag.y) / half));
+  });
+  const release = () => { drag = null; };
+  canvas.addEventListener('pointerup', release);
+  canvas.addEventListener('pointercancel', release);
+
+  async function open() {
+    renderList();
+    dialog.showModal();
+    html.classList.add('travel-open');
+    try { await loadDots(); canvas.hidden = false; } catch (e) { canvas.hidden = true; return; }
+    if (!dialog.open) return;
+    parse();
+    colours();
+    Object.assign(view, { rot: -.6, tilt: .52 });
+    focus(null);
+    opened = performance.now();
+    last = 0;
+    cancelAnimationFrame(frame);
+    frame = requestAnimationFrame(draw);
+  }
+  dialog.addEventListener('close', () => {
+    cancelAnimationFrame(frame);
+    html.classList.remove('travel-open');
+    focus(null);
+  });
+  // A click beside the sheet closes, as the cross does
+  dialog.addEventListener('click', e => {
+    if (e.target === dialog || e.target.closest('[data-travel-close]')) dialog.close();
+  });
+  document.addEventListener('click', e => { if (e.target.closest('[data-travel-open]')) open(); });
+  new MutationObserver(() => { if (dialog.open) renderList(); })
+    .observe(html, { attributes: true, attributeFilter: ['lang'] });
 })();
 
 // ─── Copy the e-mail address ──────────────────────────────────────────────────
@@ -789,6 +1205,7 @@ const roleTabs = (() => {
         '  education           formation',
         '  skills              compétences techniques',
         '  projects            projets',
+        '  travel              pays visités',
         '  contact             email, téléphone, réseaux',
         '  open <réseau>       ouvrir un profil (github, linkedin…)',
         '  cv [fr|en]          ouvrir le CV',
@@ -851,6 +1268,7 @@ const roleTabs = (() => {
         '  education           education',
         '  skills              technical skills',
         '  projects            projects',
+        '  travel              countries visited',
         '  contact             email, phone, socials',
         '  open <network>      open a profile (github, linkedin…)',
         '  cv [fr|en]          open the resume',
@@ -1230,7 +1648,21 @@ const roleTabs = (() => {
         const items = skillsByCategory(cat);
         if (!items.length) return;
         print(`  ${t()['skills.' + cat]}`);
-        items.forEach(s => print(`    ${dots(s.level)}  ${skillLabel(s)}`, 'terminal__line--muted'));
+        items.forEach(s => {
+          const tools = toolsOf(s.id).map(skillLabel).join(', ');
+          print(`    ${dots(s.level)}  ${skillLabel(s)}${tools ? ` (${tools})` : ''}`, 'terminal__line--muted');
+        });
+      });
+    },
+
+    travel() {
+      const sep = currentLang === 'en' ? ': ' : ' : ';
+      TRAVEL_ZONES.forEach(z => {
+        const been = travelIn(z.id).map(travelName), next = travelIn(z.id, true).map(travelName);
+        if (!been.length && !next.length) return;
+        print(`  ${t()['travel.zone.' + z.id]}`);
+        if (been.length) print(`    ${been.join(', ')}`, 'terminal__line--muted');
+        if (next.length) print(`    ${t()['travel.next']}${sep}${next.join(', ')}`, 'terminal__line--muted');
       });
     },
 
@@ -1522,8 +1954,9 @@ const roleTabs = (() => {
   // ── Global keyboard shortcuts ──
   document.addEventListener('keydown', e => {
     if (e.metaKey || e.ctrlKey || e.altKey) return;
-    // The CV dialog handles its own keys; the page behind it takes none
-    if (document.documentElement.classList.contains('cv-open')) return;
+    // The CV and travel dialogs handle their own keys; the page behind them takes none
+    const html = document.documentElement;
+    if (html.classList.contains('cv-open') || html.classList.contains('travel-open')) return;
     if (e.key === 'Escape') { if (!overlay.hidden) closeTerminal(); return; }
     const el = e.target;
     if (el.closest && (el.closest('input, textarea, select, [contenteditable]'))) return;

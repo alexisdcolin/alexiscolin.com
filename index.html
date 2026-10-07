@@ -62,7 +62,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png" />
   <link rel="manifest" href="assets/site.webmanifest" />
-  <link rel="stylesheet" href="style.css?v=62" />
+  <link rel="stylesheet" href="style.css?v=74" />
   <script>
     (function(){
       document.documentElement.classList.add('js');
@@ -146,21 +146,25 @@
   <!-- ═══════════ HERO ═══════════ -->
   <section class="hero" id="top" aria-labelledby="heroName">
     <div class="hero__statement" data-anim style="--i:0">
-      <h1 id="heroName"><span class="hero__line"><span class="hero__name">Alexis Colin</span>,</span> <span class="hero__line" data-i18n="hero.title">développeur data &amp; IA</span> <span class="hero__line"><span data-i18n="hero.city.prep">à</span> <span class="hero__city" data-i18n="hero.city">Montréal</span>.</span></h1>
+      <h1 id="heroName"><span class="hero__line"><span class="hero__name">Alexis Colin</span>,</span> <span class="hero__line" data-i18n="hero.title">développeur data &amp; IA</span> <span class="hero__line"><span data-i18n="hero.city.prep">à</span> <span class="hero__city"><!-- Paris, Lyon, then a copy of the city roll through letter by letter (style.css) -->
+        <span class="hero__roll hero__roll--paris" aria-hidden="true"><i style="--i:0" data-c="P"></i><i style="--i:1" data-c="a"></i><i style="--i:2" data-c="r"></i><i style="--i:3" data-c="i"></i><i style="--i:4" data-c="s"></i></span>
+        <span class="hero__roll hero__roll--lyon" aria-hidden="true"><i style="--i:0" data-c="L"></i><i style="--i:1" data-c="y"></i><i style="--i:2" data-c="o"></i><i style="--i:3" data-c="n"></i></span>
+        <span class="hero__roll hero__roll--city" aria-hidden="true"><i style="--i:0" data-c="M"></i><i style="--i:1" data-c="o"></i><i style="--i:2" data-c="n"></i><i style="--i:3" data-c="t"></i><i style="--i:4" data-c="r"></i><i style="--i:5" data-c="é" data-en="e"></i><i style="--i:6" data-c="a"></i><i style="--i:7" data-c="l"></i></span>
+        <span data-i18n="hero.city">Montréal</span></span><span class="hero__dot">.</span></span></h1>
       <p data-i18n-rich="hero.pitch">Je conçois des infrastructures de données <strong>fiables</strong>&nbsp;et&nbsp;<strong>gouvernées</strong>, de leur source jusqu'aux agents IA.</p>
     </div>
 
     <!-- The stack beside the statement, as tall as it and the buttons; governance runs along all of it -->
     <div class="stack-wrap" data-anim style="--i:1">
-      <p class="gov" title="accès, masquage, audit — à chaque étape" data-i18n="hero.gov" data-i18n-title="hero.gov.desc">Gouvernance</p>
+      <p class="gov" title="tests, accès, masquage, audit — à chaque étape" data-i18n="hero.gov" data-i18n-title="hero.gov.desc">Qualité &amp; gouvernance</p>
       <span id="stackLabel" hidden data-i18n="hero.stack.aria">Ma stack, de la source à l'IA</span>
       <ol class="stack" aria-labelledby="stackLabel">
-        <li class="step" style="--n:0"><span class="step__n">01</span><span class="step__t">Ingestion</span><span class="step__d" data-i18n="hero.stack.d1">Collecter chaque source</span><span class="step__tip">Python</span></li>
-        <li class="step" style="--n:1"><span class="step__n">02</span><span class="step__t" data-i18n="hero.stack.store">Stockage</span><span class="step__d" data-i18n="hero.stack.d2">Un entrepôt fiable</span><span class="step__tip">S3 · Parquet · MySQL · PostgreSQL</span></li>
-        <li class="step" style="--n:2"><span class="step__n">03</span><span class="step__t">Transformation</span><span class="step__d" data-i18n="hero.stack.d3">Nettoyer et modéliser</span><span class="step__tip">SQL · dbt</span></li>
-        <li class="step" style="--n:3"><span class="step__n">04</span><span class="step__t">Orchestration</span><span class="step__d" data-i18n="hero.stack.d4">Automatiser les flux</span><span class="step__tip">Dagster · Prefect</span></li>
-        <li class="step" style="--n:4"><span class="step__n">05</span><span class="step__t" data-i18n="hero.stack.viz">Visualisation</span><span class="step__d" data-i18n="hero.stack.d5">Piloter l'activité</span><span class="step__tip">Power BI · Tableau · Grafana</span></li>
-        <li class="step is-hl" style="--n:5"><span class="step__n">06</span><span class="step__t" data-i18n="hero.stack.ai">IA</span><span class="step__d" data-i18n="hero.stack.d6">Des agents branchés aux données</span><span class="step__tip">MCP · Agents</span></li>
+        <li class="step" style="--n:0"><span class="step__n">01</span><span class="step__t">Ingestion</span><span class="step__d" data-i18n="hero.stack.d1">Collecter chaque source</span></li>
+        <li class="step" style="--n:1"><span class="step__n">02</span><span class="step__t" data-i18n="hero.stack.store">Stockage</span><span class="step__d" data-i18n="hero.stack.d2">Centraliser les données</span></li>
+        <li class="step" style="--n:2"><span class="step__n">03</span><span class="step__t">Transformation</span><span class="step__d" data-i18n="hero.stack.d3">Nettoyer et modéliser</span></li>
+        <li class="step" style="--n:3"><span class="step__n">04</span><span class="step__t">Orchestration</span><span class="step__d" data-i18n="hero.stack.d4">Automatiser les flux</span></li>
+        <li class="step" style="--n:4"><span class="step__n">05</span><span class="step__t" data-i18n="hero.stack.viz">Visualisation</span><span class="step__d" data-i18n="hero.stack.d5">Piloter l'activité</span></li>
+        <li class="step is-hl" style="--n:5"><span class="step__n">06</span><span class="step__t" data-i18n="hero.stack.ai">IA</span><span class="step__d" data-i18n="hero.stack.d6">Ouvrir les données aux agents</span></li>
       </ol>
     </div>
 
@@ -211,7 +215,7 @@
           <p class="label" data-i18n="misc.title">Centres d'intérêt</p>
           <ul class="interests__list">
             <li><span class="interests__emoji" aria-hidden="true">🏓</span><div><strong data-i18n="misc.tt.title">Tennis de Table</strong><span data-i18n="misc.tt.desc">Activité pratiquée pendant plus de 10 ans en club.</span></div></li>
-            <li><span class="interests__emoji" aria-hidden="true">✈️</span><div><strong data-i18n="misc.travel.title">Voyages</strong><span data-i18n="misc.travel.desc">Déjà 17 pays explorés, et bien d'autres à venir.</span></div></li>
+            <li><span class="interests__emoji" aria-hidden="true">✈️</span><div><strong data-i18n="misc.travel.title">Voyages</strong><span data-i18n="misc.travel.pre">Déjà</span> <button type="button" class="travel-link" data-travel-open aria-haspopup="dialog" data-i18n="misc.travel.count">18 pays explorés</button><span data-i18n="misc.travel.post">, et bien d'autres à venir.</span></div></li>
             <li><span class="interests__emoji" aria-hidden="true">🏔️</span><div><strong data-i18n="misc.nature.title">Nature</strong><span data-i18n="misc.nature.desc">Ski, randonnée, trek, camping&nbsp;: tout ce qui se passe dehors.</span></div></li>
           </ul>
         </article>
@@ -377,10 +381,10 @@
           <article class="tile edu-card">
             <span class="edu-card__badge" aria-hidden="true">UCBL</span>
             <span class="edu-card__y">2019 — 2021</span>
-            <strong data-i18n="edu.miage.short">Master MIAGE</strong>
+            <strong data-i18n="edu.miage.short">Master informatique de gestion</strong>
             <span class="edu-card__s">Université Claude Bernard Lyon 1</span>
             <span class="edu-card__w"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="edu.miage.city">Lyon, France</span></span>
-            <span class="edu-card__tag" data-i18n="edu.miage.note">Systèmes d'information de santé</span>
+            <span class="edu-card__tag" data-i18n="edu.miage.note">MIAGE · Systèmes d'information de santé</span>
           </article>
         </div>
       </div>
@@ -446,7 +450,7 @@
           <p class="project-card__meta" data-i18n="projects.mcp.meta">Laps · Avr. – Juin 2026 · 3 mois</p>
           <p class="project-card__desc" data-i18n="projects.mcp.desc">Développement d'un serveur MCP en Python (FastMCP) donnant aux agents IA un accès gouverné à l'entrepôt de données de Laps&nbsp;: requêtes en lecture seule validées (liste blanche de tables, limites et délais imposés), masquage automatique des données personnelles et journal d'audit complet.</p>
           <p class="project-card__desc" data-i18n="projects.mcp.pitch">Les équipes posent leurs questions en langage naturel à leur agent IA, qui interroge l'entrepôt sans jamais voir de donnée sensible ni pouvoir y écrire.</p>
-          <ul class="tags"><li class="tag">Python</li><li class="tag">FastMCP</li><li class="tag">MySQL</li><li class="tag">Docker</li></ul>
+          <ul class="key-skills"><li data-skill="python"><span>Python</span></li><li data-skill="mcp"><span>FastMCP</span></li><li data-skill="mysql"><span>MySQL</span></li><li data-skill="docker"><span>Docker</span></li></ul>
           <p class="project-private"><svg class="ico" aria-hidden="true"><use href="#i-lock"/></svg><span data-i18n="projects.private">Code privé</span></p>
         </article>
 
@@ -456,7 +460,7 @@
           <p class="project-card__sub" data-i18n="projects.etl.title.sub">Framework de pipelines serverless</p>
           <p class="project-card__meta" data-i18n="projects.etl.meta">Laps · Juin – Sept. 2025 · 4 mois</p>
           <p class="project-card__desc" data-i18n="projects.etl.desc">Développement d'un framework ETL serverless sur AWS Lambda, permettant la création de pipelines modulaires, évolutifs et économiques pour l'automatisation des flux de données.</p>
-          <ul class="tags"><li class="tag">AWS Lambda</li><li class="tag">Python</li><li class="tag">ETL</li></ul>
+          <ul class="key-skills"><li data-skill="aws"><span>AWS Lambda</span></li><li data-skill="python"><span>Python</span></li><li data-skill="etl"><span>ETL/ELT</span></li></ul>
           <a class="gh-link" href="https://github.com/alexisdcolin/AWS-Lambda-ETL" target="_blank" rel="noopener"><svg class="ico" aria-hidden="true"><use href="#icon-github"/></svg><span data-i18n="projects.github.label">Voir sur GitHub</span><svg class="ico" aria-hidden="true"><use href="#i-ext"/></svg></a>
         </article>
 
@@ -582,6 +586,27 @@
     </div>
   </div>
 
+  <!-- ═══════════ Easter egg: the countries behind "18 pays explorés" ═══════════ -->
+  <!-- scroll.js fills the list and loads the dot globe (assets/world-dots.js) on first opening -->
+  <dialog class="travel" id="travelDialog" aria-labelledby="travelTitle">
+    <div class="travel__sheet">
+      <div class="travel__head">
+        <div>
+          <h2 class="travel__title" id="travelTitle" data-i18n="travel.title">Carnet de voyage</h2>
+          <p class="travel__sub" data-i18n="travel.sub">Choisissez un pays pour le trouver sur le globe, ou faites-le tourner.</p>
+        </div>
+        <button type="button" class="travel__close" data-travel-close aria-label="Fermer" data-i18n-aria="travel.close" autofocus><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>
+      </div>
+      <div class="travel__body">
+        <canvas class="travel__globe" aria-hidden="true"></canvas>
+        <div>
+          <p class="travel__sum" id="travelSum"></p>
+          <div class="travel__zones" id="travelZones"></div>
+        </div>
+      </div>
+    </div>
+  </dialog>
+
   <!-- ═══════════ CV (every CV button) — the print view in front, the page blurred behind ═══════════ -->
   <!-- scroll.js loads cv.html into the frame on first intent; the buttons drive it.
        The CV links keep their href: a new tab, or no JavaScript, still gets /cv. -->
@@ -608,8 +633,8 @@
   <!-- Intentional load order: i18n.js must come before scroll.js
        (scroll.js depends on `translations` and `currentLang` defined in i18n.js)
        Do not add async/defer to these two scripts. -->
-  <script src="i18n.js?v=53"></script>
-  <script src="skills-data.js?v=8"></script>
-  <script src="scroll.js?v=59"></script>
+  <script src="i18n.js?v=63"></script>
+  <script src="skills-data.js?v=10"></script>
+  <script src="scroll.js?v=71"></script>
 </body>
 </html>

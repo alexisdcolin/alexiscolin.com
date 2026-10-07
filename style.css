@@ -95,7 +95,6 @@
   --badge-ochre:  light-dark(#8f6428, #d4a35e);
   --badge-purple: light-dark(#5b50a0, #ada3e0);
   --tag-bg:     light-dark(rgba(0,0,0,.05), rgba(255,255,255,.06));
-  --tag-text:   light-dark(#4a3f38, #c5b8ae);
   --shadow:     0 2px 12px light-dark(rgba(0,0,0,.06), rgba(0,0,0,.30));
   --shadow-lg:  0 8px 32px light-dark(rgba(0,0,0,.10), rgba(0,0,0,.50));
   --shadow-xl:  0 18px 50px rgba(0,0,0,.35);   /* windows over the page: terminal, CV */
@@ -110,10 +109,12 @@
   --sans:      'Space Grotesk', system-ui, -apple-system, 'Segoe UI', Roboto, sans-serif;
   --max-w:     1080px;
 
-  /* Colourise filter applied to monochrome skill icons. A filter chain isn't a
-     colour, so light-dark() can't express it — hence the real overrides below,
-     the only theme value still declared twice. */
+  /* Colourise filter applied to monochrome skill icons, and the other theme's
+     one for the inverted tile. A filter chain isn't a colour, so light-dark()
+     can't express it — hence the real overrides below, the only theme values
+     still declared twice. */
   --icon-filter: invert(26%) sepia(9%) saturate(600%) hue-rotate(340deg) brightness(88%) contrast(92%);
+  --icon-filter-inverse: invert(85%) sepia(10%) saturate(300%) hue-rotate(340deg) brightness(100%) contrast(90%);
 }
 
 /* Manual override from the theme toggle — flips every light-dark() at once */
@@ -122,10 +123,12 @@
 
 [data-theme="dark"] {
   --icon-filter: invert(85%) sepia(10%) saturate(300%) hue-rotate(340deg) brightness(100%) contrast(90%);
+  --icon-filter-inverse: invert(26%) sepia(9%) saturate(600%) hue-rotate(340deg) brightness(88%) contrast(92%);
 }
 @media (prefers-color-scheme: dark) {
   :root:not([data-theme="light"]) {
     --icon-filter: invert(85%) sepia(10%) saturate(300%) hue-rotate(340deg) brightness(100%) contrast(90%);
+    --icon-filter-inverse: invert(26%) sepia(9%) saturate(600%) hue-rotate(340deg) brightness(88%) contrast(92%);
   }
 }
 
@@ -452,15 +455,63 @@ main[tabindex="-1"]:focus { outline: none; }
 .hero__city {
   --c2: light-dark(#c27a1f, #f2b45c);
   --c3: light-dark(#b23a2a, #ef7d61);
+  display: inline-grid;
   white-space: nowrap;
+  font-kerning: none; /* lands exactly where its rolling copy (below) did */
   color: var(--accent-text);
   background: linear-gradient(90deg, var(--accent-text), var(--c2), var(--c3), var(--c2), var(--accent-text)) 0 0 / 200% 100%;
   -webkit-background-clip: text;
   background-clip: text;
+  /* The line the cities roll through: a letter above or below it is out of sight */
+  clip-path: inset(.1em -.5em -.1em);
   transition: color .25s ease;
 }
 .hero__city:hover { color: transparent; animation: citySweep 1.6s ease-in-out infinite alternate; }
 @keyframes citySweep { to { background-position: 100% 0; } }
+
+/* On arrival Paris then Lyon roll through the line letter by letter, like the
+   digits of a counter, before the city lands, the full stop with it. Their
+   letters are generated text, out of the page's text and of screen readers,
+   and so is the copy of the city that rolls in: the real one, below the line
+   till then, takes its place once the copy has landed. */
+.hero__city > span { grid-area: 1 / 1; justify-self: start; position: relative; }
+.hero__roll { visibility: hidden; }
+.hero__roll i { position: relative; display: inline-block; font-style: normal; }
+.hero__roll--paris i,
+.hero__roll--lyon i { top: -100%; } /* gone by, above the line */
+@supports (content: "" / "") {
+  .hero__roll i::before { content: attr(data-c) / ""; }
+  :lang(en) .hero__roll i[data-en]::before { content: attr(data-en) / ""; }
+  /* Each letter sets off --i × 26ms after the first */
+  .hero__roll--paris { animation: cityShown .93s; }
+  .hero__roll--paris i { animation: letterOut .22s cubic-bezier(.5, 0, .5, 1) calc(.6s + var(--i) * 26ms) backwards; }
+  .hero__roll--lyon { animation: cityShown 1.4s; }
+  /* Listed last, the way in wins until it ends; the way out then holds the
+     letter in place until its own turn */
+  .hero__roll--lyon i {
+    animation:
+      letterOut .26s cubic-bezier(.3, 0, .25, 1.3) calc(1.06s + var(--i) * 26ms) backwards,
+      letterIn .22s cubic-bezier(.5, 0, .5, 1) calc(.6s + var(--i) * 26ms) backwards;
+  }
+  .hero__roll--city { animation: cityShown 1.51s; }
+  .hero__roll--city i { animation: letterIn .26s cubic-bezier(.3, 0, .25, 1.3) calc(1.06s + var(--i) * 26ms) backwards; }
+  .hero__city > [data-i18n] { animation: cityAway 1.51s; }
+  .hero__dot { animation: dotIn .16s ease-out 1.44s backwards; }
+}
+/* Moved by top, not transform: the hover gradient follows the text where it
+   is laid out, and would stay behind as a ghost of a transformed letter */
+@keyframes letterIn  { from { top: 100%; } to { top: 0; } }
+@keyframes letterOut { from { top: 0; } to { top: -100%; } }
+@keyframes cityShown { from, to { visibility: visible; } }
+@keyframes cityAway  { from, to { top: 100%; } }
+@keyframes dotIn     { from { opacity: 0; } }
+
+@media (prefers-reduced-motion: reduce) {
+  .hero__roll,
+  .hero__roll i,
+  .hero__city > [data-i18n],
+  .hero__dot { animation: none; }
+}
 .hero__statement p {
   max-width: 27em;
   margin-top: .8em;
@@ -489,9 +540,9 @@ main[tabindex="-1"]:focus { outline: none; }
   background: linear-gradient(100deg, transparent .03em, color-mix(in srgb, var(--accent) 34%, transparent) .12em, color-mix(in srgb, var(--accent) 26%, transparent) calc(100% - .14em), transparent calc(100% - .02em)) no-repeat 0 90% / 0% 50%;
   -webkit-box-decoration-break: clone;
   box-decoration-break: clone;
-  animation: heroMark .55s cubic-bezier(.65, .05, .3, 1) .8s forwards;
+  animation: heroMark .55s cubic-bezier(.65, .05, .3, 1) 1.55s forwards; /* once the city has landed */
 }
-.hero__statement p strong:nth-of-type(2) { animation-delay: 1.3s; }
+.hero__statement p strong:nth-of-type(2) { animation-delay: 2.05s; }
 @keyframes heroMark { to { background-size: 100% 50%; } }
 
 @media (prefers-reduced-motion: reduce) {
@@ -593,28 +644,6 @@ main[tabindex="-1"]:focus { outline: none; }
 }
 .step.is-hl::after { box-shadow: 0 0 0 3px var(--accent-soft); }
 
-/* A step's tools: a bubble on hover, read by screen readers all along */
-.step__tip {
-  position: absolute;
-  top: calc(100% + 6px);
-  left: -8px;
-  z-index: 3;
-  width: max-content;
-  max-width: 230px;
-  padding: 6px 10px;
-  border: 1px solid var(--border-2);
-  border-radius: 9px;
-  background: var(--card);
-  box-shadow: var(--shadow-lg);
-  font: 400 11.5px/1.4 var(--mono);
-  color: var(--text-2);
-  opacity: 0;
-  transform: translateY(-3px);
-  pointer-events: none;
-  transition: opacity .15s ease, transform .15s ease;
-}
-.step:hover .step__tip { opacity: 1; transform: none; }
-
 .step__n { font: 400 12px/1.3 var(--mono); color: var(--accent-text); }
 .step__t { font: 700 16px/1.3 var(--mono); letter-spacing: -.01em; }
 .step__d { grid-column: 2; margin-top: 2px; font-size: 12.5px; line-height: 1.35; color: var(--muted); }
@@ -694,23 +723,6 @@ main[tabindex="-1"]:focus { outline: none; }
   border-radius: 2px;
   background: var(--accent);
   opacity: .75;
-}
-
-.tags {
-  display: flex;
-  flex-wrap: wrap;
-  gap: 6px;
-}
-
-.tag {
-  display: inline-block;
-  padding: 4px 8px;
-  border: 1px solid var(--border);
-  border-radius: 4px;
-  background: var(--tag-bg);
-  font: 400 11px/1.2 var(--mono);
-  letter-spacing: .02em;
-  color: var(--tag-text);
 }
 
 .contract-badge {
@@ -818,6 +830,20 @@ main[tabindex="-1"]:focus { outline: none; }
 }
 .drives__ico svg { width: 18px; height: 18px; }
 .interests__list strong { display: block; font: 700 13px/1.35 var(--mono); color: var(--text); }
+
+/* Easter egg: the count of countries opens their map */
+.travel-link {
+  padding: 0;
+  border: 0;
+  background: none;
+  font: inherit;
+  color: inherit;
+  text-decoration: underline dotted color-mix(in srgb, currentColor 50%, transparent);
+  text-underline-offset: 3px;
+  cursor: pointer;
+  transition: color .15s ease;
+}
+.travel-link:hover { color: var(--accent-text); text-decoration-color: currentColor; }
 
 .drives__cta {
   display: inline-flex;
@@ -937,6 +963,7 @@ main[tabindex="-1"]:focus { outline: none; }
   background: var(--accent);
 }
 
+/* A position's key skills, and a project's tools */
 .key-skills {
   display: flex;
   flex-wrap: wrap;
@@ -1156,6 +1183,14 @@ main[tabindex="-1"]:focus { outline: none; }
   break-inside: avoid;
   margin-bottom: var(--gap);
 }
+/* Shared out into fixed columns by scroll.js, so an unfolding family
+   lengthens its own column instead of reshuffling the tiles */
+.skills-grid.is-laid {
+  display: grid;
+  grid-template-columns: repeat(var(--cols, 3), minmax(0, 1fr));
+  align-items: start;
+}
+.skills-col > .tile { margin-bottom: var(--gap); }
 
 .skill-rows {
   display: grid;
@@ -1187,6 +1222,30 @@ main[tabindex="-1"]:focus { outline: none; }
 .skill-row svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--text-2); }
 .skill-row__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .skill-row__dur { font: 400 10.5px/1 var(--mono); color: var(--muted); white-space: nowrap; }
+.skill-row > i { width: 18px; height: 18px; flex-shrink: 0; } /* a tool without a logo */
+
+/* A family: its row unfolds its tools, set in under it */
+.skill-fam__count {
+  display: inline-flex;
+  align-items: center;
+  gap: 4px;
+  padding: 2px 7px;
+  border: 1px solid var(--border-2);
+  border-radius: 7px;
+  font: 400 10.5px/1.3 var(--mono);
+  color: var(--muted);
+}
+.skill-fam__count::after { content: '▾'; transition: transform .15s ease; }
+.skill-fam__head[aria-expanded="true"] .skill-fam__count::after { transform: rotate(180deg); }
+.skill-fam__tools {
+  display: grid;
+  gap: 1px;
+  margin: 0 0 6px 28px;
+  padding-left: 8px;
+  border-left: 1.5px solid var(--border-2);
+}
+.skill-fam__tools[hidden] { display: none; }
+.skill-fam__tools .skill-row { padding: 4px 8px; font-size: 13px; }
 
 .langs { display: grid; gap: 16px; margin-top: 16px; }
 .langs__row { display: flex; align-items: center; gap: 10px; }
@@ -1249,7 +1308,7 @@ main[tabindex="-1"]:focus { outline: none; }
 .project-card__sub { margin-top: 2px; font-size: 14.5px; font-weight: 500; color: var(--accent-text); }
 .project-card__meta { margin-top: 6px; font: 400 11px/1.5 var(--mono); color: var(--muted); }
 .project-card__desc { margin-top: 10px; font-size: 14.5px; color: var(--text-2); }
-.project-card .tags { margin: 14px 0 16px; }
+.project-card .key-skills { margin: 14px 0 16px; }
 
 /* Featured: the page's one dark tile (light, in dark mode), the same layout as the others */
 .project-card--feature {
@@ -1267,7 +1326,9 @@ main[tabindex="-1"]:focus { outline: none; }
 .project-card--feature .project-card__sub { color: var(--feature-accent); }
 .project-card--feature .project-card__meta { color: color-mix(in srgb, var(--bg) 70%, var(--feature-bg)); }
 .project-card--feature .project-card__desc { max-width: 66ch; font-size: 15px; color: color-mix(in srgb, var(--bg) 84%, var(--feature-bg)); }
-.project-card--feature .tag { border-color: transparent; background: color-mix(in srgb, var(--bg) 12%, transparent); color: inherit; }
+.project-card--feature { --icon-filter: var(--icon-filter-inverse); } /* light logos on the dark tile */
+.project-card--feature .key-skills li { border-color: transparent; background: color-mix(in srgb, var(--bg) 12%, transparent); color: inherit; }
+.project-card--feature .key-skills svg { color: inherit; }
 
 .project-private {
   display: inline-flex;
@@ -1957,6 +2018,117 @@ html.cv-open { overflow: hidden; }
 .cv-dialog--closing .cv-stage { animation: terminalOut .18s ease-in forwards; }
 @keyframes cvFade { from { opacity: 0; } }
 
+/* ── Travel log: the countries behind the count, on a dot globe ── */
+.travel {
+  width: 100%;
+  height: 100%;
+  max-width: none;
+  max-height: none;
+  margin: 0;
+  padding: 0;
+  border: 0;
+  background: transparent;
+  overflow-y: auto;
+}
+.travel[open] { display: grid; place-items: center; }
+.travel::backdrop {
+  background: var(--scrim);
+  -webkit-backdrop-filter: blur(4px);
+  backdrop-filter: blur(4px);
+  animation: cvFade .2s ease-out;
+}
+html.travel-open { overflow: hidden; }
+
+.travel__sheet {
+  width: min(1040px, 100% - 32px);
+  margin: 24px 0;
+  padding: 24px;
+  border: 1px solid var(--border);
+  border-radius: var(--radius);
+  background: var(--card);
+  box-shadow: var(--shadow-xl);
+  animation: terminalIn .2s ease-out;
+}
+.travel__head { display: flex; align-items: flex-start; justify-content: space-between; gap: 16px; }
+.travel__title { font: 700 22px/1.2 var(--mono); letter-spacing: -.02em; }
+.travel__sub { margin-top: 4px; font-size: 14px; color: var(--muted); }
+.travel__close {
+  flex-shrink: 0;
+  display: grid;
+  place-items: center;
+  width: 36px;
+  height: 36px;
+  border: 1px solid var(--border-2);
+  border-radius: 50%;
+  background: none;
+  color: var(--text-2);
+  cursor: pointer;
+}
+.travel__close:hover { background: var(--bg-alt); color: var(--text); }
+
+/* The globe beside the continents, centred on them; a phone stacks them */
+.travel__body {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 1.1fr);
+  gap: 28px;
+  align-items: center;
+  margin-top: 18px;
+}
+.travel__globe { display: block; width: 100%; max-width: 480px; aspect-ratio: 1; justify-self: center; cursor: grab; touch-action: none; }
+.travel__globe:active { cursor: grabbing; }
+.travel__sum { font: 400 12px/1.5 var(--mono); color: var(--muted); }
+.travel__sum b { font-weight: 700; color: var(--accent-text); }
+
+.travel__zones {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(min(100%, 210px), 1fr));
+  gap: 10px;
+  margin-top: 12px;
+}
+.travel__zone { padding: 12px 14px; border: 1px solid var(--border-2); border-radius: 12px; }
+.travel__zone:first-child { grid-column: 1 / -1; }
+.travel__zone header { display: flex; align-items: center; gap: 7px; font: 700 12.5px/1.3 var(--mono); }
+.travel__zone .ico { width: 13px; height: 13px; }
+.travel__n { margin-left: auto; font-weight: 400; color: var(--muted); }
+.travel__bar { height: 4px; margin-top: 9px; border-radius: 2px; background: var(--border); }
+.travel__bar i { display: block; height: 100%; border-radius: 2px; background: var(--accent); }
+.travel__zone.is-locked { border-style: dashed; }
+.travel__zone.is-locked header { font-weight: 400; color: var(--muted); }
+.travel__lock { margin-top: 8px; font-size: 12.5px; color: var(--muted); }
+
+.travel__list { display: flex; flex-wrap: wrap; gap: 5px; margin-top: 10px; }
+.travel__list li {
+  padding: 3px 9px;
+  border: 1px solid var(--border-2);
+  border-radius: 999px;
+  font-size: 12.5px;
+  line-height: 1.35;
+  color: var(--text-2);
+  cursor: default;
+  transition: background .15s ease, border-color .15s ease, color .15s ease;
+}
+.travel__list li small { font-size: inherit; color: var(--muted); }
+.travel__list li.is-next {
+  border-style: dashed;
+  border-color: color-mix(in srgb, var(--accent) 55%, transparent);
+  color: var(--accent-text);
+}
+.travel__list li.is-on {
+  border-color: color-mix(in srgb, var(--accent) 45%, transparent);
+  background: var(--accent-soft);
+  color: var(--accent-text);
+}
+
+@media (max-width: 759.98px) {
+  .travel__sheet { padding: 18px; }
+  .travel__body { grid-template-columns: minmax(0, 1fr); gap: 18px; }
+  .travel__globe { max-width: 380px; }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .travel__sheet { animation: none; }
+}
+
 /* Phones: the sheet takes the screen, the controls a bar under it */
 @media (max-width: 599.98px) {
   .cv-stage { flex-direction: column; gap: 0; width: 100%; height: 100%; }
@@ -2133,7 +2305,6 @@ html.cv-open { overflow: hidden; }
   .step:first-child .step__t { left: 0; transform: none; }
   .step:last-child .step__n,
   .step:last-child .step__t { right: 0; left: auto; transform: none; }
-  .step__tip,
   .step__d { display: none; }
 
   /* Positions: a row of tabs that scrolls, BIAL-R's clients under one line */
@@ -2281,6 +2452,7 @@ html.cv-open { overflow: hidden; }
   .xp { display: block; }
   .xp-tabs { display: none !important; }
   .xp-panel[hidden] { display: block !important; }
+  .skill-fam__tools[hidden] { display: grid !important; }
 
   .tile {
     background: #fff !important;
@@ -2294,7 +2466,7 @@ html.cv-open { overflow: hidden; }
   .hero__city { background: none; }
 
   /* The inverted tile turns back to dark ink on white */
-  .project-card--feature { --bg: #111; --feature-bg: #fff; --feature-accent: var(--accent-text); }
+  .project-card--feature { --bg: #111; --feature-bg: #fff; --feature-accent: var(--accent-text); --icon-filter: none; }
 
   /* Never print the filter pill */
   .skill-filter-pill { display: none !important; }
