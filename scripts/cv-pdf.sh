@@ -12,8 +12,11 @@ trap 'rm -rf "$tmp"' EXIT
 
 # The file names match cv.pdf.file in i18n.js, which the site links to
 for doc in fr:Alexis-Colin-CV en:Alexis-Colin-Resume; do
-  # No analytics beacon: a print is not a visit
+  # No analytics beacon: a print is not a visit. Fatal logs only, and no GPU:
+  # a runner without a display or a graphics card otherwise fills the log
+  # with errors that change nothing to the print.
   "$chrome" --headless=new --no-pdf-header-footer --virtual-time-budget=5000 \
+    --log-level=3 --disable-gpu \
     --host-resolver-rules='MAP static.cloudflareinsights.com ~NOTFOUND' \
     --print-to-pdf="$tmp/${doc#*:}.pdf" "file://$PWD/cv.html?lang=${doc%%:*}"
 done
