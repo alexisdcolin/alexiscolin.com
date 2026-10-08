@@ -27,6 +27,8 @@ jobs:
           # --fallback-extensions: Cloudflare Pages serves /privacy for privacy.html and
           # 308s the .html form, so internal links are extensionless and have no file
           # --exclude formspree: the form endpoint only accepts POST, HEAD checks get a 405
+          # --exclude og-: the share image is named on the live site, where a new
+          # one only exists once this commit is deployed
           # 403/429/999: LinkedIn and the like block bots — don't fail
           # the CI over a link that is actually valid
           args: >-
@@ -34,6 +36,7 @@ jobs:
             --root-dir "${{ github.workspace }}"
             --fallback-extensions html
             --exclude 'formspree\.io'
+            --exclude 'alexiscolin\.com/assets/og-'
             --accept '200..=299,403,429,999'
             './*.html'
           fail: true

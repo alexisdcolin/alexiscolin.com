@@ -1239,6 +1239,7 @@ function travelIn(zone, next = false) {
         loading:   'Déchiffrement…',
         wrong:     'Phrase de passe incorrecte.',
         missing:   'cv-refs.enc introuvable.',
+        local:     'cv-refs.enc ne se lit pas en file:// : ouvrez le site par un serveur (python3 -m http.server).',
         failed:    'Échec : rien n\'a été écrit.',
         mismatch:  'Les deux phrases diffèrent : rien n\'a été écrit.',
         locked:    'Références verrouillées.',
@@ -1302,6 +1303,7 @@ function travelIn(zone, next = false) {
         loading:   'Decrypting…',
         wrong:     'Wrong passphrase.',
         missing:   'cv-refs.enc not found.',
+        local:     'cv-refs.enc cannot be read from file://: serve the site (python3 -m http.server).',
         failed:    'Failed: nothing was written.',
         mismatch:  'The passphrases differ: nothing was written.',
         locked:    'References locked.',
@@ -1431,7 +1433,7 @@ function travelIn(zone, next = false) {
   // Fetched on first use only. Keep ?v= in step with the tag in cv.html.
   const loadRefsLib = () => refsLib || (refsLib = new Promise((resolve, reject) => {
     const s = document.createElement('script');
-    s.src = 'refs-crypto.js?v=3';
+    s.src = 'refs-crypto.js?v=5';
     s.onload = resolve;
     s.onerror = () => { refsLib = null; reject(new Error('load')); };
     document.head.appendChild(s);
@@ -1474,7 +1476,7 @@ function travelIn(zone, next = false) {
         if (terminalClosed()) return;
         refsSession = { refs, pass };
       } catch (e) {
-        const msg = e.message === 'missing' ? r.missing : e.message === 'load' ? r.failed : r.wrong;
+        const msg = { missing: r.missing, local: r.local, load: r.failed }[e.message] || r.wrong;
         print(msg, 'terminal__line--error');
         return;
       }
@@ -1623,8 +1625,10 @@ function travelIn(zone, next = false) {
       ]);
     },
 
+    // The pitch first: the paragraph after it starts from what it promises
     about() {
       print('');
+      print(t()['hero.pitch'].replace(/\*\*/g, ''));
       print(t()['about.p1']);
     },
 
@@ -1983,13 +1987,14 @@ function travelIn(zone, next = false) {
 })();
 
 // ─── CV in a dialog ───────────────────────────────────────────────────────────
-// Every CV button opens the print view in front of the page instead of leaving
-// it: cv.html loads into a frame on first intent, the page blurs behind, and
+// On a computer or a tablet, every CV button opens the print view in front of
+// the page instead of leaving it: cv.html loads into a frame on first intent,
+// the page blurs behind, and
 // the buttons beside the sheet drive the frame — print, references, language.
 // They talk to it through postMessage rather than reaching into its document:
 // opened from a file:// copy the frame counts as another origin, and only
 // messages get through. The links keep their href, so a new tab (middle or
-// ⌘-click) and a browser without JavaScript still get /cv on its own.
+// ⌘-click), a phone and a browser without JavaScript still get /cv on its own.
 (function () {
   const dialog = document.getElementById('cvDialog');
   const frame = document.getElementById('cvFrame');
@@ -2001,18 +2006,25 @@ function travelIn(zone, next = false) {
   const pass = document.getElementById('cvPass');
   const passInput = document.getElementById('cvPassInput');
   const passErr = document.getElementById('cvPassErr');
-  // iOS prints the page around a frame, not the frame: there the button opens
-  // the CV on its own, which prints itself (cv.js reads ?print=1)
-  const IOS = /iPad|iPhone|iPod/.test(navigator.userAgent) ||
+  // iPadOS prints the page around a frame, not the frame: there the button
+  // opens the CV on its own, which prints itself (cv.js reads ?print=1). An
+  // iPhone never gets the dialog.
+  const IOS = /iPad/.test(navigator.userAgent) ||
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
+  // Phones, held upright or sideways: the sheet would take the whole screen
+  // anyway, so the links lead to the CV page, where back, zoom and printing
+  // are the browser's own. The same query labels the buttons (style.css) and
+  // trims the CV page's toolbar (cv.css).
+  const PHONE = matchMedia('(max-width: 599.98px), (max-height: 499.98px) and (pointer: coarse)');
   const cvUrl = () => `${pageUrl('/cv')}?lang=${currentLang}`;
   let ready = false;          // cv.js answered from inside the frame
   let refsState = 'locked';   // as the frame last reported it
 
   const send = msg => { if (ready) frame.contentWindow.postMessage({ cv: true, ...msg }, MSG_ORIGIN); };
 
-  // Loaded on the first hover, focus or click, then kept for an instant reopen
-  const warm = () => { if (!frame.getAttribute('src')) frame.src = cvUrl(); };
+  // Loaded on the first hover, focus or click, then kept for an instant
+  // reopen; never on a phone, which leaves for the page instead
+  const warm = () => { if (!PHONE.matches && !frame.getAttribute('src')) frame.src = cvUrl(); };
 
   window.addEventListener('message', e => {
     if (e.source !== frame.contentWindow || !e.data || e.data.cv !== true) return;
@@ -2032,7 +2044,7 @@ function travelIn(zone, next = false) {
     } else if (m.type === 'unlock') {
       if (m.ok) { showPass(false); refsBtn.focus(); return; }
       // Keyed, so a language switch translates the message too
-      const key = m.error === 'missing' ? 'cv.refs.absent' : 'cv.refs.wrong';
+      const key = REFS_ERRORS[m.error] || 'cv.refs.wrong';
       passErr.setAttribute('data-i18n', key);
       passErr.textContent = t()[key];
       passInput.select();
@@ -2090,6 +2102,10 @@ function travelIn(zone, next = false) {
   // the back button leave the same history behind
   const close = () => (history.state && history.state.cv ? history.back() : hide());
   addEventListener('popstate', () => { if (!(history.state && history.state.cv)) hide(); });
+  // A window narrowed to a phone's width, the CV open: the sheet would no
+  // longer fit beside its controls. Width only: a keyboard taking half of a
+  // tablet's height must not close it in the middle of the passphrase.
+  matchMedia('(max-width: 599.98px)').addEventListener('change', e => { if (e.matches && dialog.open) close(); });
   // A reload keeps the entry's state: dropped, or closing would leave the page
   if (history.state && history.state.cv) history.replaceState(null, '');
 
@@ -2159,8 +2175,8 @@ function travelIn(zone, next = false) {
     a.addEventListener('pointerenter', warm);
     a.addEventListener('focus', warm);
     a.addEventListener('click', e => {
-      // A new tab or window stays one
-      if (e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey) return;
+      // A new tab or window stays one, and a phone follows the link
+      if (!plainClick(e) || PHONE.matches) return;
       e.preventDefault();
       open();
     });

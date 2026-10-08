@@ -3,22 +3,28 @@
 // skills-data.js. This file only renders what would be tedious by hand and
 // wires the print button.
 
-// ─── ?lang= wins over the stored preference ──────────────────────────────────
-// Someone following cv.html?lang=en is asking for that language explicitly,
-// whatever the toggle remembered from an earlier visit.
-(function () {
-  var wanted = new URLSearchParams(location.search).get('lang');
-  if ((wanted === 'fr' || wanted === 'en') && wanted !== currentLang) {
-    currentLang = wanted;
-    applyLang(wanted);
-  }
-})();
-
 // ?print=1: iOS prints the page around a frame, so the dialog's print button
 // sends it here instead, and the page prints itself
 if (new URLSearchParams(location.search).get('print') === '1') {
   window.addEventListener('load', function () { window.print(); });
 }
+
+// ─── Back to the site ─────────────────────────────────────────────────────────
+// A phone comes here from the site's own CV buttons: stepping back in history
+// returns it to the spot it left, where the plain link would reload the top of
+// the page. From anywhere else, the link stays a link.
+(function () {
+  var back = document.querySelector('.cv-toolbar__link');
+  if (!back || window.self !== window.top || history.length < 2 || !document.referrer) return;
+  // "/" or index.html, as the local preview names it
+  var home = function (url) { return new URL(url).pathname.replace(/index\.html$/, ''); };
+  if (new URL(document.referrer).origin !== location.origin || home(document.referrer) !== home(back.href)) return;
+  back.addEventListener('click', function (e) {
+    if (!plainClick(e)) return;
+    e.preventDefault();
+    history.back();
+  });
+})();
 
 // ─── Skills, grouped by category ─────────────────────────────────────────────
 // Most proficient first. Every skill is listed unless flagged `cv: false`:
@@ -99,12 +105,12 @@ new MutationObserver(renderCvSkills).observe(document.documentElement, {
 var printBtn = document.getElementById('cvPrint');
 if (printBtn) printBtn.addEventListener('click', function () { window.print(); });
 
-// Browsers name the saved PDF after the title. Swapped on beforeprint rather
-// than in the button handler, so Cmd+P gets the same file name. English says
-// "resume": in North America a CV is the long academic document.
+// Browsers name the saved PDF after the title: the ready-made PDF's name
+// (cv.pdf.file), so both copies of the CV are named alike. Swapped on
+// beforeprint rather than in the button handler, so Cmd+P gets it too.
 var screenTitle = document.title;
 window.addEventListener('beforeprint', function () {
-  document.title = currentLang === 'en' ? 'Alexis-Colin-Resume' : 'Alexis-Colin-CV';
+  document.title = t()['cv.pdf.file'].replace(/^.*\/|\.pdf$/g, '');
 });
 window.addEventListener('afterprint', function () { document.title = screenTitle; });
 
@@ -239,7 +245,7 @@ if (refsBtn) {
     try {
       await unlockRefs(passphrase);
     } catch (e) {
-      alert(t()[e.message === 'missing' ? 'cv.refs.absent' : 'cv.refs.wrong']);
+      alert(t()[REFS_ERRORS[e.message] || 'cv.refs.wrong']);
     }
   });
 }
@@ -285,7 +291,7 @@ if (window.self !== window.top) (function () {
       unlockRefs(m.passphrase).then(function () {
         post({ type: 'unlock', ok: true });
       }, function (err) {
-        post({ type: 'unlock', ok: false, error: err && err.message === 'missing' ? 'missing' : 'wrong' });
+        post({ type: 'unlock', ok: false, error: err && REFS_ERRORS[err.message] ? err.message : 'wrong' });
       });
     }
   });

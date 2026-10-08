@@ -1,0 +1,48 @@
+name: CV PDF
+
+# Reprints the CV's two PDFs (scripts/cv-pdf.sh) when the CV changes, and on
+# the 1st of each month, when the length of the current job moves on. On a
+# Mac: the CV is set in Helvetica Neue, and its two-page fit depends on it.
+on:
+  push:
+    branches: [main]
+    paths:
+      - cv.html
+      - cv.css
+      - cv.js
+      - i18n.js
+      - skills-data.js
+      - scripts/cv-pdf.sh
+      - .github/workflows/cv-pdf.yml
+  schedule:
+    - cron: '0 9 1 * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+# One run at a time, each from the latest main, so their pushes never cross
+concurrency: cv-pdf
+
+jobs:
+  print:
+    name: Print the CV
+    runs-on: macos-latest
+    # A print takes seconds: a hung Chrome must not hold a runner for hours
+    timeout-minutes: 10
+    steps:
+      - uses: actions/checkout@v5
+        with:
+          ref: main
+      - run: scripts/cv-pdf.sh
+      # Under Alexis's name, like the rest of the history. A push made with
+      # GITHUB_TOKEN starts no other workflow; Cloudflare Pages still deploys it.
+      - name: Commit the new PDFs
+        run: |
+          git add assets/cv
+          git diff --cached --quiet && exit 0
+          git config user.name 'Alexis Colin'
+          git config user.email 'contact@alexiscolin.com'
+          git commit -m 'chore: reprint the CV PDFs'
+          git pull --rebase
+          git push

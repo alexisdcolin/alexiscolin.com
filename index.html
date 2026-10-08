@@ -21,19 +21,20 @@
   <meta property="og:url"         content="https://alexiscolin.com/" />
   <meta property="og:title"       content="Alexis Colin — Data & AI Engineer" />
   <meta property="og:description" content="De leur source jusqu'aux agents IA : des données fiables, gouvernées, dignes de confiance." />
-  <meta property="og:image"       content="https://alexiscolin.com/assets/photo.jpg" />
-  <meta property="og:image:width"  content="800" />
-  <meta property="og:image:height" content="800" />
-  <meta property="og:image:alt"    content="Alexis Colin" />
+  <!-- The share preview, 1200×630. Cached as immutable: a new image gets a new name -->
+  <meta property="og:image"       content="https://alexiscolin.com/assets/og-portrait.jpg" />
+  <meta property="og:image:width"  content="1200" />
+  <meta property="og:image:height" content="630" />
+  <meta property="og:image:alt"    content="Alexis Colin, développeur data &amp; IA à Montréal" />
   <meta property="og:locale"      content="fr_CA" />
   <meta property="og:locale:alternate" content="en_CA" />
 
-  <!-- Twitter Card — "summary" (square thumb): photo.jpg is 800x800, large_image expects 2:1 landscape -->
-  <meta name="twitter:card"        content="summary" />
+  <!-- Twitter Card — the large card, made for the landscape share preview -->
+  <meta name="twitter:card"        content="summary_large_image" />
   <meta name="twitter:title"       content="Alexis Colin — Data & AI Engineer" />
   <meta name="twitter:description" content="Data & AI Engineer à Montréal. De leur source jusqu'aux agents IA : des données fiables, gouvernées, dignes de confiance." />
-  <meta name="twitter:image"       content="https://alexiscolin.com/assets/photo.jpg" />
-  <meta name="twitter:image:alt"   content="Alexis Colin" />
+  <meta name="twitter:image"       content="https://alexiscolin.com/assets/og-portrait.jpg" />
+  <meta name="twitter:image:alt"   content="Alexis Colin, développeur data &amp; IA à Montréal" />
 
   <!-- Structured data -->
   <script type="application/ld+json">
@@ -62,7 +63,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png" />
   <link rel="manifest" href="assets/site.webmanifest" />
-  <link rel="stylesheet" href="style.css?v=75" />
+  <link rel="stylesheet" href="style.css?v=78" />
   <script>
     (function(){
       document.documentElement.classList.add('js');
@@ -95,6 +96,7 @@
     <symbol id="i-pin" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8"><path d="M12 21s-7-6.2-7-11.5a7 7 0 0 1 14 0C19 14.8 12 21 12 21Z" stroke-linejoin="round"/><circle cx="12" cy="9.5" r="2.5"/></g></symbol>
     <symbol id="i-sun" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="2" stroke-linecap="round"><circle cx="12" cy="12" r="4.5"/><path d="M12 1.5v2.5M12 20v2.5M4.6 4.6l1.8 1.8M17.6 17.6l1.8 1.8M1.5 12H4M20 12h2.5M4.6 19.4l1.8-1.8M17.6 6.4l1.8-1.8"/></g></symbol>
     <symbol id="i-moon" viewBox="0 0 24 24"><path d="M21 12.8A9 9 0 1 1 11.2 3a7 7 0 0 0 9.8 9.8Z" fill="none" stroke="currentColor" stroke-width="2" stroke-linejoin="round"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M12 3.5v11m0 0-4.5-4.5m4.5 4.5 4.5-4.5M4.5 15.5v2.5a2 2 0 0 0 2 2h11a2 2 0 0 0 2-2v-2.5" fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-copy" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><rect x="8" y="8" width="12" height="12" rx="2"/><path d="M16 8V6a2 2 0 0 0-2-2H6a2 2 0 0 0-2 2v8a2 2 0 0 0 2 2h2"/></g></symbol>
     <symbol id="i-ext" viewBox="0 0 24 24"><path d="M8 16 16 8m0 0H9.5M16 8v6.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
     <symbol id="i-arrow" viewBox="0 0 24 24"><path d="M5 12h14m-5.5-5.5L19 12l-5.5 5.5" fill="none" stroke="currentColor" stroke-width="1.9" stroke-linecap="round" stroke-linejoin="round"/></symbol>
@@ -171,7 +173,7 @@
     <div class="hero__actions" data-anim style="--i:2">
       <a href="/cv" class="btn btn--accent" data-cv-link>
         <svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg>
-        <span data-i18n="links.cv">CV imprimable</span>
+        <span class="lbl" data-i18n="links.cv">CV imprimable</span><span class="lbl-short" data-i18n="links.cv.short">Voir le CV</span>
       </a>
       <a href="mailto:contact@alexiscolin.com" class="btn hero__mail"><svg class="ico" aria-hidden="true"><use href="#i-mail"/></svg>contact@alexiscolin.com</a>
       <a href="https://www.linkedin.com/in/alexisdcolin" target="_blank" rel="noopener" class="btn btn--icon" aria-label="LinkedIn"><svg class="ico" aria-hidden="true"><use href="#icon-linkedin"/></svg></a>
@@ -196,16 +198,16 @@
 
         <article class="tile about-text reveal">
           <p class="label" data-i18n="about.label">Mon métier</p>
-          <p class="about-text__lead" data-i18n="about.p1">Je conçois et mets en place des infrastructures de données de bout en bout&nbsp;: pipelines automatisés, entrepôts modélisés avec les équipes métier, tableaux de bord de pilotage, jusqu'à l'ouverture des données aux agents IA, sans jamais exposer d'information sensible.</p>
+          <p class="about-text__lead" data-i18n="about.p1">Concrètement&nbsp;: collecter les sources, automatiser les pipelines, modéliser l'entrepôt avec les équipes métier et livrer les tableaux de bord qui pilotent l'activité. Et désormais, brancher les agents IA sur ces données sans jamais exposer d'information sensible.</p>
           <p data-i18n="about.p2">Du conseil à l'entreprise, dans la santé, le transport, le logement social et l'e-commerce. Ce qui ne change pas&nbsp;: travailler au plus près des métiers pour transformer des données brutes en décisions.</p>
         </article>
 
         <article class="tile drives reveal">
           <p class="label" data-i18n="about.drives.title">Ce qui m'anime</p>
           <ul class="drives__list">
-            <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-flow"/></svg></span><span data-i18n="about.drives.1">Des plateformes de données pensées de bout en bout</span></li>
-            <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-shield"/></svg></span><span data-i18n="about.drives.2">Des données fiables, gouvernées et documentées</span></li>
-            <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-spark"/></svg></span><span data-i18n="about.drives.3">Des agents IA connectés aux données, pour les exploiter à leur plein potentiel</span></li>
+            <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-flow"/></svg></span><span data-i18n="about.drives.1">Des plateformes pensées comme un tout, pas brique par brique</span></li>
+            <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-shield"/></svg></span><span data-i18n="about.drives.2">Des données dignes de confiance&nbsp;: testées, documentées, traçables</span></li>
+            <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-spark"/></svg></span><span data-i18n="about.drives.3">Des agents IA qui mettent les données à la portée de toute l'équipe</span></li>
           </ul>
           <a class="drives__cta" href="#contact"><span data-i18n="about.drives.cta">Ces sujets vous parlent&nbsp;? Échangeons</span><svg class="ico" aria-hidden="true"><use href="#i-arrow"/></svg></a>
         </article>
@@ -214,7 +216,7 @@
         <article class="tile interests reveal" id="misc">
           <p class="label" data-i18n="misc.title">Centres d'intérêt</p>
           <ul class="interests__list">
-            <li><span class="interests__emoji" aria-hidden="true">🏓</span><div><strong data-i18n="misc.tt.title">Tennis de Table</strong><span data-i18n="misc.tt.desc">Activité pratiquée pendant plus de 10 ans en club.</span></div></li>
+            <li><span class="interests__emoji" aria-hidden="true">🏓</span><div><strong data-i18n="misc.tt.title">Tennis de table</strong><span data-i18n="misc.tt.desc">Activité pratiquée pendant plus de 10 ans en club.</span></div></li>
             <li><span class="interests__emoji" aria-hidden="true">✈️</span><div><strong data-i18n="misc.travel.title">Voyages</strong><span data-i18n="misc.travel.pre">Déjà</span> <button type="button" class="travel-link" data-travel-open aria-haspopup="dialog" data-i18n="misc.travel.count">18 pays explorés</button><span data-i18n="misc.travel.post">, et bien d'autres à venir.</span></div></li>
             <li><span class="interests__emoji" aria-hidden="true">🏔️</span><div><strong data-i18n="misc.nature.title">Nature</strong><span data-i18n="misc.nature.desc">Ski, randonnée, trek, camping&nbsp;: tout ce qui se passe dehors.</span></div></li>
           </ul>
@@ -230,7 +232,7 @@
           <h2 id="expTitle" data-i18n="exp.title">Expérience</h2>
           <p class="sec-sub" data-i18n="exp.sub">Trois employeurs, cinq rôles, de Paris à Montréal.</p>
         </div>
-        <a class="btn" href="/cv" data-cv-link><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><span data-i18n="links.cv">CV imprimable</span></a>
+        <a class="btn" href="/cv" data-cv-link><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><span class="lbl" data-i18n="links.cv">CV imprimable</span><span class="lbl-short" data-i18n="links.cv.short">Voir le CV</span></a>
       </header>
 
       <!-- Work and studies on one axis; scroll.js draws the bars (Laps runs to today) -->
@@ -279,7 +281,7 @@
           </header>
           <p class="xp-meta"><a href="https://www.laps.com/" target="_blank" rel="noopener">Laps</a><span data-i18n="exp.laps.sector">e-commerce</span><span data-i18n="hero.location">Montréal, Canada</span></p>
           <p class="xp-meta xp-meta--when"><span><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span></span><span data-i18n="cv.laps.duration">2 ans 8 mois</span></p>
-          <p class="xp-ctx" data-i18n="exp.laps.about">Réseau e-commerce de matériel de golf&nbsp;: conception et mise en place de toute l'infrastructure de données, jusqu'à son ouverture aux agents IA.</p>
+          <p class="xp-ctx" data-i18n="exp.laps.about">Réseau e-commerce de matériel de golf&nbsp;: conception et mise en place de toute son infrastructure de données.</p>
           <p class="label" data-i18n="exp.did">Ce que j'ai fait</p>
           <ul class="xp-list">
             <li data-i18n="exp.laps.li1">Conception, déploiement et automatisation de flux de données en Python sur AWS</li>
@@ -423,9 +425,9 @@
         <article class="tile soft-tile reveal" data-static>
           <p class="label" data-i18n="soft.title">Savoir-être</p>
           <ul class="soft">
-            <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-team"/></svg></span><strong data-i18n="soft.lead.t">Pilotage d'équipe</strong><span class="soft__d" data-i18n="soft.lead.d">Conduite du centre de services de Clariane&nbsp;: gestion d'équipe, coordination des activités, amélioration continue.</span></li>
-            <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-chat"/></svg></span><strong data-i18n="soft.business.t">Dialogue avec les métiers</strong><span class="soft__d" data-i18n="soft.business.d">Un entrepôt modélisé avec les équipes métier, des rapports pensés pour la finance, le péage ou la relation client.</span></li>
-            <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-route"/></svg></span><strong data-i18n="soft.e2e.t">Vision de bout en bout</strong><span class="soft__d" data-i18n="soft.e2e.d">De l'ingestion jusqu'aux agents IA&nbsp;: une infrastructure de données conçue comme un tout.</span></li>
+            <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-team"/></svg></span><strong data-i18n="soft.lead.t">Pilotage d'équipe</strong><span class="soft__d" data-i18n="soft.lead.d">Le centre de services de Clariane, mené de front avec une mission technique.</span></li>
+            <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-chat"/></svg></span><strong data-i18n="soft.business.t">Dialogue avec les métiers</strong><span class="soft__d" data-i18n="soft.business.d">Traduire les questions de la finance, du péage ou de la relation client en indicateurs et en rapports utiles.</span></li>
+            <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-route"/></svg></span><strong data-i18n="soft.e2e.t">Vision d'ensemble</strong><span class="soft__d" data-i18n="soft.e2e.d">Chaque choix fait avec la suite en tête&nbsp;: ce qu'on ingère aujourd'hui décide de ce qu'on pourra analyser demain.</span></li>
           </ul>
         </article>
       </div>
@@ -609,14 +611,15 @@
 
   <!-- ═══════════ CV (every CV button) — the print view in front, the page blurred behind ═══════════ -->
   <!-- scroll.js loads cv.html into the frame on first intent; the buttons drive it.
-       The CV links keep their href: a new tab, or no JavaScript, still gets /cv. -->
+       The CV links keep their href: a new tab, a phone, or no JavaScript, still gets /cv. -->
   <dialog class="cv-dialog" id="cvDialog" aria-label="CV d'Alexis Colin" data-i18n-aria="cv.dialog">
     <div class="cv-stage">
       <iframe class="cv-frame" id="cvFrame" title="CV d'Alexis Colin" data-i18n-title="cv.dialog"></iframe>
       <div class="cv-side">
         <button type="button" class="cv-close" id="cvClose" aria-label="Fermer le CV" data-i18n-aria="cv.close" title="Fermer le CV" data-i18n-title="cv.close" autofocus><svg class="ico" aria-hidden="true"><use href="#i-x"/></svg></button>
         <div class="cv-tools" role="group" aria-label="Actions du CV" data-i18n-aria="cv.tools">
-          <button type="button" class="cv-tool cv-tool--accent" id="cvPrint"><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><span data-i18n="cv.print">Imprimer / PDF</span></button>
+          <a class="cv-tool cv-tool--accent" id="cvPdf" href="assets/cv/Alexis-Colin-CV.pdf" download target="_blank" rel="noopener" data-i18n-href="cv.pdf.file"><svg class="ico" aria-hidden="true"><use href="#i-download"/></svg><span data-i18n="cv.pdf">Télécharger le PDF</span></a>
+          <button type="button" class="cv-tool" id="cvPrint"><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><span data-i18n="cv.print">Imprimer</span></button>
           <button type="button" class="cv-tool" id="cvRefs" aria-expanded="false" aria-controls="cvPass"><svg class="ico" aria-hidden="true"><use href="#i-unlock"/></svg><span data-i18n="cv.refs.unlock">Références</span></button>
           <form class="cv-pass" id="cvPass" hidden>
             <input type="password" class="cv-pass__input" id="cvPassInput" autocomplete="current-password" placeholder="Phrase de passe" data-i18n-placeholder="cv.refs.placeholder" aria-label="Phrase de passe des références" data-i18n-aria="cv.refs.prompt" />
@@ -633,8 +636,8 @@
   <!-- Intentional load order: i18n.js must come before scroll.js
        (scroll.js depends on `translations` and `currentLang` defined in i18n.js)
        Do not add async/defer to these two scripts. -->
-  <script src="i18n.js?v=63"></script>
+  <script src="i18n.js?v=70"></script>
   <script src="skills-data.js?v=10"></script>
-  <script src="scroll.js?v=71"></script>
+  <script src="scroll.js?v=75"></script>
 </body>
 </html>

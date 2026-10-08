@@ -9,6 +9,9 @@ const monthsBetween = (a, b) => (b.getFullYear() - a.getFullYear()) * 12 + b.get
 // "file://"), so messages then go to any.
 const MSG_ORIGIN = location.protocol === 'file:' ? '*' : location.origin;
 
+// A click that asks for nothing else: no new tab or window
+const plainClick = e => !(e.button || e.metaKey || e.ctrlKey || e.shiftKey || e.altKey);
+
 // ─── Dynamic duration for current job ────────────────────────────────────────
 const CURRENT_JOB_START = new Date(2024, 1); // February 2024
 const currentJobMonths = () => monthsBetween(CURRENT_JOB_START, new Date());
@@ -30,15 +33,23 @@ function currentJobDuration(lang) {
 }
 
 // ─── Language state ───────────────────────────────────────────────────────────
-// Priority: the stored language → browser language → 'fr'. applyLang() stores
-// whichever applies, so the CV, privacy and error pages open in the same one.
-let currentLang = (function(){
+// Priority: ?lang= in the address → the stored language → browser language →
+// 'fr'. A link with ?lang=en asks for that language explicitly, whatever the
+// toggle remembered from an earlier visit. applyLang() stores whichever
+// applies, so the CV, privacy and error pages open in the same one.
+function storedLang() {
   try {
-    var s = localStorage.getItem('lang');
+    const s = localStorage.getItem('lang');
     if (s === 'fr' || s === 'en') return s;
   } catch(e) {}
+  return null;
+}
+
+let currentLang = (function(){
+  var wanted = new URLSearchParams(location.search).get('lang');
+  if (wanted === 'fr' || wanted === 'en') return wanted;
   var nav = (navigator.languages && navigator.languages[0]) || navigator.language || '';
-  return nav.toLowerCase().indexOf('en') === 0 ? 'en' : 'fr';
+  return storedLang() || (nav.toLowerCase().indexOf('en') === 0 ? 'en' : 'fr');
 })();
 
 // ─── Translations ─────────────────────────────────────────────────────────────
@@ -63,6 +74,7 @@ const translations = {
     'hero.stack.d5': 'Piloter l\'activité',
     'hero.stack.d6': 'Ouvrir les données aux agents',
     'links.cv':           'CV imprimable',
+    'links.cv.short':     'Voir le CV',
 
     // Nav and the phone tab bar's short labels
     'nav.about':    'À propos',
@@ -81,12 +93,12 @@ const translations = {
     // About
     'about.title':    'À propos',
     'about.label': 'Mon métier',
-    'about.p1': 'Je conçois et mets en place des infrastructures de données de bout en bout\u00a0: pipelines automatisés, entrepôts modélisés avec les équipes métier, tableaux de bord de pilotage, jusqu\'à l\'ouverture des données aux agents IA, sans jamais exposer d\'information sensible.',
+    'about.p1': 'Concrètement\u00a0: collecter les sources, automatiser les pipelines, modéliser l\'entrepôt avec les équipes métier et livrer les tableaux de bord qui pilotent l\'activité. Et désormais, brancher les agents IA sur ces données sans jamais exposer d\'information sensible.',
     'about.p2': 'Du conseil à l\'entreprise, dans la santé, le transport, le logement social et l\'e-commerce. Ce qui ne change pas\u00a0: travailler au plus près des métiers pour transformer des données brutes en décisions.',
     'about.drives.title': 'Ce qui m\'anime',
-    'about.drives.1': 'Des plateformes de données pensées de bout en bout',
-    'about.drives.2': 'Des données fiables, gouvernées et documentées',
-    'about.drives.3': 'Des agents IA connectés aux données, pour les exploiter à leur plein potentiel',
+    'about.drives.1': 'Des plateformes pensées comme un tout, pas brique par brique',
+    'about.drives.2': 'Des données dignes de confiance\u00a0: testées, documentées, traçables',
+    'about.drives.3': 'Des agents IA qui mettent les données à la portée de toute l\'équipe',
     'about.drives.cta': 'Ces sujets vous parlent\u00a0? Échangeons',
 
     // Experience
@@ -104,7 +116,7 @@ const translations = {
     'edu.miage.city': 'Lyon, France',
     'edu.uqac.city': 'Chicoutimi, Québec',
     'edu.dut.city': 'Vélizy, France',
-    'exp.laps.about': 'Réseau e-commerce de matériel de golf\u00a0: conception et mise en place de toute l\'infrastructure de données, jusqu\'à son ouverture aux agents IA.',
+    'exp.laps.about': 'Réseau e-commerce de matériel de golf\u00a0: conception et mise en place de toute son infrastructure de données.',
     'exp.laps.sector': 'e-commerce',
     'exp.bialr1.about': 'Mission de conseil\u00a0: industrialisation d\'une plateforme décisionnelle cloud pour des Offices Publics de l\'Habitat, et pilotage du centre de services de Clariane.',
     'exp.bialr2.about': 'Mission de conseil chez un grand groupe de santé\u00a0: référent de l\'ensemble de ses flux inter-applicatifs.',
@@ -191,11 +203,11 @@ const translations = {
     'skills.languages':    'Langues',
     'soft.title': 'Savoir-être',
     'soft.lead.t': 'Pilotage d\'équipe',
-    'soft.lead.d': 'Conduite du centre de services de Clariane\u00a0: gestion d\'équipe, coordination des activités, amélioration continue.',
+    'soft.lead.d': 'Le centre de services de Clariane, mené de front avec une mission technique.',
     'soft.business.t': 'Dialogue avec les métiers',
-    'soft.business.d': 'Un entrepôt modélisé avec les équipes métier, des rapports pensés pour la finance, le péage ou la relation client.',
-    'soft.e2e.t': 'Vision de bout en bout',
-    'soft.e2e.d': 'De l\'ingestion jusqu\'aux agents IA\u00a0: une infrastructure de données conçue comme un tout.',
+    'soft.business.d': 'Traduire les questions de la finance, du péage ou de la relation client en indicateurs et en rapports utiles.',
+    'soft.e2e.t': 'Vision d\'ensemble',
+    'soft.e2e.d': 'Chaque choix fait avec la suite en tête\u00a0: ce qu\'on ingère aujourd\'hui décide de ce qu\'on pourra analyser demain.',
     'lang.french':         'Français',
     'lang.french.level':   'Natif',
     'lang.english':        'Anglais',
@@ -243,7 +255,7 @@ const translations = {
 
     // Misc
     'misc.title':        'Centres d\'intérêt',
-    'misc.tt.title':     'Tennis de Table',
+    'misc.tt.title':     'Tennis de table',
     'misc.tt.desc':      'Activité pratiquée pendant plus de 10 ans en club.',
     'misc.travel.title': 'Voyages',
     'misc.travel.desc':  'Déjà 18 pays explorés, et bien d\'autres à venir.',
@@ -302,7 +314,12 @@ const translations = {
 
     // CV print view
     'cv.back':  'Retour au site',
-    'cv.print': 'Imprimer / PDF',
+    'cv.print': 'Imprimer',
+    'cv.pdf':   'Télécharger le PDF',
+    // The PDFs printed by scripts/cv-pdf.sh, also the name a print saves
+    // under. English says "resume": in North America a CV is the long
+    // academic document.
+    'cv.pdf.file': 'assets/cv/Alexis-Colin-CV.pdf',
     'cv.dialog': 'CV d\'Alexis Colin',
     'cv.close':  'Fermer le CV',
     'cv.tools':  'Actions du CV',
@@ -326,6 +343,7 @@ const translations = {
     'cv.refs.go': 'Déverrouiller',
     'cv.refs.wrong':  'Phrase de passe incorrecte.',
     'cv.refs.absent': 'Aucun fichier de références chiffré n\'a été trouvé.',
+    'cv.refs.local':  'Ouvert en file://, le navigateur bloque les références : passez par un serveur local.',
   },
 
   en: {
@@ -348,6 +366,7 @@ const translations = {
     'hero.stack.d5': 'Steer the business',
     'hero.stack.d6': 'Open the data to agents',
     'links.cv':           'Printable CV',
+    'links.cv.short':     'View CV',
 
     // Nav and the phone tab bar's short labels
     'nav.about':    'About',
@@ -366,12 +385,12 @@ const translations = {
     // About
     'about.title':    'About',
     'about.label': 'What I do',
-    'about.p1': 'I design and build end-to-end data infrastructure: automated pipelines, warehouses modeled with business teams, dashboards to steer the business, up to opening the data to AI agents without ever exposing sensitive information.',
+    'about.p1': 'In practice: pulling in the sources, automating the pipelines, modeling the warehouse with business teams and shipping the dashboards that steer the business. And now, plugging AI agents into that data without ever exposing sensitive information.',
     'about.p2': 'From consulting to in-house roles, across healthcare, transportation, social housing and e-commerce. What hasn\'t changed: working closely with business teams to turn raw data into decisions.',
     'about.drives.title': 'What drives me',
-    'about.drives.1': 'Data platforms designed end to end',
-    'about.drives.2': 'Reliable, governed, documented data',
-    'about.drives.3': 'AI agents plugged into the data, to unlock its full potential',
+    'about.drives.1': 'Platforms designed as a whole, not piece by piece',
+    'about.drives.2': 'Trustworthy data: tested, documented, traceable',
+    'about.drives.3': 'AI agents that put the data within the whole team\'s reach',
     'about.drives.cta': 'Into these topics too? Let\'s talk',
 
     // Experience
@@ -389,7 +408,7 @@ const translations = {
     'edu.miage.city': 'Lyon, France',
     'edu.uqac.city': 'Chicoutimi, Quebec',
     'edu.dut.city': 'Vélizy, France',
-    'exp.laps.about': 'E-commerce network for golf equipment: designed and built the entire data infrastructure, up to opening it to AI agents.',
+    'exp.laps.about': 'E-commerce network for golf equipment: designed and built its entire data infrastructure.',
     'exp.laps.sector': 'e-commerce',
     'exp.bialr1.about': 'Consulting assignment: industrialized a cloud BI platform for public housing offices, and ran Clariane\'s service center.',
     'exp.bialr2.about': 'Consulting assignment at a major healthcare group: lead for all its inter-application data flows.',
@@ -475,11 +494,11 @@ const translations = {
     'skills.languages':    'Languages',
     'soft.title': 'Soft skills',
     'soft.lead.t': 'Team leadership',
-    'soft.lead.d': 'Ran Clariane\'s service center: team management, coordination and continuous improvement.',
+    'soft.lead.d': 'Ran Clariane\'s service center while delivering a technical assignment.',
     'soft.business.t': 'Business partnering',
-    'soft.business.d': 'A warehouse modeled with the business teams, reports built for finance, tolls or customer relations.',
-    'soft.e2e.t': 'End-to-end ownership',
-    'soft.e2e.d': 'From ingestion to AI agents: a data infrastructure designed as a whole.',
+    'soft.business.d': 'Turning questions from finance, tolls or customer relations into useful metrics and reports.',
+    'soft.e2e.t': 'Big-picture thinking',
+    'soft.e2e.d': 'Every choice made with what comes next in mind: what you ingest today decides what you can analyze tomorrow.',
     'lang.french':         'French',
     'lang.french.level':   'Native',
     'lang.english':        'English',
@@ -585,7 +604,9 @@ const translations = {
 
     // CV print view
     'cv.back':  'Back to site',
-    'cv.print': 'Print / PDF',
+    'cv.print': 'Print',
+    'cv.pdf':   'Download PDF',
+    'cv.pdf.file': 'assets/cv/Alexis-Colin-Resume.pdf',
     'cv.dialog': 'Alexis Colin\'s resume',
     'cv.close':  'Close the resume',
     'cv.tools':  'Resume actions',
@@ -605,6 +626,7 @@ const translations = {
     'cv.refs.go': 'Unlock',
     'cv.refs.wrong':  'Wrong passphrase.',
     'cv.refs.absent': 'No encrypted references file was found.',
+    'cv.refs.local':  'Opened from file://, the browser blocks the references: go through a local server.',
   }
 };
 
@@ -634,7 +656,12 @@ const I18N_TARGETS = [
   ['data-i18n-aria',        (el, v) => el.setAttribute('aria-label', v)],
   ['data-i18n-placeholder', (el, v) => el.setAttribute('placeholder', v)],
   ['data-i18n-title',       (el, v) => el.setAttribute('title', v)],
+  ['data-i18n-href',        (el, v) => el.setAttribute('href', v)],
 ];
+
+// The references' errors (decryptRefs, refs-crypto.js) and their message;
+// any other one is a wrong passphrase
+const REFS_ERRORS = { missing: 'cv.refs.absent', local: 'cv.refs.local' };
 
 // Current translation table, with the fr fallback every caller wants
 const t = () => translations[currentLang] || translations.fr;
@@ -697,3 +724,22 @@ if (langToggleBtn) langToggleBtn.addEventListener('click', () => {
 
 // ─── Init ─────────────────────────────────────────────────────────────────────
 applyLang(currentLang);
+
+// ?lang= is a way in, not a state: applied and stored, it leaves the address,
+// so a reload, or a Back the back-forward cache missed, reads the stored
+// language like any other visit. The entry keeps its state (the CV dialog's).
+if (new URLSearchParams(location.search).has('lang')) {
+  const url = new URL(location.href);
+  url.searchParams.delete('lang');
+  history.replaceState(history.state, '', url);
+}
+
+// Back from the CV page, a page can come out of the back-forward cache just as
+// it was left: it follows a language switched over there in the meantime
+addEventListener('pageshow', e => {
+  const s = e.persisted && storedLang();
+  if (s && s !== currentLang) {
+    currentLang = s;
+    applyLang(s);
+  }
+});

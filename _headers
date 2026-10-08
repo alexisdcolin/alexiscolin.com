@@ -49,3 +49,8 @@
 # Ciphertext des références : cv.js le fetch en no-store, on ne le cache nulle part.
 /cv-refs.enc
   Cache-Control: no-store
+
+# Les PDF du CV restent hors des index, comme la page /cv : ils se partagent,
+# ils ne se cherchent pas.
+/*.pdf
+  X-Robots-Tag: noindex

@@ -89,11 +89,12 @@
   --accent-text: light-dark(#9d4a28, #e29565);   /* accent-colored text — ≥ 4.5:1 on bg/card */
   --accent-btn:  light-dark(#b85c38, #a34e2e);   /* button background with white text — ≥ 4.5:1 */
   --accent-soft: light-dark(rgba(184,92,56,.12), rgba(201,104,64,.15));
-  /* Contract badge text colors — lightened in dark mode for contrast */
-  --badge-green:  light-dark(#3d7a52, #82c79a);
+  --accent-on-soft: light-dark(#8f4224, #eeaa7e); /* accent text on --accent-soft, over bg or card — ≥ 4.5:1 */
+  /* Contract badge text colors, ≥ 4.5:1 on their own 8% tint over a card */
+  --badge-green:  light-dark(#33704a, #82c79a);
   --badge-blue:   light-dark(#3260a0, #8fb6e8);
-  --badge-ochre:  light-dark(#8f6428, #d4a35e);
-  --badge-purple: light-dark(#5b50a0, #ada3e0);
+  --badge-ochre:  light-dark(#855c22, #dcae6c);
+  --badge-purple: light-dark(#5b50a0, #bcb3e8);
   --tag-bg:     light-dark(rgba(0,0,0,.05), rgba(255,255,255,.06));
   --shadow:     0 2px 12px light-dark(rgba(0,0,0,.06), rgba(0,0,0,.30));
   --shadow-lg:  0 8px 32px light-dark(rgba(0,0,0,.10), rgba(0,0,0,.50));
@@ -307,7 +308,8 @@ main[tabindex="-1"]:focus { outline: none; }
 .site-nav a:hover { color: var(--text); }
 .site-nav a[aria-current="true"] { color: #fff; }
 .site-nav .ico { width: 15px; height: 15px; }
-.site-nav .lbl-short { display: none; }
+/* A shorter label, swapped in where room runs short (here, the phone's tab bar) */
+.lbl-short { display: none; }
 
 /* Sliding pill under the active link — positioned by scroll.js */
 .site-nav__ind {
@@ -996,7 +998,7 @@ main[tabindex="-1"]:focus { outline: none; }
 .key-skills .skill-match-tag {
   background: var(--accent-soft);
   border-color: color-mix(in srgb, var(--accent) 45%, transparent);
-  color: var(--accent-text);
+  color: var(--accent-on-soft);
 }
 
 .skill-filter-pill {
@@ -1009,7 +1011,7 @@ main[tabindex="-1"]:focus { outline: none; }
   border: 1px solid color-mix(in srgb, var(--accent) 35%, transparent);
   border-radius: 20px;
   font: 400 11.5px/1.3 var(--mono);
-  color: var(--accent-text);
+  color: var(--accent-on-soft);
   cursor: pointer;
   transition: background .15s ease;
 }
@@ -1027,7 +1029,7 @@ main[tabindex="-1"]:focus { outline: none; }
   background: var(--accent-soft);
   font: 700 13px/1 var(--mono);
   letter-spacing: .06em;
-  color: var(--accent-text);
+  color: var(--accent-on-soft);
 }
 .edu-card__y { font: 700 11.5px/1.4 var(--mono); color: var(--accent-text); }
 .edu-card strong { font: 700 15px/1.35 var(--mono); }
@@ -1218,12 +1220,14 @@ main[tabindex="-1"]:focus { outline: none; }
 .skill-row:hover { background: var(--bg-alt); }
 .skill-row.is-static { cursor: default; }
 .skill-row.is-static:hover { background: none; }
-.skill-row.is-selected { background: var(--accent-soft); color: var(--accent-text); }
+.skill-row.is-selected { background: var(--accent-soft); color: var(--accent-on-soft); }
 
 .skill-row img { width: 18px; height: 18px; flex-shrink: 0; filter: var(--icon-filter); }
 .skill-row svg { width: 18px; height: 18px; flex-shrink: 0; color: var(--text-2); }
 .skill-row__name { flex: 1; min-width: 0; overflow: hidden; text-overflow: ellipsis; white-space: nowrap; }
 .skill-row__dur { font: 400 10.5px/1 var(--mono); color: var(--muted); white-space: nowrap; }
+/* Muted grey falls short on the tinted row in dark mode: the row's own colour */
+.skill-row.is-selected .skill-row__dur { color: inherit; }
 .skill-row > i { width: 18px; height: 18px; flex-shrink: 0; } /* a tool without a logo */
 
 /* A family: its row unfolds its tools, set in under it */
@@ -1258,7 +1262,7 @@ main[tabindex="-1"]:focus { outline: none; }
   border-radius: var(--radius-sm);
   background: var(--accent-soft);
   font: 400 10.5px/1.3 var(--mono);
-  color: var(--accent-text);
+  color: var(--accent-on-soft);
 }
 .langs__bar { height: 3px; margin-top: 8px; border-radius: 2px; background: var(--border); }
 .langs__bar i { display: block; height: 100%; border-radius: 2px; background: var(--accent); }
@@ -1387,12 +1391,24 @@ main[tabindex="-1"]:focus { outline: none; }
 /* ═══════════════════════════════════════════
    CONTACT
 ═══════════════════════════════════════════ */
-.bento--contact { grid-template-areas: "direct direct direct form form form"; }
+/* The direct line above the form rather than beside it: side by side, the
+   tile stretched to the form's height and left a gap in its middle. One
+   column at every width: the doubled class outranks .bento's own columns,
+   which the media queries further down redefine. */
+.bento.bento--contact { grid-template-columns: minmax(0, 1fr); }
 
-.contact-direct {
-  grid-area: direct;
-  display: flex;
-  flex-direction: column;
+/* Wide enough: the address on the left, the other channels on the right */
+@media (min-width: 768px) {
+  .contact-direct {
+    display: grid;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    column-gap: 40px;
+    align-items: start;
+  }
+  .contact-direct > .label { grid-column: 1 / -1; }
+  .contact-direct__mail,
+  .contact-direct__note { grid-column: 1; }
+  .contact-direct .channels { grid-column: 2; grid-row: 2 / span 2; padding-top: 6px; }
 }
 
 .contact-direct__mail {
@@ -1416,7 +1432,7 @@ main[tabindex="-1"]:focus { outline: none; }
 .copy-btn.is-done .copy-btn__done { display: inline; }
 
 .contact-direct__note { margin-top: 8px; font: 400 12px/1.5 var(--mono); color: var(--muted); }
-.channels { margin: auto 0 0; padding-top: 18px; }
+.channels { padding-top: 18px; }
 
 .channels > * {
   display: flex;
@@ -1439,7 +1455,6 @@ main[tabindex="-1"]:focus { outline: none; }
 
 /* ── Form (Formspree) ── */
 .contact-form {
-  grid-area: form;
   display: flex;
   flex-direction: column;
   gap: 14px;
@@ -1880,6 +1895,13 @@ main[tabindex="-1"]:focus { outline: none; }
    CV — the print view in front of the page, the page blurred behind
    A native modal <dialog>: the browser keeps focus inside and the page inert.
 ═══════════════════════════════════════════ */
+/* A phone's CV buttons open the CV page itself (PHONE in scroll.js, the same
+   query), where printing is not the point: a shorter label */
+@media (max-width: 599.98px), (max-height: 499.98px) and (pointer: coarse) {
+  [data-cv-link] .lbl { display: none; }
+  [data-cv-link] .lbl-short { display: inline; }
+}
+
 .cv-dialog {
   inset: 0;
   width: 100%;
@@ -1904,7 +1926,9 @@ main[tabindex="-1"]:focus { outline: none; }
 html.cv-open { overflow: hidden; }
 
 /* The sheet, A4 wide (210mm at 96 dpi) and the height of the window, with
-   its controls in a column beside it: nothing ever covers the CV */
+   its controls in a column beside it: nothing ever covers the CV. Phones
+   never get here: their CV links open /cv itself, and scroll.js closes the
+   dialog should the window shrink to a phone's size. */
 .cv-stage {
   display: flex;
   align-items: flex-start;
@@ -2118,8 +2142,10 @@ html.travel-open { overflow: hidden; }
 .travel__list li.is-on {
   border-color: color-mix(in srgb, var(--accent) 45%, transparent);
   background: var(--accent-soft);
-  color: var(--accent-text);
+  color: var(--accent-on-soft);
 }
+/* Muted grey falls short on the tint in dark mode: the chip's own colour */
+.travel__list li.is-on small { color: inherit; }
 
 @media (max-width: 759.98px) {
   .travel__sheet { padding: 18px; }
@@ -2129,40 +2155,6 @@ html.travel-open { overflow: hidden; }
 
 @media (prefers-reduced-motion: reduce) {
   .travel__sheet { animation: none; }
-}
-
-/* Phones: the sheet takes the screen, the controls a bar under it */
-@media (max-width: 599.98px) {
-  .cv-stage { flex-direction: column; gap: 0; width: 100%; height: 100%; }
-  .cv-frame { flex: 1; width: 100%; max-width: none; border-radius: 0; box-shadow: none; }
-  .cv-side {
-    flex: none;
-    flex-direction: row-reverse;
-    align-items: flex-end;
-    align-self: stretch;
-    gap: 8px;
-    padding: 8px 10px calc(8px + env(safe-area-inset-bottom));
-    border-top: 1px solid var(--border);
-    background: var(--card);
-  }
-  .cv-close { flex: none; width: 38px; height: 38px; box-shadow: none; }
-  .cv-tools {
-    flex: 1;
-    flex-direction: row;
-    flex-wrap: wrap;
-    align-items: center;
-    padding: 0;
-    border: 0;
-    background: none;
-    box-shadow: none;
-    -webkit-backdrop-filter: none;
-    backdrop-filter: none;
-  }
-  .cv-tool { width: auto; height: 38px; border-radius: 999px; }
-  .cv-tool--accent { margin: 0; }
-  #cvRefs, #cvTab { width: 38px; padding: 0; justify-content: center; }
-  #cvRefs span, #cvTab span { display: none; }
-  .cv-pass { order: -1; flex-basis: 100%; padding: 0 0 6px; }
 }
 
 @media (prefers-reduced-motion: reduce) {
@@ -2201,7 +2193,6 @@ html.travel-open { overflow: hidden; }
       "drives drives drives drives drives drives misc   misc   misc   misc   misc   misc";
   }
   .bento--projects { grid-template-areas: "feature feature" "card academic"; }
-  .bento--contact { grid-template-areas: "direct" "form"; grid-template-columns: minmax(0, 1fr); }
 
   .skills-grid { columns: 2; }
 

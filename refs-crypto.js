@@ -45,8 +45,11 @@ async function deriveRefsKey(passphrase, salt, usages) {
 // Throws on a wrong passphrase: AES-GCM authenticates, so a bad key fails the
 // tag check rather than returning plausible-looking garbage.
 async function decryptRefs(passphrase) {
-  // Unreachable (offline, or fetch() refusing file://) counts as missing too
-  var res = await fetch(REFS_URL, { cache: 'no-store' }).catch(function () { throw new Error('missing'); });
+  // Unreachable counts as missing, offline say; from a file:// page, where
+  // most browsers refuse fetch(), the cause is said instead
+  var res = await fetch(REFS_URL, { cache: 'no-store' }).catch(function () {
+    throw new Error(location.protocol === 'file:' ? 'local' : 'missing');
+  });
   if (!res.ok) throw new Error('missing');
   var blob = b64ToBytes(await res.text());
   var key = await deriveRefsKey(passphrase, blob.slice(0, 16));

@@ -9,7 +9,7 @@
   <meta name="robots" content="noindex, follow" />
   <link rel="icon" href="assets/favicon.ico" sizes="32x32" />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <link rel="stylesheet" href="cv.css?v=23" />
+  <link rel="stylesheet" href="cv.css?v=25" />
   <!-- Inside the site's CV dialog: the site draws the controls (cv.css) -->
   <script>if (window.self !== window.top) document.documentElement.classList.add('is-embedded');</script>
   <!-- Cloudflare Web Analytics — cookieless, no consent banner needed -->
@@ -27,6 +27,7 @@
     <symbol id="i-in" viewBox="0 0 24 24"><path d="M16 8a6 6 0 0 1 6 6v7h-4v-7a2 2 0 0 0-4 0v7h-4v-7a6 6 0 0 1 6-6z"/><rect x="2" y="9" width="4" height="12"/><circle cx="4" cy="4" r="2"/></symbol>
     <symbol id="i-unlock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 9.9-1"/></symbol>
     <symbol id="i-lock" viewBox="0 0 24 24"><rect x="3" y="11" width="18" height="11" rx="2"/><path d="M7 11V7a5 5 0 0 1 10 0v4"/></symbol>
+    <symbol id="i-download" viewBox="0 0 24 24"><path d="M21 15v4a2 2 0 0 1-2 2H5a2 2 0 0 1-2-2v-4"/><polyline points="7 10 12 15 17 10"/><line x1="12" y1="15" x2="12" y2="3"/></symbol>
     <symbol id="i-gh" viewBox="0 0 24 24"><path d="M9 19c-5 1.5-5-2.5-7-3m14 6v-3.87a3.37 3.37 0 0 0-.94-2.61c3.14-.35 6.44-1.54 6.44-7A5.44 5.44 0 0 0 20 4.77 5.07 5.07 0 0 0 19.91 1S18.73.65 16 2.48a13.38 13.38 0 0 0-7 0C6.27.65 5.09 1 5.09 1A5.07 5.07 0 0 0 5 4.77a5.44 5.44 0 0 0-1.5 3.78c0 5.42 3.3 6.61 6.44 7A3.37 3.37 0 0 0 9 18.13V22"/></symbol>
   </svg>
 
@@ -41,9 +42,15 @@
         <svg class="ico" aria-hidden="true"><use href="#i-unlock"/></svg>
         <span data-i18n="cv.refs.unlock">Références</span>
       </button>
-      <button type="button" id="cvPrint" class="cv-toolbar__btn cv-toolbar__btn--accent">
-        <span data-i18n="cv.print">Imprimer / PDF</span>
+      <button type="button" id="cvPrint" class="cv-toolbar__btn">
+        <span data-i18n="cv.print">Imprimer</span>
       </button>
+      <!-- The ready-made PDF, printed by scripts/cv-pdf.sh. A new tab where
+           download is ignored (a file:// copy), rather than leaving the CV -->
+      <a id="cvPdf" class="cv-toolbar__btn cv-toolbar__btn--accent" href="assets/cv/Alexis-Colin-CV.pdf" download target="_blank" rel="noopener" data-i18n-href="cv.pdf.file" aria-label="Télécharger le PDF" data-i18n-aria="cv.pdf">
+        <svg class="ico" aria-hidden="true"><use href="#i-download"/></svg>
+        <span>PDF</span>
+      </a>
     </div>
   </div>
 
@@ -233,7 +240,7 @@
       <h2 class="cv-h2" data-i18n="misc.title">Centres d'intérêt</h2>
       <div class="cv-misc">
         <div class="cv-misc__item">
-          <p class="cv-misc__title" data-i18n="misc.tt.title">Tennis de Table</p>
+          <p class="cv-misc__title" data-i18n="misc.tt.title">Tennis de table</p>
           <p class="cv-misc__desc" data-i18n="misc.tt.desc">Activité pratiquée pendant plus de 10 ans en club.</p>
         </div>
         <div class="cv-misc__item">
@@ -263,9 +270,9 @@
   <!-- Same load order as index.html: i18n.js defines translations / applyLang,
        skills-data.js the shared catalogue, refs-crypto.js the references
        format, cv.js consumes them. -->
-  <script src="i18n.js?v=63"></script>
+  <script src="i18n.js?v=70"></script>
   <script src="skills-data.js?v=10"></script>
-  <script src="refs-crypto.js?v=3"></script>
-  <script src="cv.js?v=22"></script>
+  <script src="refs-crypto.js?v=5"></script>
+  <script src="cv.js?v=26"></script>
 </body>
 </html>
