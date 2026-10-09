@@ -9,7 +9,7 @@
   <meta name="robots" content="noindex, follow" />
   <link rel="icon" href="assets/favicon.ico" sizes="32x32" />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <link rel="stylesheet" href="cv.css?v=29" />
+  <link rel="stylesheet" href="cv.css?v=30" />
   <!-- Inside the site's CV dialog: the site draws the controls (cv.css) -->
   <script>if (window.self !== window.top) document.documentElement.classList.add('is-embedded');</script>
   <!-- Cloudflare Web Analytics — cookieless, no consent banner needed -->
@@ -152,15 +152,17 @@
           <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.hyatt.start">Avr. 2018</span> – <span data-i18n="exp.hyatt.end">Juill. 2018</span></span></span>
           <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg>Paris, France</span>
         </p>
-        <!-- One line on the CV: the IT support tasks say little for a data
-             role, and the space goes to the current position. The site keeps
-             them (exp.hyatt.li1–li3). -->
         <p class="cv-entry__desc" data-i18n="exp.hyatt.desc">Stage de fin de DUT au sein du service informatique d'un palace parisien.</p>
+        <ul class="cv-entry__list">
+          <li data-i18n="exp.hyatt.li1">Maintenance et support du parc informatique (poste de travail, réseaux, serveurs)</li>
+          <li data-i18n="exp.hyatt.li2">Participation au déploiement de nouveaux projets IT</li>
+          <li data-i18n="exp.hyatt.li3">Contribution à la mise en place et au suivi des mesures de cybersécurité</li>
+        </ul>
       </div>
     </section>
 
     <!-- ═══════════ COMPÉTENCES ═══════════ -->
-    <section class="cv-section">
+    <section class="cv-section cv-section--skills">
       <h2 class="cv-h2" data-i18n="skills.title">Compétences</h2>
       <!-- Rendered by cv.js from the shared catalogue in skills-data.js -->
       <div class="cv-skills" id="cvSkills"></div>

@@ -386,6 +386,9 @@ a { color: inherit; text-decoration: none; }
      and a heading moved to the next page left that sliver of ink at the foot
      of the previous one. 1pt of padding keeps the accent inside the box. */
   .cv-h2 { padding-top: 1pt; }
+  /* The skills open page 2 whole: split after a few rows, the list read as
+     two halves. Page 1 holds the experience. */
+  .cv-section--skills { break-before: page; }
   .cv-entry { break-inside: auto; orphans: 3; widows: 3; }
   .cv-group__head { break-after: avoid; }
   .cv-lang, .cv-misc__item, .cv-ref { break-inside: avoid; }
