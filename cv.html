@@ -9,7 +9,7 @@
   <meta name="robots" content="noindex, follow" />
   <link rel="icon" href="assets/favicon.ico" sizes="32x32" />
   <link rel="icon" type="image/svg+xml" href="assets/favicon.svg" />
-  <link rel="stylesheet" href="cv.css?v=25" />
+  <link rel="stylesheet" href="cv.css?v=29" />
   <!-- Inside the site's CV dialog: the site draws the controls (cv.css) -->
   <script>if (window.self !== window.top) document.documentElement.classList.add('is-embedded');</script>
   <!-- Cloudflare Web Analytics — cookieless, no consent banner needed -->
@@ -75,17 +75,18 @@
 
       <div class="cv-entry">
         <h3 class="cv-entry__title" data-i18n="exp.laps.role">Développeur Data &amp; IA</h3>
-        <p class="cv-entry__org">Laps</p>
+        <p class="cv-entry__org">Laps<span class="cv-entry__sector"> · <span data-i18n="exp.laps.sector">e-commerce</span></span></p>
         <p class="cv-entry__meta">
           <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span> · <span data-i18n="cv.laps.duration">2 ans 7 mois</span></span></span>
           <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg><span data-i18n="hero.location">Montréal, Canada</span></span>
         </p>
-        <p class="cv-entry__desc" data-i18n="exp.laps.desc">Conception et mise en place de l'ensemble de l'infrastructure de données de Laps, réseau e-commerce spécialisé dans le matériel de golf, depuis l'ingestion et le traitement jusqu'à la valorisation des données via des rapports stratégiques et opérationnels et leur exposition aux agents IA (serveur MCP).</p>
+        <p class="cv-entry__desc" data-i18n="exp.laps.desc">Conception et mise en place de toute l'infrastructure de données de Laps, réseau e-commerce de matériel de golf, et participation à son système automatisé de gestion des prix d'achat et de vente.</p>
         <ul class="cv-entry__list">
-          <li data-i18n="exp.laps.li1">Conception, déploiement et automatisation de flux de données en Python sur AWS</li>
-          <li data-i18n="exp.laps.li2">Modélisation et implémentation d'un entrepôt de données centralisé</li>
-          <li data-i18n="exp.laps.li3">Développement de rapports et tableaux de bord opérationnels avec Grafana</li>
-          <li data-i18n="exp.laps.li4">Développement d'un serveur MCP en Python connectant l'entrepôt aux agents IA, gouverné et sécurisé</li>
+          <li data-i18n="exp.laps.li1">Mise en place de flux de données Python serverless sur AWS depuis les ERP et les plateformes marketing</li>
+          <li data-i18n="exp.laps.li2">Conception d'un data lake qui centralise et historise toutes les données brutes</li>
+          <li data-i18n="exp.laps.li3">Industrialisation des transformations avec dbt et Dagster, testées pour garantir des données fiables</li>
+          <li data-i18n="exp.laps.li4">Modélisation de l'entrepôt de données, source de vérité unique pour toutes les équipes</li>
+          <li data-i18n="exp.laps.li5">Développement d'un serveur MCP en Python qui permet aux agents IA d'interroger l'entrepôt en toute sécurité</li>
         </ul>
       </div>
 
@@ -93,7 +94,7 @@
            progression rather than as three unrelated employers. -->
       <div class="cv-group">
         <div class="cv-group__head">
-          <h3 class="cv-group__company">BIAL-R</h3>
+          <h3 class="cv-group__company">BIAL-R<span class="cv-entry__sector"> · <span data-i18n="cv.bialr.sector">conseil</span></span></h3>
           <p class="cv-entry__meta">
             <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.bialr.start">Sept. 2020</span> – <span data-i18n="exp.bialr.end">Déc. 2023</span> · <span data-i18n="cv.bialr.duration">3 ans 4 mois</span></span></span>
             <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg>Lyon, France</span>
@@ -102,25 +103,25 @@
 
         <div class="cv-entry">
           <h3 class="cv-entry__title" data-i18n="exp.bialr1.role">Développeur Data</h3>
-          <p class="cv-entry__org" data-i18n="cv.bialr1.org">BIAL-R · client : Bial-S</p>
+          <p class="cv-entry__org"><span data-i18n="exp.bialr1.client">Bial-S</span><span class="cv-entry__sector"> · <span data-i18n="exp.bialr1.sector">logement social</span></span></p>
           <p class="cv-entry__meta">
             <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.bialr1.start">Janv. 2023</span> – <span data-i18n="exp.bialr1.end">Déc. 2023</span> · <span data-i18n="exp.bialr1.meta">1 an</span></span></span>
           </p>
-          <p class="cv-entry__desc"><span data-i18n="exp.bialr1.desc">Participation à l'industrialisation d'une plateforme décisionnelle Cloud automatisée sur AWS, permettant l'ingestion, la visualisation et l'analyse prédictive de données pour des Offices Publics de l'Habitat.</span><br><span data-i18n="exp.bialr1.desc2">Parallèlement, pilotage d'un centre de services MCO pour Clariane.</span></p>
+          <p class="cv-entry__desc" data-i18n="exp.bialr1.desc">Participation à l'industrialisation d'une plateforme décisionnelle Cloud en SaaS sur AWS, offrant aux Offices Publics de l'Habitat une solution complète&nbsp;: ingestion, data lake, visualisation et analyse prédictive.</p>
           <ul class="cv-entry__list">
             <li data-i18n="exp.bialr1.li1">Conception, déploiement et automatisation de flux de données ETL avec Pentaho</li>
-            <li data-i18n="exp.bialr1.li2">Support transversal de la plateforme décisionnelle et intégration de nouveaux clients</li>
-            <li data-i18n="exp.bialr1.li3">Pilotage du CDS : gestion d'équipe, coordination des activités et amélioration continue</li>
+            <li data-i18n="exp.bialr1.li2">Support transversal de la plateforme et intégration de nouveaux clients</li>
+            <li data-i18n="exp.bialr1.li3">Pilotage du centre de services BIAL-R chez Clariane&nbsp;: gestion d'équipe et amélioration continue</li>
           </ul>
         </div>
 
         <div class="cv-entry">
           <h3 class="cv-entry__title" data-i18n="exp.bialr2.role">Consultant ETL</h3>
-          <p class="cv-entry__org" data-i18n="cv.bialr2.org">BIAL-R · client : Clariane</p>
+          <p class="cv-entry__org"><span data-i18n="exp.bialr2.client">Clariane</span><span class="cv-entry__sector"> · <span data-i18n="exp.bialr2.sector">santé</span></span></p>
           <p class="cv-entry__meta">
             <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.bialr2.start">Sept. 2021</span> – <span data-i18n="exp.bialr2.end">Déc. 2022</span> · <span data-i18n="exp.bialr2.meta">1 an 4 mois</span></span></span>
           </p>
-          <p class="cv-entry__desc" data-i18n="exp.bialr2.desc">Référent MCO de l'ensemble des flux inter-applicatifs de Clariane, couvrant les domaines finance, RH, santé et relation client.</p>
+          <p class="cv-entry__desc" data-i18n="exp.bialr2.desc">Référent MCO des flux inter-applicatifs de Clariane&nbsp;: finance, RH, santé et relation client.</p>
           <ul class="cv-entry__list">
             <li data-i18n="exp.bialr2.li1">Développement et maintenance des flux inter-applicatifs avec Pentaho</li>
             <li data-i18n="exp.bialr2.li2">Gestion des incidents de production : analyse, correction et reprise de données</li>
@@ -130,11 +131,11 @@
 
         <div class="cv-entry">
           <h3 class="cv-entry__title" data-i18n="exp.bialr3.role">Consultant Data</h3>
-          <p class="cv-entry__org" data-i18n="cv.bialr3.org">BIAL-R · client : APRR</p>
+          <p class="cv-entry__org"><span data-i18n="exp.bialr3.client">APRR</span><span class="cv-entry__sector"> · <span data-i18n="exp.bialr3.sector">autoroutes</span></span></p>
           <p class="cv-entry__meta">
             <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.bialr3.start">Sept. 2020</span> – <span data-i18n="exp.bialr3.end">Août 2021</span> · <span data-i18n="exp.bialr3.meta">1 an</span></span></span>
           </p>
-          <p class="cv-entry__desc" data-i18n="exp.bialr3.desc">Alternance en dernière année de Master MIAGE, principalement réalisée sur des missions pour le client Autoroutes Paris-Rhin-Rhône (APRR) dans les domaines finance, péage, autoroute et relation clientèle.</p>
+          <p class="cv-entry__desc" data-i18n="exp.bialr3.desc">Alternance de Master MIAGE en mission chez Autoroutes Paris-Rhin-Rhône&nbsp;: finance, péage et relation clientèle.</p>
           <ul class="cv-entry__list">
             <li data-i18n="exp.bialr3.li1">Cartographie et mise en place d'une gouvernance des données</li>
             <li data-i18n="exp.bialr3.li2">Développement et déploiement de rapports opérationnels</li>
@@ -146,17 +147,15 @@
 
       <div class="cv-entry">
         <h3 class="cv-entry__title" data-i18n="exp.hyatt.role">Technicien Support IT</h3>
-        <p class="cv-entry__org">Park Hyatt Paris-Vendôme</p>
+        <p class="cv-entry__org">Park Hyatt Paris-Vendôme<span class="cv-entry__sector"> · <span data-i18n="exp.hyatt.sector">hôtellerie</span></span></p>
         <p class="cv-entry__meta">
           <span class="cv-meta"><svg class="ico"><use href="#i-cal"/></svg><span class="cv-meta__text"><span data-i18n="exp.hyatt.start">Avr. 2018</span> – <span data-i18n="exp.hyatt.end">Juill. 2018</span></span></span>
           <span class="cv-meta"><svg class="ico"><use href="#i-pin"/></svg>Paris, France</span>
         </p>
+        <!-- One line on the CV: the IT support tasks say little for a data
+             role, and the space goes to the current position. The site keeps
+             them (exp.hyatt.li1–li3). -->
         <p class="cv-entry__desc" data-i18n="exp.hyatt.desc">Stage de fin de DUT au sein du service informatique d'un palace parisien.</p>
-        <ul class="cv-entry__list">
-          <li data-i18n="exp.hyatt.li1">Maintenance et support du parc informatique (poste de travail, réseaux, serveurs)</li>
-          <li data-i18n="exp.hyatt.li2">Participation au déploiement de nouveaux projets IT</li>
-          <li data-i18n="exp.hyatt.li3">Contribution à la mise en place et au suivi des mesures de cybersécurité</li>
-        </ul>
       </div>
     </section>
 
@@ -270,8 +269,8 @@
   <!-- Same load order as index.html: i18n.js defines translations / applyLang,
        skills-data.js the shared catalogue, refs-crypto.js the references
        format, cv.js consumes them. -->
-  <script src="i18n.js?v=70"></script>
-  <script src="skills-data.js?v=10"></script>
+  <script src="i18n.js?v=83"></script>
+  <script src="skills-data.js?v=12"></script>
   <script src="refs-crypto.js?v=5"></script>
   <script src="cv.js?v=26"></script>
 </body>

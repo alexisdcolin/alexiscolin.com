@@ -990,6 +990,11 @@ main[tabindex="-1"]:focus { outline: none; }
 }
 .key-skills img { width: 15px; height: 15px; flex-shrink: 0; filter: var(--icon-filter); }
 .key-skills svg { width: 15px; height: 15px; flex-shrink: 0; color: var(--text-2); }
+/* A family's key tools, after its name in the same pill (renderRoleSkills).
+   The dot is decoration: an empty alternative keeps it from being read out. */
+.key-skills__tools { color: var(--text-2); }
+.key-skills__tools::before { content: '·'; content: '·' / ''; margin-right: 7px; color: var(--muted); }
+.key-skills .skill-match-tag .key-skills__tools { color: inherit; }
 
 
 /* ── Skill → experience cross-filter ── */

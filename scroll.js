@@ -75,6 +75,10 @@ const customIcons = {
   orchestration: 'M17 16l-4-4V8.82C14.16 8.4 15 7.3 15 6c0-1.66-1.34-3-3-3S9 4.34 9 6c0 1.3.84 2.4 2 2.82V12l-4 4H3v5h5v-3.05l4-4.2 4 4.2V21h5v-5h-4z',
   ai:         'M15 9H9v6h6V9zm-2 4h-2v-2h2v2zm8-2V9h-2V7c0-1.1-.9-2-2-2h-2V3h-2v2h-2V3H9v2H7c-1.1 0-2 .9-2 2v2H3v2h2v2H3v2h2v2c0 1.1.9 2 2 2h2v2h2v-2h2v2h2v-2h2c1.1 0 2-.9 2-2v-2h2v-2h-2v-2h2zm-4 6H7V7h10v10z',
   agents:     'M20 9V7c0-1.1-.9-2-2-2h-3c0-1.66-1.34-3-3-3S9 3.34 9 5H6c-1.1 0-2 .9-2 2v2c-1.66 0-3 1.34-3 3s1.34 3 3 3v4c0 1.1.9 2 2 2h12c1.1 0 2-.9 2-2v-4c1.66 0 3-1.34 3-3s-1.34-3-3-3zM7.5 11.5c0-.83.67-1.5 1.5-1.5s1.5.67 1.5 1.5S9.83 13 9 13s-1.5-.67-1.5-1.5zM16 17H8v-2h8v2zm-1-4c-.83 0-1.5-.67-1.5-1.5S14.17 10 15 10s1.5.67 1.5 1.5S15.83 13 15 13z',
+  // Three waves drawn by hand for the data lake, Material all_inclusive for
+  // CI/CD's loop — no logo exists for either
+  datalake:   'M2 6Q4.5 4 7 6T12 6T17 6T22 6V8Q19.5 10 17 8T12 8T7 8T2 8ZM2 11Q4.5 9 7 11T12 11T17 11T22 11V13Q19.5 15 17 13T12 13T7 13T2 13ZM2 16Q4.5 14 7 16T12 16T17 16T22 16V18Q19.5 20 17 18T12 18T7 18T2 18Z',
+  cicd:       'M18.6 6.62c-1.44 0-2.8.56-3.77 1.53L12 10.66 10.48 12h.01L7.8 14.39c-.64.64-1.49.99-2.4.99-1.87 0-3.39-1.51-3.39-3.38S3.53 8.62 5.4 8.62c.91 0 1.76.35 2.44 1.03l1.13 1 1.51-1.34L9.22 8.2C8.2 7.18 6.84 6.62 5.4 6.62 2.42 6.62 0 9.04 0 12s2.42 5.38 5.4 5.38c1.44 0 2.8-.56 3.77-1.53l2.83-2.5.01.01L13.52 12h-.01l2.69-2.39c.64-.64 1.49-.99 2.4-.99 1.87 0 3.39 1.51 3.39 3.38s-1.52 3.38-3.39 3.38c-.9 0-1.76-.35-2.44-1.03l-1.14-1.01-1.51 1.34 1.27 1.12c1.02 1.01 2.37 1.57 3.82 1.57 2.98 0 5.4-2.41 5.4-5.38s-2.42-5.37-5.4-5.37z',
 };
 
 function makeCustomSvg(pathData) {
@@ -227,26 +231,31 @@ const roleSkills = {
     start: CURRENT_JOB_START,
     end: null,                  // ongoing
     skills: [
-      { id: 'mcp',             key: true,  start: new Date(2026, 3) },  // Apr 2026
+      // The key skills in the order the data travels, from the sources to
+      // the AI agents, as the position's bullets tell it
       { id: 'python',          key: true  },
       { id: 'aws',             key: true  },
-      { id: 'llm',             key: false },
-      { id: 'agents',          key: false, months: 6 },
-      { id: 'sql',             key: true  },
-      { id: 'snowflake',       key: false, months: 6 },
-      { id: 'docker',          key: false },
-      { id: 'bitbucket',       key: false },
-      { id: 'agile',           key: false },
-      { id: 'databricks',      key: false, months: 6 },
-      { id: 'jira',            key: false },
-      { id: 'pulumi',          key: false },
-      { id: 'dbt',             key: true,  start: new Date(2026, 8) },  // Sep 2026
+      { id: 'datalake',        key: true,  start: new Date(2026, 8) },  // Sep 2026
       { id: 'duckdb',          key: true,  start: new Date(2026, 8) },  // Sep 2026
       { id: 'etl',             key: true  },
-      { id: 'governance',      key: false },
-      { id: 'dagster',         key: false, start: new Date(2026, 8) },  // Sep 2026
+      { id: 'dbt',             key: true,  start: new Date(2026, 8) },  // Sep 2026
+      { id: 'dagster',         key: true,  start: new Date(2026, 8) },  // Sep 2026
+      { id: 'sql',             key: true  },
+      { id: 'dwh',             key: true  },
+      { id: 'governance',      key: true  },
+      { id: 'mcp',             key: true,  start: new Date(2026, 3) },  // Apr 2026
+      { id: 'llm',             key: false },
+      { id: 'agents',          key: false, months: 6 },
+      { id: 'parquet',         key: false, start: new Date(2026, 8) },  // Sep 2026
       { id: 'prefect',         key: false, months: 3 },
-      { id: 'dwh',             key: false },
+      { id: 'snowflake',       key: false, months: 6 },
+      { id: 'databricks',      key: false, months: 6 },
+      { id: 'docker',          key: false },
+      { id: 'bitbucket',       key: false },
+      { id: 'cicd',            key: false },
+      { id: 'agile',           key: false },
+      { id: 'jira',            key: false },
+      { id: 'pulumi',          key: false },
       { id: 'lambda',          key: false },
       { id: 's3',              key: false },
       { id: 'stepfunctions',   key: false },
@@ -266,6 +275,7 @@ const roleSkills = {
     skills: [
       { id: 'pentaho',     key: true  },
       { id: 'aws',         key: true  },
+      { id: 'datalake',    key: true  },
       { id: 'postgresql',  key: true  },
       { id: 'sql',         key: true  },
       { id: 'agile',       key: false },
@@ -365,22 +375,45 @@ function updateSkillDurations(lang) {
   });
 }
 
-// Each position lists its key skills, with their logos. The filter still
-// matches every skill a position used, listed here or not.
+// Each position lists its key skills, with their logos. A tool shares its
+// family's pill, after the family's name ("Data lake · DuckDB"), as the CV
+// writes it in brackets: fewer pills, in the order the role lists them, the
+// family where it or its first tool comes. The filter still matches every
+// skill a position used, listed here or not.
 function renderRoleSkills() {
   document.querySelectorAll('.xp-panel[data-role]').forEach(el => {
     const role = roleSkills[el.dataset.role];
     const keyList = el.querySelector('.key-skills');
     if (!role || !keyList) return;
 
-    keyList.replaceChildren(...role.skills.filter(s => s.key).map(s => {
+    // Each pill's skill, and the key tools it carries
+    const pills = new Map();
+    role.skills.filter(s => s.key).forEach(s => {
+      const id = skillById[s.id]?.parent || s.id;
+      if (!pills.has(id)) pills.set(id, []);
+      if (id !== s.id) pills.get(id).push(s.id);
+    });
+
+    keyList.replaceChildren(...[...pills].map(([id, tools]) => {
       const li = document.createElement('li');
-      li.dataset.skill = s.id;
-      const icon = skillById[s.id] && skillIcon(skillById[s.id]);
+      li.dataset.skill = id;
+      const icon = skillById[id] && skillIcon(skillById[id]);
       if (icon) li.appendChild(icon);
       const name = document.createElement('span');
-      setSkillName(name, s.id);
+      setSkillName(name, id);
       li.appendChild(name);
+      if (tools.length) {
+        // Picking one of the tools in the skills lights the whole pill
+        li.dataset.tools = tools.join(' ');
+        const list = document.createElement('span');
+        list.className = 'key-skills__tools';
+        tools.forEach((tool, i) => {
+          const n = document.createElement('span');
+          setSkillName(n, tool);
+          list.append(...(i ? [', ', n] : [n]));
+        });
+        li.appendChild(list);
+      }
       return li;
     }));
   });
@@ -741,7 +774,7 @@ const roleTabs = (() => {
       tab.classList.toggle('skill-dim', !ok);
       if (ok && !first) first = tab;
     });
-    expSection.querySelectorAll(`.xp-panel [data-skill="${skillId}"]`).forEach(el => el.classList.add('skill-match-tag'));
+    expSection.querySelectorAll(`.xp-panel [data-skill="${skillId}"], .xp-panel [data-tools~="${skillId}"]`).forEach(el => el.classList.add('skill-match-tag'));
     if (first && roleTabs) roleTabs.select(first);
 
     pill = document.createElement('button');
