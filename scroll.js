@@ -566,6 +566,20 @@ document.querySelector('.skills-grid')?.addEventListener('click', e => {
 })();
 renderChrono();
 
+// A span's name shows only where it fits (.is-tight hides it): the tile
+// narrows on tablets and the axis stretches with today, so the shortest
+// spans would otherwise cut theirs short
+(() => {
+  const tl = document.querySelector('.chrono__tl');
+  if (!tl) return;
+  const fit = () => tl.querySelectorAll('.chrono__track span').forEach(el => {
+    el.classList.toggle('is-tight', el.scrollWidth > el.clientWidth);
+  });
+  fit();
+  document.fonts?.ready.then(fit);
+  if (window.ResizeObserver) new ResizeObserver(fit).observe(tl);
+})();
+
 // On a phone the chronology is wider than the screen: it opens on today
 const chronoScroll = document.querySelector('.chrono__scroll');
 if (chronoScroll) {
@@ -600,6 +614,19 @@ window.addEventListener('beforeprint', revealAll);
 // ─── Top bar: glass background once the page scrolls ─────────────────────────
 const topbar = document.getElementById('topbar');
 if (topbar) onScroll(y => topbar.classList.toggle('is-stuck', y > 8));
+
+// Its CV button shows once the hero's has gone under it (.hero-cv-gone):
+// side by side on arrival, the two would say the same thing
+(() => {
+  const heroCv = document.querySelector('.hero__actions [data-cv-link]');
+  if (!heroCv || !window.IntersectionObserver) {
+    document.documentElement.classList.add('hero-cv-gone');
+    return;
+  }
+  new IntersectionObserver(([e]) => {
+    document.documentElement.classList.toggle('hero-cv-gone', !e.isIntersecting);
+  }, { rootMargin: '-68px 0px 0px 0px' }).observe(heroCv);
+})();
 
 // ─── Active nav link + sliding indicator ──────────────────────────────────────
 // The active section is the last one whose top has crossed 40% of the viewport

@@ -63,7 +63,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png" />
   <link rel="manifest" href="assets/site.webmanifest" />
-  <link rel="stylesheet" href="style.css?v=79" />
+  <link rel="stylesheet" href="style.css?v=80" />
   <script>
     (function(){
       document.documentElement.classList.add('js');
@@ -110,6 +110,9 @@
     <symbol id="i-team" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="9" cy="8" r="3.5"/><path d="M2.5 20a6.5 6.5 0 0 1 13 0M15.5 4.8a3.5 3.5 0 0 1 0 6.4M18 14.2a6.5 6.5 0 0 1 3.5 5.8"/></g></symbol>
     <symbol id="i-chat" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M4 4.5h11A1.5 1.5 0 0 1 16.5 6v6.5A1.5 1.5 0 0 1 15 14H9l-4 3v-3H4a1.5 1.5 0 0 1-1.5-1.5V6A1.5 1.5 0 0 1 4 4.5Z"/><path d="M16.5 8.5H20A1.5 1.5 0 0 1 21.5 10v6.5A1.5 1.5 0 0 1 20 18h-1v3l-4-3h-3.5a1.5 1.5 0 0 1-1.5-1.5V14" stroke-linecap="round"/></g></symbol>
     <symbol id="i-route" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round"><circle cx="5.5" cy="18.5" r="2.5"/><circle cx="18.5" cy="4.5" r="2.5"/><path d="M8 18.5h7.5a3.5 3.5 0 0 0 0-7h-7a3.5 3.5 0 0 1 0-7H16"/></g></symbol>
+    <symbol id="i-pingpong" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linejoin="round"><path d="M10.77 15.64 7.7 18.7a1.7 1.7 0 0 1-2.4-2.4l3.06-3.07A6.5 6.5 0 1 1 10.77 15.64Z"/><circle cx="19.4" cy="19.3" r="1.8"/></g></symbol>
+    <symbol id="i-plane" viewBox="0 0 24 24"><path transform="rotate(45 12 12)" d="M12 2.6c.8 0 1.2 1 1.2 2.2v4.8L21 14v1.6l-7.8-2.2v4.8l2.8 2v1.2L12 20.4l-4 1v-1.2l2.8-2v-4.8L3 15.6V14l7.8-4.4V4.8c0-1.2.4-2.2 1.2-2.2Z" fill="none" stroke="currentColor" stroke-width="1.6" stroke-linejoin="round"/></symbol>
+    <symbol id="i-mountain" viewBox="0 0 24 24"><g fill="none" stroke="currentColor" stroke-width="1.8" stroke-linecap="round" stroke-linejoin="round"><path d="M2.5 19.5 9 8.5l4.2 7 2.4-3.6 5.9 7.6Z"/><path d="M6.6 12.6 8.3 14l1.6-1.4 1.6 1.3"/></g></symbol>
   </svg>
 
   <!-- ═══════════ TOP BAR — outside #pageWrap so it doesn't fade on language switch ═══════════ -->
@@ -117,14 +120,14 @@
     <div class="topbar__in">
       <a class="brand" href="#top" aria-label="Accueil" data-i18n-aria="nav.home"><svg class="brand__logo" viewBox="0 0 32 32" width="32" height="32" aria-hidden="true" focusable="false"><circle class="off" cx="3.7" cy="3.7" r=".9"/><circle class="off" cx="9.85" cy="3.7" r=".9"/><circle class="r4" cx="16" cy="3.7" r="2.7"/><circle class="off" cx="22.15" cy="3.7" r=".9"/><circle class="off" cx="28.3" cy="3.7" r=".9"/><circle class="off" cx="3.7" cy="9.85" r=".9"/><circle class="r3" cx="9.85" cy="9.85" r="2.7"/><circle class="off" cx="16" cy="9.85" r=".9"/><circle class="r3" cx="22.15" cy="9.85" r="2.7"/><circle class="off" cx="28.3" cy="9.85" r=".9"/><circle class="r2" cx="3.7" cy="16" r="2.7"/><circle class="off" cx="9.85" cy="16" r=".9"/><circle class="off" cx="16" cy="16" r=".9"/><circle class="off" cx="22.15" cy="16" r=".9"/><circle class="r2" cx="28.3" cy="16" r="2.7"/><circle class="r1" cx="3.7" cy="22.15" r="2.7"/><circle class="r1" cx="9.85" cy="22.15" r="2.7"/><circle class="r1" cx="16" cy="22.15" r="2.7"/><circle class="r1" cx="22.15" cy="22.15" r="2.7"/><circle class="r1" cx="28.3" cy="22.15" r="2.7"/><circle class="r0" cx="3.7" cy="28.3" r="2.7"/><circle class="off" cx="9.85" cy="28.3" r=".9"/><circle class="off" cx="16" cy="28.3" r=".9"/><circle class="off" cx="22.15" cy="28.3" r=".9"/><circle class="r0" cx="28.3" cy="28.3" r="2.7"/></svg></a>
 
-      <!-- A pill under the active link on desktop, a bottom tab bar on mobile -->
+      <!-- A pill under the active link on desktop, a bottom tab bar on mobile: the same labels as the section titles -->
       <nav class="site-nav" id="siteNav" aria-label="Navigation">
         <span class="site-nav__ind" aria-hidden="true"></span>
-        <a href="#about"><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg><span class="lbl" data-i18n="nav.about">À propos</span><span class="lbl-short" data-i18n="nav.about.short">Profil</span></a>
-        <a href="#experience"><svg class="ico" aria-hidden="true"><use href="#i-case"/></svg><span class="lbl" data-i18n="nav.exp">Expérience</span><span class="lbl-short" data-i18n="nav.exp.short">Parcours</span></a>
-        <a href="#skills"><svg class="ico" aria-hidden="true"><use href="#i-bolt"/></svg><span class="lbl" data-i18n="nav.skills">Compétences</span><span class="lbl-short" data-i18n="nav.skills.short">Stack</span></a>
-        <a href="#projects"><svg class="ico" aria-hidden="true"><use href="#i-rocket"/></svg><span class="lbl" data-i18n="nav.projects">Projets</span><span class="lbl-short" data-i18n="nav.projects.short">Projets</span></a>
-        <a href="#contact"><svg class="ico" aria-hidden="true"><use href="#i-mail"/></svg><span class="lbl" data-i18n="nav.contact">Contact</span><span class="lbl-short" data-i18n="nav.contact">Contact</span></a>
+        <a href="#about"><svg class="ico" aria-hidden="true"><use href="#i-user"/></svg><span class="lbl" data-i18n="nav.about">À propos</span></a>
+        <a href="#experience"><svg class="ico" aria-hidden="true"><use href="#i-case"/></svg><span class="lbl" data-i18n="nav.exp">Expérience</span></a>
+        <a href="#skills"><svg class="ico" aria-hidden="true"><use href="#i-bolt"/></svg><span class="lbl" data-i18n="nav.skills">Compétences</span></a>
+        <a href="#projects"><svg class="ico" aria-hidden="true"><use href="#i-rocket"/></svg><span class="lbl" data-i18n="nav.projects">Projets</span></a>
+        <a href="#contact"><svg class="ico" aria-hidden="true"><use href="#i-mail"/></svg><span class="lbl" data-i18n="nav.contact">Contact</span></a>
       </nav>
 
       <div class="topbar__ctrls">
@@ -198,8 +201,8 @@
 
         <article class="tile about-text reveal">
           <p class="label" data-i18n="about.label">Mon métier</p>
-          <p class="about-text__lead" data-i18n="about.p1">Concrètement&nbsp;: collecter les sources, automatiser les pipelines, modéliser l'entrepôt avec les équipes métier et livrer les tableaux de bord qui pilotent l'activité. Et désormais, brancher les agents IA sur ces données sans jamais exposer d'information sensible.</p>
-          <p data-i18n="about.p2">Du conseil à l'entreprise, dans la santé, le transport, le logement social et l'e-commerce. Ce qui ne change pas&nbsp;: travailler au plus près des métiers pour transformer des données brutes en décisions.</p>
+          <p class="about-text__lead" data-i18n="about.p1">Concrètement&nbsp;: collecter les sources, les réunir dans un data lake, automatiser les pipelines et modéliser l'entrepôt avec les équipes métier. Et désormais, brancher les agents IA sur ces données sans jamais exposer d'information sensible.</p>
+          <p data-i18n="about.p2">Du conseil à l'entreprise, dans la santé, le transport, le logement social et l'e&#8209;commerce. Ce qui ne change pas&nbsp;: travailler au plus près des métiers pour transformer des données brutes en décisions.</p>
         </article>
 
         <article class="tile drives reveal">
@@ -216,9 +219,9 @@
         <article class="tile interests reveal" id="misc">
           <p class="label" data-i18n="misc.title">Centres d'intérêt</p>
           <ul class="interests__list">
-            <li><span class="interests__emoji" aria-hidden="true">🏓</span><div><strong data-i18n="misc.tt.title">Tennis de table</strong><span data-i18n="misc.tt.desc">Activité pratiquée pendant plus de 10 ans en club.</span></div></li>
-            <li><span class="interests__emoji" aria-hidden="true">✈️</span><div><strong data-i18n="misc.travel.title">Voyages</strong><span data-i18n="misc.travel.pre">Déjà</span> <button type="button" class="travel-link" data-travel-open aria-haspopup="dialog" data-i18n="misc.travel.count">18 pays explorés</button><span data-i18n="misc.travel.post">, et bien d'autres à venir.</span></div></li>
-            <li><span class="interests__emoji" aria-hidden="true">🏔️</span><div><strong data-i18n="misc.nature.title">Nature</strong><span data-i18n="misc.nature.desc">Ski, randonnée, trek, camping&nbsp;: tout ce qui se passe dehors.</span></div></li>
+            <li><span class="interests__ico" aria-hidden="true"><svg><use href="#i-pingpong"/></svg></span><div><strong data-i18n="misc.tt.title">Tennis de table</strong><span data-i18n="misc.tt.desc">Activité pratiquée pendant plus de 10 ans en club.</span></div></li>
+            <li><span class="interests__ico" aria-hidden="true"><svg><use href="#i-plane"/></svg></span><div><strong data-i18n="misc.travel.title">Voyages</strong><span data-i18n="misc.travel.pre">Déjà</span> <button type="button" class="travel-link" data-travel-open aria-haspopup="dialog" data-i18n="misc.travel.count">18 pays explorés</button><span data-i18n="misc.travel.post">, et bien d'autres à venir.</span></div></li>
+            <li><span class="interests__ico" aria-hidden="true"><svg><use href="#i-mountain"/></svg></span><div><strong data-i18n="misc.nature.title">Nature</strong><span data-i18n="misc.nature.desc">Ski, randonnée, trek, camping&nbsp;: tout ce qui se passe dehors.</span></div></li>
           </ul>
         </article>
       </div>
@@ -265,10 +268,10 @@
           <button type="button" class="xp-tab" role="tab" id="xpt-laps" aria-controls="xpp-laps" aria-selected="true" data-role="laps"><b>Laps</b><span class="xp-tab__role" data-i18n="exp.laps.role">Développeur Data &amp; IA</span><span class="xp-tab__when"><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span></span></button>
           <!-- BIAL-R: one consulting firm, three clients -->
           <div class="xp-group" role="none">
-            <p class="xp-group__head" aria-hidden="true"><span><b>BIAL-R</b><i data-i18n="exp.bialr.group">Conseil en data · 2020 — 2023</i></span></p>
-            <button type="button" class="xp-tab" role="tab" id="xpt-bialr1" aria-controls="xpp-bialr1" aria-selected="false" data-role="bialr1"><b><span class="sr-only">BIAL-R, client </span>Bial-S</b><span class="xp-tab__line"><span data-i18n="exp.bialr1.role">Développeur Data</span> · <i>2023</i></span></button>
-            <button type="button" class="xp-tab" role="tab" id="xpt-bialr2" aria-controls="xpp-bialr2" aria-selected="false" data-role="bialr2"><b><span class="sr-only">BIAL-R, client </span>Clariane</b><span class="xp-tab__line"><span data-i18n="exp.bialr2.role">Consultant ETL</span> · <i>2021 — 22</i></span></button>
-            <button type="button" class="xp-tab" role="tab" id="xpt-bialr3" aria-controls="xpp-bialr3" aria-selected="false" data-role="bialr3"><b><span class="sr-only">BIAL-R, client </span>APRR</b><span class="xp-tab__line"><span data-i18n="exp.bialr3.role">Consultant Data</span> · <i>2020 — 21</i></span></button>
+            <p class="xp-group__head" aria-hidden="true"><span><b>BIAL-R</b><span class="xp-group__sub"><i data-i18n="exp.bialr.group">Conseil en data</i><i>2020 — 2023</i></span></span></p>
+            <button type="button" class="xp-tab" role="tab" id="xpt-bialr1" aria-controls="xpp-bialr1" aria-selected="false" data-role="bialr1"><b><span class="sr-only">BIAL-R, client </span>Bial-S</b><span class="xp-tab__line"><span data-i18n="exp.bialr1.role">Développeur Data</span><i>2023</i></span></button>
+            <button type="button" class="xp-tab" role="tab" id="xpt-bialr2" aria-controls="xpp-bialr2" aria-selected="false" data-role="bialr2"><b><span class="sr-only">BIAL-R, client </span>Clariane</b><span class="xp-tab__line"><span data-i18n="exp.bialr2.role">Consultant ETL</span><i>2021 — 22</i></span></button>
+            <button type="button" class="xp-tab" role="tab" id="xpt-bialr3" aria-controls="xpp-bialr3" aria-selected="false" data-role="bialr3"><b><span class="sr-only">BIAL-R, client </span>APRR</b><span class="xp-tab__line"><span data-i18n="exp.bialr3.role">Consultant Data</span><i>2020 — 21</i></span></button>
           </div>
           <button type="button" class="xp-tab" role="tab" id="xpt-hyatt" aria-controls="xpp-hyatt" aria-selected="false" data-role="hyatt"><b>Park Hyatt</b><span class="xp-tab__role" data-i18n="exp.hyatt.role">Technicien Support IT</span><span class="xp-tab__when"><span data-i18n="exp.hyatt.start">Avr. 2018</span> – <span data-i18n="exp.hyatt.end">Juill. 2018</span></span></button>
         </div>
@@ -281,7 +284,7 @@
           </header>
           <p class="xp-meta"><a href="https://www.laps.com/" target="_blank" rel="noopener">Laps</a><span data-i18n="exp.laps.sector">e-commerce</span><span data-i18n="hero.location">Montréal, Canada</span></p>
           <p class="xp-meta xp-meta--when"><span><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span></span><span data-i18n="cv.laps.duration">2 ans 8 mois</span></p>
-          <p class="xp-ctx" data-i18n="exp.laps.about">Réseau e-commerce de matériel de golf&nbsp;: conception et mise en place de toute son infrastructure de données.</p>
+          <p class="xp-ctx" data-i18n="exp.laps.about">Réseau e&#8209;commerce de matériel de golf&nbsp;: conception et mise en place de toute son infrastructure de données.</p>
           <p class="label" data-i18n="exp.did">Ce que j'ai fait</p>
           <ul class="xp-list">
             <li data-i18n="exp.laps.li1">Mise en place de flux de données Python serverless sur AWS depuis les ERP et les plateformes marketing</li>
@@ -637,8 +640,8 @@
   <!-- Intentional load order: i18n.js must come before scroll.js
        (scroll.js depends on `translations` and `currentLang` defined in i18n.js)
        Do not add async/defer to these two scripts. -->
-  <script src="i18n.js?v=83"></script>
-  <script src="skills-data.js?v=12"></script>
-  <script src="scroll.js?v=78"></script>
+  <script src="i18n.js?v=84"></script>
+  <script src="skills-data.js?v=13"></script>
+  <script src="scroll.js?v=79"></script>
 </body>
 </html>

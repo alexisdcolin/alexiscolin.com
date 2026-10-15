@@ -60,7 +60,9 @@ const skillsData = [
   { id: 'jira',       name: 'Jira',       level: 2, category: 'pm',    icon: 'jira', parent: 'agile' },
 ];
 
-const categoryDefs = ['dataeng', 'lang', 'cloud', 'db', 'bi', 'devops', 'pm'];
+// The site's tiles in this order (the CV has its own rows, CV_SKILL_ROWS in
+// cv.js): BI comes last, the direction being the data platform and AI
+const categoryDefs = ['dataeng', 'lang', 'cloud', 'db', 'devops', 'pm', 'bi'];
 
 // Name in the current language, for the skills that carry an `i18n` key
 function skillLabel(s) {
