@@ -579,6 +579,13 @@ main[tabindex="-1"]:focus { outline: none; }
   .hero__mail { order: 1; }
 }
 
+/* On a phone both rows stopped a good 100px short of the statement above them,
+   so the address takes the full width and the CV stretches out to the icons */
+@media (max-width: 599.98px) {
+  .hero__mail { flex: 1 0 100%; }
+  .hero__actions [data-cv-link] { flex: 1 1 auto; }
+}
+
 /* ── The stack: as tall as the statement and the buttons, the steps spread along the rail ── */
 .stack-wrap {
   grid-area: stack;
