@@ -81,6 +81,8 @@ const customIcons = {
   datalake:   'M2 6Q4.5 4 7 6T12 6T17 6T22 6V8Q19.5 10 17 8T12 8T7 8T2 8ZM2 11Q4.5 9 7 11T12 11T17 11T22 11V13Q19.5 15 17 13T12 13T7 13T2 13ZM2 16Q4.5 14 7 16T12 16T17 16T22 16V18Q19.5 20 17 18T12 18T7 18T2 18Z',
   parquet:    'M3 3h8v3.25H3zM3 7.75h8V11H3zM13 3h3.25v8H13zM17.75 3H21v8h-3.25zM3 13h3.25v8H3zM7.75 13H11v8H7.75zM13 13h8v3.25h-8zM13 17.75h8V21h-8z',
   cicd:       'M18.6 6.62c-1.44 0-2.8.56-3.77 1.53L12 10.66 10.48 12h.01L7.8 14.39c-.64.64-1.49.99-2.4.99-1.87 0-3.39-1.51-3.39-3.38S3.53 8.62 5.4 8.62c.91 0 1.76.35 2.44 1.03l1.13 1 1.51-1.34L9.22 8.2C8.2 7.18 6.84 6.62 5.4 6.62 2.42 6.62 0 9.04 0 12s2.42 5.38 5.4 5.38c1.44 0 2.8-.56 3.77-1.53l2.83-2.5.01.01L13.52 12h-.01l2.69-2.39c.64-.64 1.49-.99 2.4-.99 1.87 0 3.39 1.51 3.39 3.38s-1.52 3.38-3.39 3.38c-.9 0-1.76-.35-2.44-1.03l-1.14-1.01-1.51 1.34 1.27 1.12c1.02 1.01 2.37 1.57 3.82 1.57 2.98 0 5.4-2.41 5.4-5.38s-2.42-5.37-5.4-5.37z',
+  // Material dns, the servers that IaC writes as code
+  iac:        'M20 13H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1v-6c0-.55-.45-1-1-1zM7 19c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2zM20 3H4c-.55 0-1 .45-1 1v6c0 .55.45 1 1 1h16c.55 0 1-.45 1-1V4c0-.55-.45-1-1-1zM7 9c-1.1 0-2-.9-2-2s.9-2 2-2 2 .9 2 2-.9 2-2 2z',
 };
 
 function makeCustomSvg(pathData) {
@@ -195,7 +197,7 @@ function renderSkills() {
     const tile = document.createElement('article');
     tile.className = 'tile reveal';
 
-    const label = document.createElement('p');
+    const label = document.createElement('h3'); // like the static tiles' captions
     label.className = 'label';
     label.dataset.i18n = `skills.${cat}`;
     label.textContent = tr[`skills.${cat}`] || cat;
@@ -261,6 +263,8 @@ const roleSkills = {
       { id: 'lambda',          key: false },
       { id: 's3',              key: false },
       { id: 'stepfunctions',   key: false },
+      { id: 'ecs',             key: false, start: new Date(2026, 9) },  // Oct 2026
+      { id: 'ecr',             key: false, start: new Date(2026, 9) },  // Oct 2026
       { id: 'rds',             key: false },
       { id: 'cloudwatch',      key: false },
       { id: 'postgresql',      key: false },
@@ -762,6 +766,7 @@ const roleTabs = (() => {
 // ─── Skill → experience cross-filter ─────────────────────────────────────────
 // Click a skill row to dim the positions that didn't use it and open the first
 // that did (data comes from roleSkills). Click again / × pill / Escape to clear.
+// The click leads up to the positions; the pill and Escape lead back to the row.
 (() => {
   const expSection = document.getElementById('experience');
   const skillsContainer = document.querySelector('.skills-grid');
@@ -774,7 +779,17 @@ const roleTabs = (() => {
     Object.keys(roleSkills).filter(r => roleSkills[r].skills.some(s => s.id === skillId))
   );
 
-  function clearFilter() {
+  const onScreen = el => {
+    const r = el.getBoundingClientRect();
+    return r.bottom > 0 && r.top < innerHeight;
+  };
+
+  // back: closed from the positions, the filter returns the visitor to the
+  // skill they came from, where the next one is a click away
+  function clearFilter(back) {
+    const chip = back && skillsContainer.querySelector('.skill-row.is-selected');
+    // A tool folded away with its family has no place on the page: the family's row then
+    const row = chip && (chip.offsetParent ? chip : chip.closest('.skill-fam')?.querySelector('.skill-fam__head'));
     activeSkill = null;
     skillsContainer.querySelectorAll('.skill-row.is-selected').forEach(el => {
       el.classList.remove('is-selected');
@@ -783,11 +798,17 @@ const roleTabs = (() => {
     expSection.querySelectorAll('.skill-dim').forEach(el => el.classList.remove('skill-dim'));
     expSection.querySelectorAll('.skill-match-tag').forEach(el => el.classList.remove('skill-match-tag'));
     if (pill) {
-      // Focus would drop to <body> with the pill
-      if (pill.contains(document.activeElement)) expSection.querySelector('.xp-tab[aria-selected="true"]')?.focus();
+      // Focus would drop to <body> with the pill. It moves without the page:
+      // the visitor may be far from the positions by now
+      if (!row && pill.contains(document.activeElement)) expSection.querySelector('.xp-tab[aria-selected="true"]')?.focus({ preventScroll: true });
       pill.remove();
       pill = null;
     }
+    if (!row) return;
+    // Focus follows the way back, as it followed the jump
+    row.focus({ preventScroll: true });
+    const r = row.getBoundingClientRect();
+    if (r.top < 0 || r.bottom > innerHeight) row.scrollIntoView({ block: 'center', behavior: prefersReducedMotion ? 'auto' : 'smooth' });
   }
 
   function applyFilter(skillId, chip) {
@@ -818,7 +839,7 @@ const roleTabs = (() => {
     cross.setAttribute('aria-hidden', 'true');
     cross.textContent = '×';
     pill.append(label, ' ', name, ' ', cross);
-    pill.addEventListener('click', clearFilter);
+    pill.addEventListener('click', () => clearFilter(true));
     expSection.querySelector('.sec-head').insertAdjacentElement('afterend', pill);
     // Focus follows the jump to the positions
     pill.focus({ preventScroll: true });
@@ -838,7 +859,9 @@ const roleTabs = (() => {
     // Escape then belongs to the CV dialog or the terminal
     const html = document.documentElement;
     if (html.classList.contains('cv-open') || html.classList.contains('travel-open') || !document.getElementById('terminalOverlay').hidden) return;
-    clearFilter();
+    // Back to the row only from the positions: Escape pressed elsewhere on
+    // the page clears the filter and leaves the visitor where they are
+    clearFilter(onScreen(expSection));
   });
 })();
 
@@ -2075,8 +2098,7 @@ function travelIn(zone, next = false) {
     (navigator.platform === 'MacIntel' && navigator.maxTouchPoints > 1);
   // Phones, held upright or sideways: the sheet would take the whole screen
   // anyway, so the links lead to the CV page, where back, zoom and printing
-  // are the browser's own. The same query labels the buttons (style.css) and
-  // trims the CV page's toolbar (cv.css).
+  // are the browser's own. The same query trims the CV page's toolbar (cv.css).
   const PHONE = matchMedia('(max-width: 599.98px), (max-height: 499.98px) and (pointer: coarse)');
   const cvUrl = () => `${pageUrl('/cv')}?lang=${currentLang}`;
   let ready = false;          // cv.js answered from inside the frame

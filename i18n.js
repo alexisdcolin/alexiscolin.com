@@ -55,6 +55,8 @@ let currentLang = (function(){
 // ─── Translations ─────────────────────────────────────────────────────────────
 const translations = {
   fr: {
+    // The page's <title>, which follows the language like the rest
+    'meta.title':          'Alexis Colin — Développeur Data & IA à Montréal',
     'hero.role':           'Développeur Data & IA',
     'hero.location':       'Montréal, Canada',
     'hero.title': 'développeur data & IA',
@@ -65,16 +67,15 @@ const translations = {
     'hero.gov.desc': 'tests, accès, masquage, audit — à chaque étape',
     'hero.stack.aria': 'Ma stack, de la source à l\'IA',
     'hero.stack.store': 'Stockage',
-    'hero.stack.viz': 'Visualisation',
+    'hero.stack.serve': 'Publication',
     'hero.stack.ai': 'IA',
     'hero.stack.d1': 'Collecter chaque source',
     'hero.stack.d2': 'Centraliser les données',
     'hero.stack.d3': 'Nettoyer et modéliser',
     'hero.stack.d4': 'Automatiser les flux',
-    'hero.stack.d5': 'Piloter l\'activité',
+    'hero.stack.d5': 'Servir une source de vérité',
     'hero.stack.d6': 'Ouvrir les données aux agents',
-    'links.cv':           'CV imprimable',
-    'links.cv.short':     'Voir le CV',
+    'links.cv':           'Voir le CV',
 
     // Nav and the phone tab bar's short labels
     'nav.about':    'À propos',
@@ -223,6 +224,9 @@ const translations = {
     'edu.dut.dates':    'Sept. 2016 – Juin 2018',
     'edu.miage.short': 'Master informatique de gestion',
     'edu.miage.note': 'MIAGE · Systèmes d\'information de santé',
+    // One wording for the site's tile and the CV (data-i18n-rich: ** marks the degree it amounts to)
+    'edu.miage.equiv': 'Équivalent à une **maîtrise en informatique** au Québec',
+    'edu.dut.equiv':   'Équivalent à un **DEC technique en informatique** au Québec',
     'edu.uqac.short': 'Baccalauréat en informatique',
     'edu.uqac.note': 'Double diplôme avec l\'UVSQ',
     'edu.dut.short': 'DUT Informatique',
@@ -340,6 +344,7 @@ const translations = {
   },
 
   en: {
+    'meta.title':          'Alexis Colin — Data & AI Engineer in Montreal',
     'hero.role':           'Data & AI Engineer',
     'hero.location':       'Montreal, Canada',
     'hero.title': 'data & AI engineer',
@@ -350,16 +355,15 @@ const translations = {
     'hero.gov.desc': 'tests, access, masking, audit — at every step',
     'hero.stack.aria': 'My stack, from source to AI',
     'hero.stack.store': 'Storage',
-    'hero.stack.viz': 'Visualization',
+    'hero.stack.serve': 'Serving',
     'hero.stack.ai': 'AI',
     'hero.stack.d1': 'Pull in every source',
     'hero.stack.d2': 'Centralize the data',
     'hero.stack.d3': 'Clean and model',
     'hero.stack.d4': 'Automate the flows',
-    'hero.stack.d5': 'Steer the business',
+    'hero.stack.d5': 'Serve one source of truth',
     'hero.stack.d6': 'Open the data to agents',
-    'links.cv':           'Printable CV',
-    'links.cv.short':     'View CV',
+    'links.cv':           'View CV',
 
     // Nav and the phone tab bar's short labels
     'nav.about':    'About',
@@ -507,6 +511,8 @@ const translations = {
     'edu.dut.dates':    'Sep. 2016 – Jun. 2018',
     'edu.miage.short': 'Master\'s in Information Systems',
     'edu.miage.note': 'MIAGE · Healthcare information systems',
+    'edu.miage.equiv': 'Equivalent to a **Master\'s in Computer Science** in Quebec',
+    'edu.dut.equiv':   'Equivalent to a **technical DEC in Computer Science** in Quebec',
     'edu.uqac.short': 'B.Sc. Computer Science',
     'edu.uqac.note': 'Dual degree with UVSQ',
     'edu.dut.short': 'Technical degree, CS',

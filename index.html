@@ -5,12 +5,13 @@
   <!-- Cloudflare Web Analytics — cookieless, no consent banner needed -->
   <script type="module" src="https://static.cloudflareinsights.com/beacon.min.js" data-cf-beacon='{"token": "1e7d4c7d044344bfbb5808d2bf1a1fc0"}'></script>
   <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover" />
-  <title>Alexis Colin — Data &amp; AI Engineer</title>
+  <!-- In French like the page; i18n.js swaps it with the language -->
+  <title data-i18n="meta.title">Alexis Colin — Développeur Data &amp; IA à Montréal</title>
 
   <!-- SEO -->
   <meta name="description" content="Alexis Colin — Data & AI Engineer à Montréal. De leur source jusqu'aux agents IA : des données fiables, gouvernées, dignes de confiance." />
   <meta name="author" content="Alexis Colin" />
-  <meta name="keywords" content="Data &amp; AI Engineer, agents IA, MCP, Montréal, Python, AWS, dbt, ETL, Grafana" />
+  <meta name="keywords" content="Développeur Data &amp; IA, Data &amp; AI Engineer, data lake, agents IA, MCP, Python, AWS, dbt, Dagster, ETL, Montréal" />
   <meta name="color-scheme" content="light dark" />
   <meta name="theme-color" content="#f0e6dc" media="(prefers-color-scheme: light)" />
   <meta name="theme-color" content="#332c24" media="(prefers-color-scheme: dark)" />
@@ -19,7 +20,7 @@
   <!-- Open Graph -->
   <meta property="og:type"        content="website" />
   <meta property="og:url"         content="https://alexiscolin.com/" />
-  <meta property="og:title"       content="Alexis Colin — Data & AI Engineer" />
+  <meta property="og:title"       content="Alexis Colin — Développeur Data &amp; IA à Montréal" />
   <meta property="og:description" content="De leur source jusqu'aux agents IA : des données fiables, gouvernées, dignes de confiance." />
   <!-- The share preview, 1200×630. Cached as immutable: a new image gets a new name -->
   <meta property="og:image"       content="https://alexiscolin.com/assets/og-portrait.jpg" />
@@ -31,7 +32,7 @@
 
   <!-- Twitter Card — the large card, made for the landscape share preview -->
   <meta name="twitter:card"        content="summary_large_image" />
-  <meta name="twitter:title"       content="Alexis Colin — Data & AI Engineer" />
+  <meta name="twitter:title"       content="Alexis Colin — Développeur Data &amp; IA à Montréal" />
   <meta name="twitter:description" content="Data & AI Engineer à Montréal. De leur source jusqu'aux agents IA : des données fiables, gouvernées, dignes de confiance." />
   <meta name="twitter:image"       content="https://alexiscolin.com/assets/og-portrait.jpg" />
   <meta name="twitter:image:alt"   content="Alexis Colin, développeur data &amp; IA à Montréal" />
@@ -63,7 +64,7 @@
   <link rel="icon" type="image/png" sizes="192x192" href="assets/icon-192.png" />
   <link rel="apple-touch-icon" sizes="180x180" href="assets/icon-180.png" />
   <link rel="manifest" href="assets/site.webmanifest" />
-  <link rel="stylesheet" href="style.css?v=82" />
+  <link rel="stylesheet" href="style.css?v=86" />
   <script>
     (function(){
       document.documentElement.classList.add('js');
@@ -168,7 +169,7 @@
         <li class="step" style="--n:1"><span class="step__n">02</span><span class="step__t" data-i18n="hero.stack.store">Stockage</span><span class="step__d" data-i18n="hero.stack.d2">Centraliser les données</span></li>
         <li class="step" style="--n:2"><span class="step__n">03</span><span class="step__t">Transformation</span><span class="step__d" data-i18n="hero.stack.d3">Nettoyer et modéliser</span></li>
         <li class="step" style="--n:3"><span class="step__n">04</span><span class="step__t">Orchestration</span><span class="step__d" data-i18n="hero.stack.d4">Automatiser les flux</span></li>
-        <li class="step" style="--n:4"><span class="step__n">05</span><span class="step__t" data-i18n="hero.stack.viz">Visualisation</span><span class="step__d" data-i18n="hero.stack.d5">Piloter l'activité</span></li>
+        <li class="step" style="--n:4"><span class="step__n">05</span><span class="step__t" data-i18n="hero.stack.serve">Publication</span><span class="step__d" data-i18n="hero.stack.d5">Servir une source de vérité</span></li>
         <li class="step is-hl" style="--n:5"><span class="step__n">06</span><span class="step__t" data-i18n="hero.stack.ai">IA</span><span class="step__d" data-i18n="hero.stack.d6">Ouvrir les données aux agents</span></li>
       </ol>
     </div>
@@ -176,7 +177,7 @@
     <div class="hero__actions" data-anim style="--i:2">
       <a href="/cv" class="btn btn--accent" data-cv-link>
         <svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg>
-        <span class="lbl" data-i18n="links.cv">CV imprimable</span><span class="lbl-short" data-i18n="links.cv.short">Voir le CV</span>
+        <span data-i18n="links.cv">Voir le CV</span>
       </a>
       <a href="mailto:contact@alexiscolin.com" class="btn hero__mail"><svg class="ico" aria-hidden="true"><use href="#i-mail"/></svg>contact@alexiscolin.com</a>
       <a href="https://www.linkedin.com/in/alexisdcolin" target="_blank" rel="noopener" class="btn btn--icon" aria-label="LinkedIn"><svg class="ico" aria-hidden="true"><use href="#icon-linkedin"/></svg></a>
@@ -200,13 +201,13 @@
         </figure>
 
         <article class="tile about-text reveal">
-          <p class="label" data-i18n="about.label">Mon métier</p>
+          <h3 class="label" data-i18n="about.label">Mon métier</h3>
           <p class="about-text__lead" data-i18n="about.p1">Concrètement&nbsp;: collecter les sources, les réunir dans un data lake, automatiser les pipelines et modéliser l'entrepôt avec les équipes métier. Et désormais, brancher les agents IA sur ces données sans jamais exposer d'information sensible.</p>
           <p data-i18n="about.p2">Du conseil à l'entreprise, dans la santé, le transport, le logement social et l'e&#8209;commerce. Ce qui ne change pas&nbsp;: travailler au plus près des métiers pour transformer des données brutes en décisions.</p>
         </article>
 
         <article class="tile drives reveal">
-          <p class="label" data-i18n="about.drives.title">Ce qui m'anime</p>
+          <h3 class="label" data-i18n="about.drives.title">Ce qui m'anime</h3>
           <ul class="drives__list">
             <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-flow"/></svg></span><span data-i18n="about.drives.1">Des plateformes pensées comme un tout, pas brique par brique</span></li>
             <li><span class="drives__ico" aria-hidden="true"><svg><use href="#i-shield"/></svg></span><span data-i18n="about.drives.2">Des données dignes de confiance&nbsp;: testées, documentées, traçables</span></li>
@@ -217,7 +218,7 @@
 
         <!-- id="misc" keeps the terminal's `cd misc` working -->
         <article class="tile interests reveal" id="misc">
-          <p class="label" data-i18n="misc.title">Centres d'intérêt</p>
+          <h3 class="label" data-i18n="misc.title">Centres d'intérêt</h3>
           <ul class="interests__list">
             <li><span class="interests__ico" aria-hidden="true"><svg><use href="#i-pingpong"/></svg></span><div><strong data-i18n="misc.tt.title">Tennis de table</strong><span data-i18n="misc.tt.desc">Activité pratiquée pendant plus de 10 ans en club.</span></div></li>
             <li><span class="interests__ico" aria-hidden="true"><svg><use href="#i-plane"/></svg></span><div><strong data-i18n="misc.travel.title">Voyages</strong><span data-i18n="misc.travel.pre">Déjà</span> <button type="button" class="travel-link" data-travel-open aria-haspopup="dialog" data-i18n="misc.travel.count">18 pays explorés</button><span data-i18n="misc.travel.post">, et bien d'autres à venir.</span></div></li>
@@ -235,13 +236,13 @@
           <h2 id="expTitle" data-i18n="exp.title">Expérience</h2>
           <p class="sec-sub" data-i18n="exp.sub">Trois employeurs, cinq rôles, de Paris à Montréal.</p>
         </div>
-        <a class="btn" href="/cv" data-cv-link><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><span class="lbl" data-i18n="links.cv">CV imprimable</span><span class="lbl-short" data-i18n="links.cv.short">Voir le CV</span></a>
+        <a class="btn" href="/cv" data-cv-link><svg class="ico" aria-hidden="true"><use href="#i-doc"/></svg><span data-i18n="links.cv">Voir le CV</span></a>
       </header>
 
       <!-- Work and studies on one axis; scroll.js draws the bars (Laps runs to today) -->
       <div class="tile chrono reveal">
         <div class="chrono__head">
-          <p class="label" data-i18n="chrono.title">Chronologie</p>
+          <h3 class="label" data-i18n="chrono.title">Chronologie</h3>
           <ul class="chrono__legend" aria-hidden="true">
             <li><i class="c-laps"></i>Laps</li>
             <li><i class="c-bialr"></i>BIAL-R</li>
@@ -283,7 +284,7 @@
             <span class="contract-badge contract-badge--permanent" data-i18n="contract.permanent">CDI</span>
           </header>
           <p class="xp-meta"><a href="https://www.laps.com/" target="_blank" rel="noopener">Laps</a><span data-i18n="exp.laps.sector">e-commerce</span><span data-i18n="hero.location">Montréal, Canada</span></p>
-          <p class="xp-meta xp-meta--when"><span><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span></span><span data-i18n="cv.laps.duration">2 ans 8 mois</span></p>
+          <p class="xp-meta xp-meta--when"><span><span data-i18n="exp.laps.start">Févr. 2024</span> – <span data-i18n="exp.laps.end">Aujourd'hui</span></span><span data-i18n="cv.laps.duration"></span></p>
           <p class="xp-ctx" data-i18n="exp.laps.about">Réseau e&#8209;commerce de matériel de golf&nbsp;: conception et mise en place de toute son infrastructure de données.</p>
           <p class="label" data-i18n="exp.did">Ce que j'ai fait</p>
           <ul class="xp-list">
@@ -367,7 +368,7 @@
 
       <!-- id="education" keeps the terminal's `cd education` working -->
       <div class="xp-edu reveal" id="education">
-        <p class="label" data-i18n="edu.title">Formation</p>
+        <h3 class="label" data-i18n="edu.title">Formation</h3>
         <div class="edu-cards">
           <article class="tile edu-card">
             <span class="edu-card__badge" aria-hidden="true">UVSQ</span>
@@ -375,6 +376,7 @@
             <strong data-i18n="edu.dut.short">DUT Informatique</strong>
             <span class="edu-card__s">Université de Versailles Saint-Quentin</span>
             <span class="edu-card__w"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="edu.dut.city">Vélizy, France</span></span>
+            <p class="edu-card__equiv"><svg class="ico" aria-hidden="true"><use href="#i-flow"/></svg><span data-i18n-rich="edu.dut.equiv">Équivalent à un <strong>DEC technique en informatique</strong> au Québec</span></p>
           </article>
           <article class="tile edu-card">
             <span class="edu-card__badge" aria-hidden="true">UQAC</span>
@@ -391,6 +393,8 @@
             <span class="edu-card__s">Université Claude Bernard Lyon 1</span>
             <span class="edu-card__w"><svg class="ico" aria-hidden="true"><use href="#i-pin"/></svg><span data-i18n="edu.miage.city">Lyon, France</span></span>
             <span class="edu-card__tag" data-i18n="edu.miage.note">MIAGE · Systèmes d'information de santé</span>
+            <!-- What the degree is worth here: a note at the foot of the tile, as on the CV -->
+            <p class="edu-card__equiv"><svg class="ico" aria-hidden="true"><use href="#i-flow"/></svg><span data-i18n-rich="edu.miage.equiv">Équivalent à une <strong>maîtrise en informatique</strong> au Québec</span></p>
           </article>
         </div>
       </div>
@@ -402,7 +406,7 @@
         <div>
           <p class="sec-num">03</p>
           <h2 id="skillsTitle" data-i18n="skills.title">Compétences</h2>
-          <p class="sec-sub" data-i18n="skills.hint">Cliquez une compétence pour voir où je l'ai utilisée.</p>
+          <p class="sec-sub" data-i18n="skills.hint">Cliquez sur une compétence pour voir où je l'ai utilisée.</p>
         </div>
         <p class="skills-legend" aria-hidden="true">
           <span><i class="lvl" data-level="3"></i><span data-i18n="skills.level.expert">Expertise</span></span>
@@ -414,7 +418,7 @@
       <!-- Category tiles are rendered by scroll.js from skills-data.js, before the static tiles -->
       <div class="skills-grid">
         <article class="tile langs-tile reveal" data-static>
-          <p class="label" data-i18n="skills.languages">Langues</p>
+          <h3 class="label" data-i18n="skills.languages">Langues</h3>
           <div class="langs">
             <div>
               <p class="langs__row"><strong data-i18n="lang.french">Français</strong><span class="langs__lvl" data-i18n="lang.french.level">Natif</span></p>
@@ -427,7 +431,7 @@
           </div>
         </article>
         <article class="tile soft-tile reveal" data-static>
-          <p class="label" data-i18n="soft.title">Savoir-être</p>
+          <h3 class="label" data-i18n="soft.title">Savoir-être</h3>
           <ul class="soft">
             <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-team"/></svg></span><strong data-i18n="soft.lead.t">Pilotage d'équipe</strong><span class="soft__d" data-i18n="soft.lead.d">Le centre de services de Clariane, mené de front avec une mission technique.</span></li>
             <li><span class="soft__ico" aria-hidden="true"><svg><use href="#i-chat"/></svg></span><strong data-i18n="soft.business.t">Dialogue avec les métiers</strong><span class="soft__d" data-i18n="soft.business.d">Traduire les questions de la finance, du péage ou de la relation client en indicateurs et en rapports utiles.</span></li>
@@ -471,7 +475,7 @@
         </article>
 
         <article class="tile project-academic reveal">
-          <p class="label" data-i18n="projects.academic.title">Projets académiques</p>
+          <h3 class="label" data-i18n="projects.academic.title">Projets académiques</h3>
           <ul class="academic">
             <li id="project-copill">
               <p class="academic__head"><strong data-i18n="projects.copill.title.main">CoPill</strong><span class="contract-badge contract-badge--academic" data-i18n="projects.badge.academic">Académique</span></p>
@@ -500,7 +504,7 @@
 
       <div class="bento bento--contact">
         <article class="tile contact-direct reveal">
-          <p class="label" data-i18n="contact.direct">Écrire directement</p>
+          <h3 class="label" data-i18n="contact.direct">Écrire directement</h3>
           <div class="contact-direct__mail">
             <a class="contact-direct__address" href="mailto:contact@alexiscolin.com">contact@alexiscolin.com</a>
             <button type="button" class="btn btn--sm copy-btn" id="copyEmail" data-copy="contact@alexiscolin.com">
@@ -516,7 +520,7 @@
         </article>
 
         <form class="tile contact-form reveal" id="contactForm" action="https://formspree.io/f/xkopnznd" method="POST" novalidate>
-          <p class="label" data-i18n="contact.form.title">Laisser un message</p>
+          <h3 class="label" data-i18n="contact.form.title">Laisser un message</h3>
           <div class="contact-form__row">
             <div class="contact-form__field">
               <label for="contactName" data-i18n="contact.name.label">Nom</label>
@@ -560,7 +564,7 @@
     <div class="footer__bottom">
       <span>© <span id="footerYear"></span> Alexis Colin · <a href="/privacy" data-i18n="footer.privacy">Confidentialité</a></span>
       <span class="footer__actions">
-        <button type="button" class="terminal-cue" data-terminal-open aria-label="Ouvrir le terminal" title="Ouvrir le terminal" data-i18n-aria="aria.terminal" data-i18n-title="aria.terminal.hint" hidden><span class="terminal-cue__prompt" aria-hidden="true">&gt;</span><span class="terminal-cue__cursor" aria-hidden="true"></span></button>
+        <button type="button" class="terminal-cue" data-terminal-open aria-label="Ouvrir le terminal" title="Ouvrir le terminal — touche $ ou `" data-i18n-aria="aria.terminal" data-i18n-title="aria.terminal.hint" hidden><span class="terminal-cue__prompt" aria-hidden="true">&gt;</span><span class="terminal-cue__cursor" aria-hidden="true"></span></button>
         <a href="#top" class="back-to-top" aria-label="Retour en haut" data-i18n-aria="footer.backtotop">↑</a>
       </span>
     </div>
@@ -640,8 +644,8 @@
   <!-- Intentional load order: i18n.js must come before scroll.js
        (scroll.js depends on `translations` and `currentLang` defined in i18n.js)
        Do not add async/defer to these two scripts. -->
-  <script src="i18n.js?v=85"></script>
-  <script src="skills-data.js?v=14"></script>
-  <script src="scroll.js?v=80"></script>
+  <script src="i18n.js?v=89"></script>
+  <script src="skills-data.js?v=15"></script>
+  <script src="scroll.js?v=82"></script>
 </body>
 </html>

@@ -234,13 +234,16 @@ main[tabindex="-1"]:focus { outline: none; }
   min-height: 64px;
   margin: 0 auto;
   padding: 12px 20px;
-  display: flex;
+  /* The nav stands in the middle of the page, whatever sits on either side of
+     it; short of room, the wider side takes what it needs */
+  display: grid;
+  grid-template-columns: 1fr auto 1fr;
   align-items: center;
   gap: 16px;
 }
 
 .brand {
-  flex-shrink: 0;
+  justify-self: start;
   border-radius: 9px;
 }
 
@@ -278,9 +281,9 @@ main[tabindex="-1"]:focus { outline: none; }
 
 .site-nav {
   position: relative;
+  grid-column: 2;
   display: flex;
   gap: 2px;
-  margin-inline: auto;
   padding: 4px;
   border-radius: 999px;
   background: var(--card);
@@ -308,9 +311,6 @@ main[tabindex="-1"]:focus { outline: none; }
 .site-nav a:hover { color: var(--text); }
 .site-nav a[aria-current="true"] { color: #fff; }
 .site-nav .ico { width: 15px; height: 15px; }
-/* A shorter label, swapped in where room runs short (the CV buttons on phones) */
-.lbl-short { display: none; }
-
 /* Sliding pill under the active link — positioned by scroll.js */
 .site-nav__ind {
   position: absolute;
@@ -329,10 +329,11 @@ main[tabindex="-1"]:focus { outline: none; }
 }
 
 .topbar__ctrls {
+  grid-column: 3; /* named: on phones the nav leaves the grid for the bottom of the screen */
+  justify-self: end;
   display: flex;
   align-items: center;
   gap: 8px;
-  flex-shrink: 0;
 }
 
 /* The CV button waits until the hero's has scrolled under the bar (scroll.js
@@ -984,6 +985,7 @@ main[tabindex="-1"]:focus { outline: none; }
 }
 .xp-meta > * { position: relative; padding-left: 28px; white-space: nowrap; } /* lines break between items only */
 .xp-meta > *::before { content: '·'; position: absolute; left: 11px; color: var(--border-2); }
+.xp-meta > :empty { display: none; } /* the current position's duration, until i18n.js counts it */
 .xp-meta--when { margin-top: 4px; }
 .xp-meta a { font-weight: 700; color: var(--accent-text); }
 .xp-meta a:hover { text-decoration: underline; text-underline-offset: 3px; }
@@ -1064,7 +1066,8 @@ main[tabindex="-1"]:focus { outline: none; }
 
 /* ── Education: a tile per degree, the school's initials as its badge ── */
 .xp-edu { margin-top: 28px; }
-.edu-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); gap: var(--gap); margin-top: 14px; }
+/* Each tile as tall as what it holds: stretched to the tallest, the short ones stood half empty */
+.edu-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: var(--gap); margin-top: 14px; }
 .edu-card { display: grid; align-content: start; gap: 4px; }
 .edu-card__badge {
   width: fit-content;
@@ -1077,7 +1080,7 @@ main[tabindex="-1"]:focus { outline: none; }
   color: var(--accent-on-soft);
 }
 .edu-card__y { font: 700 12px/1.4 var(--mono); color: var(--accent-text); }
-.edu-card strong { font: 700 15px/1.35 var(--mono); }
+.edu-card > strong { font: 700 15px/1.35 var(--mono); }
 .edu-card__s { font-size: 15px; color: var(--text-2); }
 .edu-card__w { display: inline-flex; align-items: center; gap: 5px; font: 400 12px/1.4 var(--mono); color: var(--muted); }
 .edu-card__w .ico { width: 12px; height: 12px; }
@@ -1090,6 +1093,21 @@ main[tabindex="-1"]:focus { outline: none; }
   font: 400 12px/1.3 var(--mono);
   color: var(--text-2);
 }
+/* What a degree from abroad is worth here: a note of its own at the foot of
+   the tile, under a hairline like a project card's, not one more tag */
+.edu-card__equiv {
+  display: flex;
+  gap: 8px;
+  margin-top: 12px;
+  padding-top: 12px;
+  border-top: 1px solid var(--border);
+  font-size: 13.5px;
+  line-height: 1.45;
+  color: var(--text-2);
+  text-wrap: balance;
+}
+.edu-card__equiv .ico { width: 16px; height: 16px; margin-top: 2px; color: var(--accent-text); }
+.edu-card__equiv strong { font-weight: 600; color: var(--text); }
 
 /* ── Chronology: work and studies on one axis ── */
 .chrono { margin-bottom: var(--gap); padding: 24px 26px 20px; container-type: inline-size; }
@@ -1252,6 +1270,7 @@ main[tabindex="-1"]:focus { outline: none; }
 
 .skill-rows {
   display: grid;
+  grid-template-columns: minmax(0, 1fr); /* a long row shortens its name, it doesn't widen the tile */
   gap: 2px;
   margin: 12px -8px 0;
 }
@@ -1299,6 +1318,7 @@ main[tabindex="-1"]:focus { outline: none; }
 .skill-fam__head[aria-expanded="true"] .skill-fam__count::after { transform: rotate(180deg); }
 .skill-fam__tools {
   display: grid;
+  grid-template-columns: minmax(0, 1fr);
   gap: 1px;
   margin: 0 0 6px 28px;
   padding-left: 8px;
@@ -1949,13 +1969,6 @@ main[tabindex="-1"]:focus { outline: none; }
    CV — the print view in front of the page, the page blurred behind
    A native modal <dialog>: the browser keeps focus inside and the page inert.
 ═══════════════════════════════════════════ */
-/* A phone's CV buttons open the CV page itself (PHONE in scroll.js, the same
-   query), where printing is not the point: a shorter label */
-@media (max-width: 599.98px), (max-height: 499.98px) and (pointer: coarse) {
-  [data-cv-link] .lbl { display: none; }
-  [data-cv-link] .lbl-short { display: inline; }
-}
-
 .cv-dialog {
   inset: 0;
   width: 100%;
@@ -2260,7 +2273,6 @@ html.travel-open { overflow: hidden; }
   .topbar { position: relative; }
   .topbar::before { display: none; }
   .topbar__in { min-height: 60px; padding: 12px 16px; }
-  .topbar__ctrls { margin-left: auto; }
 
   .site-nav {
     position: fixed;
@@ -2405,7 +2417,7 @@ html.travel-open { overflow: hidden; }
   .xp-group__head b { font-weight: 700; font-size: 11px; line-height: 1; letter-spacing: .14em; color: var(--accent-text); }
   .xp-panel { padding: 22px 20px 26px; }
   /* Stacked, the latest degree comes first */
-  .edu-cards { display: flex; flex-direction: column-reverse; }
+  .edu-cards { display: flex; flex-direction: column-reverse; align-items: stretch; }
   /* One side gutter for the hero, the sections and the footer */
   .hero, .sec, .footer { padding-left: 16px; padding-right: 16px; }
   :root { --gap: 10px; }
@@ -2425,6 +2437,11 @@ html.travel-open { overflow: hidden; }
   .contact-form__row { grid-template-columns: minmax(0, 1fr); }
 }
 
+/* The narrowest phones: tighter skill rows, so the names keep their letters */
+@media (max-width: 359.98px) {
+  .skill-row { gap: 6px; }
+}
+
 /* iOS Safari zooms into any focused field under 16px: touch screens get 16px,
    whatever their width (a phone held sideways is wider than the breakpoints) */
 @media (pointer: coarse) {
@@ -2432,6 +2449,23 @@ html.travel-open { overflow: hidden; }
   .contact-form__field textarea,
   .cv-pass__input,
   .terminal { font-size: 16px; }
+
+  /* Small controls answer a finger on 44px without growing: a transparent
+     area centred on each, larger than it only where it falls short */
+  :is(.pill, .btn--sm, .brand, .skill-filter-pill, .drives__cta, .gh-link, .footer-socials a, .footer__bottom a, .back-to-top, .terminal-cue) { position: relative; }
+  :is(.pill, .btn--sm, .brand, .skill-filter-pill, .drives__cta, .gh-link, .footer-socials a, .footer__bottom a, .back-to-top, .terminal-cue)::after {
+    content: '';
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    width: max(100%, 44px);
+    height: max(100%, 44px);
+    transform: translate(-50%, -50%);
+  }
+  .footer__bottom a:not(.back-to-top) { display: inline-block; } /* the privacy link: a box of its own for that area */
+  /* Room between neighbours, so no two areas overlap */
+  .footer-socials { gap: 10px; }
+  .footer__actions { gap: 20px; }
 }
 
 /* ═══════════════════════════════════════════
