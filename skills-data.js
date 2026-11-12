@@ -21,7 +21,7 @@ const skillsData = [
   { id: 'dagster',    name: 'Dagster',    level: 2, category: 'dataeng', icon: null, parent: 'orchestration' },
   { id: 'prefect',    name: 'Prefect',    level: 1, category: 'dataeng', icon: 'prefect', parent: 'orchestration' },
   { id: 'ai',         name: 'IA',         level: 2, category: 'dataeng', icon: null, i18n: 'skill.ai' },
-  { id: 'llm',        name: 'LLM',        level: 2, category: 'dataeng', icon: null, parent: 'ai' },
+  { id: 'llm',        name: 'LLM',        level: 3, category: 'dataeng', icon: null, parent: 'ai' },
   { id: 'mcp',        name: 'MCP',        level: 2, category: 'dataeng', icon: 'fastmcp', parent: 'ai' },
   { id: 'agents',     name: 'Agents',     level: 2, category: 'dataeng', icon: null, parent: 'ai' },
   // Languages, SQL with the databases
@@ -31,18 +31,20 @@ const skillsData = [
   { id: 'postgresql', name: 'PostgreSQL', level: 3, category: 'db',    icon: 'postgresql', parent: 'sql' },
   { id: 'mssql',      name: 'SQL Server', level: 2, category: 'db',    icon: 'microsoftsqlserver', parent: 'sql' },
   { id: 'oracle',     name: 'Oracle',     level: 2, category: 'db',    icon: 'oracle', parent: 'sql' },
-  // Cloud, AWS with its services
+  // Cloud, AWS with its services. Simple Icons dropped Amazon's logos, so the
+  // services (CloudFormation too) wear AWS's own architecture icons, stripped
+  // of their coloured tile to take the site's tint like the other logos
   { id: 'aws',        name: 'AWS',        level: 3, category: 'cloud', icon: 'amazonwebservices' },
-  { id: 'lambda',     name: 'Lambda',     level: 3, category: 'cloud', icon: null, parent: 'aws' },
-  { id: 's3',         name: 'S3',         level: 3, category: 'cloud', icon: null, parent: 'aws' },
-  { id: 'stepfunctions', name: 'Step Functions', level: 3, category: 'cloud', icon: null, parent: 'aws' },
-  { id: 'ecs',        name: 'ECS Fargate', level: 2, category: 'cloud', icon: null, parent: 'aws' },
-  { id: 'ecr',        name: 'ECR',        level: 2, category: 'cloud', icon: null, parent: 'aws' },
-  { id: 'glue',       name: 'Glue',       level: 2, category: 'cloud', icon: null, parent: 'aws' },
-  { id: 'athena',     name: 'Athena',     level: 2, category: 'cloud', icon: null, parent: 'aws' },
-  { id: 'rds',        name: 'RDS',        level: 2, category: 'cloud', icon: null, parent: 'aws' },
-  { id: 'cloudwatch', name: 'CloudWatch', level: 2, category: 'cloud', icon: null, parent: 'aws' },
-  { id: 'codepipeline',   name: 'CodePipeline',   level: 2, category: 'cloud', icon: null, parent: 'aws' },
+  { id: 'lambda',     name: 'Lambda',     level: 3, category: 'cloud', icon: 'aws-lambda', parent: 'aws' },
+  { id: 's3',         name: 'S3',         level: 3, category: 'cloud', icon: 'aws-s3', parent: 'aws' },
+  { id: 'stepfunctions', name: 'Step Functions', level: 3, category: 'cloud', icon: 'aws-stepfunctions', parent: 'aws' },
+  { id: 'ecs',        name: 'ECS Fargate', level: 1, category: 'cloud', icon: 'aws-ecs', parent: 'aws' },
+  { id: 'ecr',        name: 'ECR',        level: 1, category: 'cloud', icon: 'aws-ecr', parent: 'aws' },
+  { id: 'glue',       name: 'Glue',       level: 2, category: 'cloud', icon: 'aws-glue', parent: 'aws' },
+  { id: 'athena',     name: 'Athena',     level: 2, category: 'cloud', icon: 'aws-athena', parent: 'aws' },
+  { id: 'rds',        name: 'RDS',        level: 2, category: 'cloud', icon: 'aws-rds', parent: 'aws' },
+  { id: 'cloudwatch', name: 'CloudWatch', level: 2, category: 'cloud', icon: 'aws-cloudwatch', parent: 'aws' },
+  { id: 'codepipeline',   name: 'CodePipeline',   level: 2, category: 'cloud', icon: 'aws-codepipeline', parent: 'aws' },
   { id: 'snowflake',  name: 'Snowflake',  level: 1, category: 'cloud', icon: 'snowflake',  cv: false },
   { id: 'databricks', name: 'Databricks', level: 1, category: 'cloud', icon: 'databricks', cv: false },
   // BI & data visualization
@@ -56,8 +58,8 @@ const skillsData = [
   { id: 'cicd',       name: 'CI/CD',      level: 2, category: 'devops', icon: null },
   { id: 'docker',     name: 'Docker',     level: 2, category: 'devops', icon: 'docker' },
   { id: 'iac',        name: 'IaC',        level: 2, category: 'devops', icon: null },
-  { id: 'cloudformation', name: 'CloudFormation', level: 2, category: 'devops', icon: null, parent: 'iac' },
-  { id: 'pulumi',     name: 'Pulumi',     level: 1, category: 'devops', icon: 'pulumi', parent: 'iac' },
+  { id: 'cloudformation', name: 'CloudFormation', level: 3, category: 'devops', icon: 'aws-cloudformation', parent: 'iac' },
+  { id: 'pulumi',     name: 'Pulumi',     level: 2, category: 'devops', icon: 'pulumi', parent: 'iac' },
   // Project management
   { id: 'agile',      name: 'Agile',      level: 3, category: 'pm',    icon: null },
   { id: 'jira',       name: 'Jira',       level: 2, category: 'pm',    icon: 'jira', parent: 'agile' },

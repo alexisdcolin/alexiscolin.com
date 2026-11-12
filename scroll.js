@@ -596,7 +596,13 @@ if (chronoScroll) {
 // ─── Scroll Reveal ────────────────────────────────────────────────────────────
 // Content is only hidden while the observer can show it: if it never reports
 // (background tab, some link previews), everything is revealed anyway.
-const revealAll = () => document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+// A lazy logo waits until it shows, so a folded family's would only load on
+// the click that unfolds it and pop in late: they load along with their tile.
+const loadFoldedLogos = el => el.querySelectorAll('.skill-fam__tools img[loading="lazy"]').forEach(img => { img.loading = 'eager'; });
+const revealAll = () => {
+  document.querySelectorAll('.reveal').forEach(el => el.classList.add('visible'));
+  loadFoldedLogos(document);
+};
 let revealSeen = false;
 const revealObserver = new IntersectionObserver(
   entries => {
@@ -604,6 +610,7 @@ const revealObserver = new IntersectionObserver(
     entries.forEach(e => {
       if (e.isIntersecting) {
         e.target.classList.add('visible');
+        loadFoldedLogos(e.target);
         revealObserver.unobserve(e.target);
       }
     });

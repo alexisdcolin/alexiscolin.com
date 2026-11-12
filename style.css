@@ -967,7 +967,11 @@ main[tabindex="-1"]:focus { outline: none; }
 .xp-tab__line i,
 .xp-group__sub > :last-child { white-space: nowrap; }
 
-.xp-panel { padding: 30px 36px 34px; }
+.xp-panel { padding: 30px 36px 34px; container-type: inline-size; }
+/* Header: role and company on the left, dates and length on the right,
+   closed by a hairline */
+.xp-top { display: flex; align-items: flex-start; justify-content: space-between; gap: 10px 28px; padding-bottom: 20px; border-bottom: 1px solid var(--border); }
+.xp-top__main { min-width: 0; }
 .xp-head { display: flex; flex-wrap: wrap; align-items: center; gap: 6px 12px; }
 .xp-panel h3 { font: 700 22px/1.25 var(--mono); letter-spacing: -.03em; }
 /* Items with a dot between them. Each dot sits in its item's left padding,
@@ -986,27 +990,40 @@ main[tabindex="-1"]:focus { outline: none; }
 .xp-meta > * { position: relative; padding-left: 28px; white-space: nowrap; } /* lines break between items only */
 .xp-meta > *::before { content: '·'; position: absolute; left: 11px; color: var(--border-2); }
 .xp-meta > :empty { display: none; } /* the current position's duration, until i18n.js counts it */
-.xp-meta--when { margin-top: 4px; }
+/* The dates, stacked on the right of the header: no dots between them there */
+.xp-meta--when { flex-direction: column; align-items: flex-end; flex-shrink: 0; row-gap: 3px; margin: 6px 0 0; clip-path: none; text-align: right; }
+.xp-meta--when > * { padding-left: 0; }
+.xp-meta--when > *::before { content: none; }
+.xp-meta--when > :first-child { color: var(--text-2); }
+/* A narrow panel (a phone, or a tablet beside the tabs) puts them back under
+   the company, in a dotted line of their own */
+@container (max-width: 559.98px) {
+  .xp-top { flex-direction: column; gap: 0; }
+  .xp-meta--when { flex-direction: row; align-items: center; margin: 4px 0 0 -28px; clip-path: inset(-6px -6px -6px 28px); text-align: left; }
+  .xp-meta--when > * { padding-left: 28px; }
+  .xp-meta--when > *::before { content: '·'; }
+}
 .xp-meta a { font-weight: 700; color: var(--accent-text); }
 .xp-meta a:hover { text-decoration: underline; text-underline-offset: 3px; }
 /* A consulting position: the client first, the firm after it, quieter */
 .xp-via__firm { color: var(--muted); }
 .xp-via__firm a { font-weight: 400; color: inherit; }
-.xp-ctx { max-width: 58ch; margin-top: 20px; font-size: 17.5px; line-height: 1.5; text-wrap: pretty; }
-.xp-panel .label { margin-top: 24px; }
+.xp-ctx { max-width: 64ch; margin-top: 20px; font-size: 17px; line-height: 1.6; text-wrap: pretty; }
+.xp-panel .label { margin-top: 28px; }
 
-.xp-list { display: grid; gap: 9px; max-width: 70ch; margin-top: 12px; }
-.xp-list li { position: relative; padding-left: 20px; font-size: 16px; line-height: 1.55; color: var(--text-2); }
-/* Whole-pixel position and height: a fractional one renders some dashes
-   thicker than others */
+/* The tasks, a size under the description, each on a bullet of four dots:
+   the motif of the logo and of the page's dotted background. Whole-pixel
+   line height and position, so every bullet lands on its first line alike. */
+.xp-list { display: grid; gap: 11px; max-width: 68ch; margin-top: 14px; }
+.xp-list li { position: relative; padding-left: 22px; font-size: 15px; line-height: 24px; color: var(--text-2); text-wrap: pretty; }
 .xp-list li::before {
   content: '';
   position: absolute;
-  top: 11px;
-  left: 2px;
-  width: 9px;
-  height: 2px;
-  background: var(--accent);
+  top: 8px;
+  left: 1px;
+  width: 8px;
+  height: 8px;
+  background: radial-gradient(circle, var(--accent) 1.4px, transparent 1.7px) 0 0 / 4px 4px;
 }
 
 /* A position's key skills, and a project's tools */
@@ -1069,9 +1086,11 @@ main[tabindex="-1"]:focus { outline: none; }
 /* Each tile as tall as what it holds: stretched to the tallest, the short ones stood half empty */
 .edu-cards { display: grid; grid-template-columns: repeat(3, minmax(0, 1fr)); align-items: start; gap: var(--gap); margin-top: 14px; }
 .edu-card { display: grid; align-content: start; gap: 4px; }
+/* The initials and the years on one row, the years on the right as a
+   position's dates */
+.edu-card__top { display: flex; align-items: center; justify-content: space-between; gap: 8px; margin-bottom: 14px; }
 .edu-card__badge {
   width: fit-content;
-  margin-bottom: 10px;
   padding: 8px 10px;
   border-radius: var(--radius-sm);
   background: var(--accent-soft);
@@ -1079,35 +1098,17 @@ main[tabindex="-1"]:focus { outline: none; }
   letter-spacing: .06em;
   color: var(--accent-on-soft);
 }
-.edu-card__y { font: 700 12px/1.4 var(--mono); color: var(--accent-text); }
+.edu-card__y { font: 400 12px/1.4 var(--mono); color: var(--text-2); }
 .edu-card > strong { font: 700 15px/1.35 var(--mono); }
-.edu-card__s { font-size: 15px; color: var(--text-2); }
-.edu-card__w { display: inline-flex; align-items: center; gap: 5px; font: 400 12px/1.4 var(--mono); color: var(--muted); }
-.edu-card__w .ico { width: 12px; height: 12px; }
-.edu-card__tag {
-  width: fit-content;
-  margin-top: 10px;
-  padding: 4px 9px;
-  border-radius: 6px;
-  background: var(--bg-alt);
-  font: 400 12px/1.3 var(--mono);
-  color: var(--text-2);
-}
-/* What a degree from abroad is worth here: a note of its own at the foot of
-   the tile, under a hairline like a project card's, not one more tag */
-.edu-card__equiv {
-  display: flex;
-  gap: 8px;
-  margin-top: 12px;
-  padding-top: 12px;
-  border-top: 1px solid var(--border);
-  font-size: 13.5px;
-  line-height: 1.45;
-  color: var(--text-2);
-  text-wrap: balance;
-}
-.edu-card__equiv .ico { width: 16px; height: 16px; margin-top: 2px; color: var(--accent-text); }
-.edu-card__equiv strong { font-weight: 600; color: var(--text); }
+.edu-card__sub { font-size: 14px; line-height: 1.45; color: var(--muted); } /* the degree's program */
+.edu-card__s { margin-top: 8px; font-size: 15px; line-height: 1.4; color: var(--text-2); }
+.edu-card__w { font: 400 12px/1.4 var(--mono); color: var(--muted); }
+/* The extras (what a degree from abroad is worth here, a double degree) as
+   notes in one footer, under a hairline like a project card's */
+.edu-card__foot { display: grid; gap: 8px; margin-top: 14px; padding-top: 12px; border-top: 1px solid var(--border); }
+.edu-card__note { display: flex; gap: 8px; font-size: 13.5px; line-height: 1.45; color: var(--text-2); text-wrap: balance; }
+.edu-card__note .ico { width: 16px; height: 16px; flex-shrink: 0; margin-top: 2px; color: var(--accent-text); }
+.edu-card__note strong { font-weight: 600; color: var(--text); }
 
 /* ── Chronology: work and studies on one axis ── */
 .chrono { margin-bottom: var(--gap); padding: 24px 26px 20px; container-type: inline-size; }
@@ -1236,19 +1237,27 @@ main[tabindex="-1"]:focus { outline: none; }
 }
 .skills-legend > span { display: inline-flex; align-items: center; gap: 8px; }
 
-/* Three-step meter: data-level lights 1 to 3 segments */
+/* Three-step meter: data-level lights 1 to 3 segments, each a shade deeper
+   than the last, from a pale accent to the full one. The dark theme lifts the
+   pale shades and dims the unlit segments, or "notions" would melt into them. */
 .lvl {
+  --lvl-1: light-dark(color-mix(in oklab, var(--accent) 40%, var(--card)), color-mix(in oklab, var(--accent) 52%, var(--card)));
+  --lvl-2: light-dark(color-mix(in oklab, var(--accent) 68%, var(--card)), color-mix(in oklab, var(--accent) 76%, var(--card)));
+  --lvl-off: light-dark(rgba(0,0,0,.15), rgba(255,255,255,.09));
+  --a: var(--lvl-off);
+  --b: var(--lvl-off);
+  --c: var(--lvl-off);
   flex-shrink: 0;
   width: 42px;
   height: 6px;
   border-radius: 2px;
-  background: linear-gradient(90deg, var(--accent) calc(var(--l, 0) * 33.34%), var(--border-2) 0);
+  background: linear-gradient(90deg, var(--a) 0 33.34%, var(--b) 0 66.67%, var(--c) 0);
   -webkit-mask: repeating-linear-gradient(90deg, #000 0 12.67px, transparent 12.67px 14.67px);
   mask: repeating-linear-gradient(90deg, #000 0 12.67px, transparent 12.67px 14.67px);
 }
-.lvl[data-level="1"] { --l: 1; }
-.lvl[data-level="2"] { --l: 2; }
-.lvl[data-level="3"] { --l: 3; }
+.lvl[data-level="1"] { --a: var(--lvl-1); }
+.lvl[data-level="2"] { --a: var(--lvl-1); --b: var(--lvl-2); }
+.lvl[data-level="3"] { --a: var(--lvl-1); --b: var(--lvl-2); --c: var(--accent); }
 
 .skills-grid {
   columns: 3;
@@ -2313,25 +2322,31 @@ html.travel-open { overflow: hidden; }
 
   .hero {
     grid-template-columns: minmax(0, 1fr);
-    grid-template-areas: "statement" "actions" "stack";
+    grid-template-areas: "statement" "stack" "actions";
     padding-top: 24px;
   }
-  /* The stack lies down under the buttons: one line, the names above and
-     below it in turn so the six of them fit across a phone */
-  .stack-wrap { display: block; margin-top: 34px; padding: 0; }
+  /* The stack lies down between the sentence and the buttons: one line, the
+     names above and below it in turn so the six of them fit across a phone.
+     The line gives the order, so the numbers go; governance, which runs along
+     every step, is centred under it rather than heading it. */
+  .stack-wrap { display: flex; flex-direction: column; margin-top: 30px; padding: 0; }
   .stack-wrap::before { display: none; }
   .gov {
     position: static;
+    order: 1;
     display: block;
-    margin-bottom: 4px;
+    margin-top: 12px;
     writing-mode: horizontal-tb;
     transform: none;
+    text-align: center;
+    color: var(--muted); /* grey here: the screen already holds plenty of terracotta */
   }
   .stack {
     position: relative;
+    flex: none;
     display: grid;
     grid-template-columns: repeat(6, minmax(0, 1fr));
-    height: 86px;
+    height: 58px;
   }
   .stack::before {
     content: '';
@@ -2346,24 +2361,20 @@ html.travel-open { overflow: hidden; }
   .step { display: block; height: 100%; font-size: 11px; }
   .step::before { display: none; }
   .step::after { top: calc(50% - 3.5px); left: calc(50% - 3.5px); }
-  .step__n,
+  .step__n { display: none; }
   .step__t {
     position: absolute;
     left: 50%;
+    font-size: 11px;
     white-space: nowrap;
     transform: translateX(-50%);
   }
-  .step__n { font-size: 11px; }
-  .step__t { font-size: 11px; }
   /* Odd steps above the line, even ones below */
   .step:nth-child(odd) .step__t  { bottom: calc(50% + 9px); }
-  .step:nth-child(odd) .step__n  { bottom: calc(50% + 24px); }
   .step:nth-child(even) .step__t { top: calc(50% + 9px); }
-  .step:nth-child(even) .step__n { top: calc(50% + 24px); }
-  .step:first-child .step__n,
+  /* The first name is long and starts at the edge; the last one ("IA", "AI")
+     is short enough to sit centred on its dot like the rest */
   .step:first-child .step__t { left: 0; transform: none; }
-  .step:last-child .step__n,
-  .step:last-child .step__t { right: 0; left: auto; transform: none; }
   .step__d { display: none; }
 
   /* Positions: a row of tabs that scrolls, BIAL-R's clients under one line */
@@ -2426,7 +2437,7 @@ html.travel-open { overflow: hidden; }
 }
 
 @media (max-width: 599.98px) {
-  .hero__actions { margin-top: 28px; }
+  .hero__actions { margin-top: 44px; } /* clear of the stack and its caption above */
 
   .bento { grid-template-columns: minmax(0, 1fr); }
   .bento--about { grid-template-columns: minmax(0, 1fr); grid-template-areas: "photo" "text" "drives" "misc"; }
